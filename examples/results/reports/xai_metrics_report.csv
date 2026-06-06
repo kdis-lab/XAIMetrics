@@ -1,0 +1,5 @@
+dataset_name,model_name,metric,metric_params,LIME,SHAP
+hydraulic,IForest,Complexity,"{""normalise"": true}",1.218711283816869,1.498499752271559
+hydraulic,IForest,Faithfulness,"{""base_strategy"": ""mean""}",-0.4813783902979324,0.40757754145842956
+hydraulic,IForest,LocalLipschitzEstimate,"{""normalise"": true, ""nr_samples"": 200}",16.85367697958906,9.68076399837827
+hydraulic,IForest,Sparseness,"{""normalise"": true}",0.5324807803220825,0.38579770108192357

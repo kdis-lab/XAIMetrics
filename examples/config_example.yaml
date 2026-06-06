@@ -1,5 +1,5 @@
 context:
-  device: "cuda"
+  device: "cpu"
   datasets_dir: "data"
   models_dir: "models"
   attributions_dir: "attributions"
