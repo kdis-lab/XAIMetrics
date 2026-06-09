@@ -12,22 +12,6 @@ xai\_metrics.metrics.fidelity.completeness.completeness\_metric module
    :show-inheritance:
    :undoc-members:
 
-xai\_metrics.metrics.fidelity.completeness.deletion module
-----------------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.fidelity.completeness.deletion
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.fidelity.completeness.mufidelity module
-------------------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.fidelity.completeness.mufidelity
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
 Module contents
 ---------------
 

@@ -52,22 +52,6 @@ xai\_metrics.metrics.faithfulness.monotonicity\_metric module
    :show-inheritance:
    :undoc-members:
 
-xai\_metrics.metrics.faithfulness.pgi module
---------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.pgi
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.faithfulness.pgu module
---------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.pgu
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
 xai\_metrics.metrics.faithfulness.sensitivity\_n module
 -------------------------------------------------------
 

@@ -17,7 +17,6 @@ xai\_metrics.base.registry module
 
 .. automodule:: xai_metrics.base.registry
    :members:
-   :ignore-module-all:
    :show-inheritance:
    :undoc-members:
 
