@@ -4,20 +4,32 @@ import numpy as np
 
 from xai_metrics.base import BaseMetric, MetricContext, register_metric, MetricSkipped
 
-from typing import Mapping, Any, Callable, Dict
+from typing import Mapping, Any
 
 @register_metric
 class Sufficiency(BaseMetric):
     """
     Quantus Sufficiency metric.
 
-    This metric evaluates whether an explanation is sufficient to identify the
-    model prediction. Two observations are considered to share a similar
-    explanation when the distance between their attribution vectors is below a
-    user-defined threshold. The score measures how often observations with
-    similar explanations also share the same predicted class.
+    This metric evaluates whether similar explanations are associated with the
+    same model prediction. For the complete set of evaluated observations,
+    Quantus flattens the attribution vectors and computes the pairwise distances
+    between them. The resulting distance matrix is normalised, and two
+    explanations are considered similar when their distance is less than or
+    equal to ``threshold``.
 
-    The metric is based on the Sufficiency metric proposed by Dasgupta et al.
+    For each observation, the metric computes the proportion of other
+    observations with similar explanations that receive the same predicted
+    class. The observation itself is excluded from this comparison. If no other
+    explanation lies within the specified distance threshold, the score for
+    that observation is ``0.0``.
+
+    Higher scores indicate that observations with similar explanations more
+    frequently receive the same model prediction. Because explanations are
+    compared within the evaluated batch, the resulting scores depend on the
+    observations included in the metric context.
+
+    The metric is based on the Sufficiency test proposed by Dasgupta et al.
     (2022) and implemented in Quantus.
     """
     NAME = 'Sufficiency'
@@ -25,9 +37,7 @@ class Sufficiency(BaseMetric):
     def __init__(
         self,
         context: MetricContext,
-        params: Mapping[str, Any] | None = None,
-        normalise_func: Callable[..., np.ndarray] | None = None,
-        normalise_func_kwargs: Dict[str, Any] | None = None
+        params: Mapping[str, Any] | None = None
     ):
         """
         Parameters
@@ -58,54 +68,70 @@ class Sufficiency(BaseMetric):
               metric. The default value is ``True``.
 
             If ``None``, an empty dictionary is used.
-        normalise_func : Callable[..., numpy.ndarray] or None, optional
-            Custom normalisation function passed to Quantus. The function must
-            accept the attribution array as its first argument and may accept
-            additional keyword arguments from ``normalise_func_kwargs``. If
-            ``None``, Quantus uses its default normalisation behaviour when
-            ``normalise=True``.
-        normalise_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``normalise_func`` when normalisation is
-            enabled. If ``None``, no additional keyword arguments are passed.
+
+        Notes
+        -----
+        This wrapper uses the default attribution normalisation function
+        provided by Quantus.
+
+        The metric compares explanations only among the observations evaluated
+        in the same call. Consequently, changing the selected observations can
+        change the neighbourhood of each explanation and therefore its score.
         """
         super().__init__(context, params)
-        self.normalise_func = normalise_func
-        self.normalise_func_kwargs = normalise_func_kwargs
+        
 
     def run(self):
         """
         Compute the Sufficiency metric.
 
-        The method selects the observations defined in the metric context,
-        retrieves their input data, labels and attribution values, and passes them
-        to :class:`quantus.Sufficiency`. The model is set to evaluation mode before
-        computing the metric.
+        The method selects the observations defined in the metric context and
+        passes their input data, labels and attribution values to
+        :class:`quantus.Sufficiency`.
+
+        Quantus computes the pairwise distances between the flattened
+        attribution vectors, normalises the distance matrix and identifies
+        explanation pairs whose distance is less than or equal to
+        ``threshold``. For each observation, it then calculates the fraction of
+        similar explanations whose observations receive the same predicted
+        class. Self-comparisons are excluded.
+
+        If all attribution values are negative, their treatment depends on the
+        ``abs`` parameter. Their absolute values are used when ``abs=True``;
+        otherwise, the metric is skipped.
+
+        The model is set to evaluation mode before the metric is computed.
 
         Returns
         -------
-        List[float]
-            Sufficiency score for each evaluated observation. Higher values
-            indicate that observations with similar explanations more often share
-            the same predicted class.
+        list[float]
+            Sufficiency score for each evaluated observation. Scores lie
+            between ``0.0`` and ``1.0``. Higher values indicate that
+            observations with similar explanations more frequently receive
+            the same predicted class. A score of ``0.0`` is returned when no
+            other explanation satisfies the distance threshold.
 
         Raises
         ------
         MetricSkipped
-            If all attribution values are negative, since the metric is skipped for
-            that attribution configuration.
+            If all attribution values are negative and ``abs`` is ``False``.
         """
         ctx = self.context
         p = self.params
-
-        if np.all(ctx.attributions < 0.0):
-            raise MetricSkipped(
-                f"{self.NAME} skipped: all attributions are negative."
-            )
 
         threshold = float(p.get("threshold", 0.6))
         distance_func = str(p.get("distance_func", "seuclidean"))
         abs_ = bool(p.get("abs", True))
         normalise = bool(p.get("normalise", True))
+
+        attributions = ctx.attributions
+        if np.all(attributions < 0.0):
+            if not abs_:
+                raise MetricSkipped(
+                    f"{self.NAME} skipped: all attributions are negative."
+                )
+            else:
+                attributions = np.abs(attributions)
 
         ctx.model.eval()
 
@@ -113,14 +139,12 @@ class Sufficiency(BaseMetric):
             threshold=threshold,
             distance_func=distance_func,
             abs=abs_,
-            normalise=normalise,
-            normalise_func=self.normalise_func,
-            normalise_func_kwargs=self.normalise_func_kwargs
+            normalise=normalise
         )(
             model=ctx.model,
             x_batch=ctx.X_test.loc[ctx.observations].to_numpy(copy=True),
             y_batch=ctx.y_test.loc[ctx.observations].to_numpy(copy=True),
-            a_batch=ctx.attributions
+            a_batch=attributions
         )
 
         return results

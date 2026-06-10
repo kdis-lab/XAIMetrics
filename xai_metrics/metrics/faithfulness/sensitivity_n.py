@@ -4,18 +4,29 @@ import numpy as np
 
 from xai_metrics.base import BaseMetric, MetricContext, register_metric, MetricSkipped
 
-from typing import Mapping, Any, Callable, Dict
+from typing import Mapping, Any
 
 @register_metric
 class SensitivityN(BaseMetric):
     """
     Quantus Sensitivity-N metric.
 
-    This metric evaluates whether attribution values are faithful to the model
-    by comparing the sum of feature attributions with the corresponding change
-    in model output after perturbing those features. Quantus computes this
-    relationship over increasingly large feature subsets and compares both
-    quantities using a similarity function.
+    This metric evaluates whether the attribution values assigned to groups of
+    features agree with the variation in the target model output produced when
+    those features are perturbed.
+
+    For each observation, features are ordered by decreasing attribution value
+    and progressively perturbed in groups of size ``features_in_step``. At each
+    perturbation step, Quantus records the change in the target output and the
+    attribution values associated with the processed feature group. Pearson
+    correlation is then used to measure the agreement between both quantities
+    for the evaluated perturbation steps.
+
+    The number of evaluated steps is limited by ``n_max_percentage``, which
+    determines the maximum proportion of input features considered by the
+    experiment. Higher correlation values indicate stronger agreement between
+    the attribution values and the effect of the corresponding perturbations
+    on the model output.
 
     The metric is based on the Sensitivity-N test proposed by Ancona et al.
     (2018) and implemented in Quantus.
@@ -25,12 +36,7 @@ class SensitivityN(BaseMetric):
     def __init__(
         self,
         context: MetricContext,
-        params: Mapping[str, Any] | None = None,
-        similarity_func: Callable[..., float | np.ndarray] | None = None,
-        normalise_func: Callable[..., np.ndarray] | None = None,
-        normalise_func_kwargs: Dict[str, Any] | None = None,
-        perturb_func: Callable[[Any], Any] | None = None,
-        perturb_func_kwargs: Dict[str, Any] | None = None
+        params: Mapping[str, Any] | None = None
     ):
         """
         Parameters
@@ -65,64 +71,56 @@ class SensitivityN(BaseMetric):
               ``"uniform"``. The default value is ``"black"``.
 
             If ``None``, an empty dictionary is used.
-        similarity_func : Callable[..., float | numpy.ndarray] or None, optional
-            Function used to compare attribution sums with prediction score drops. The
-            function must accept ``a`` and ``b`` as inputs and may accept ``batched``
-            and other keyword arguments. If ``None``, Quantus uses its default
-            similarity function.
-        normalise_func : Callable[..., numpy.ndarray] or None, optional
-            Custom normalisation function passed to Quantus. The function must accept
-            the attribution array as its first argument and may accept additional
-            keyword arguments from ``normalise_func_kwargs``. If ``None``, Quantus uses
-            its default normalisation behaviour when ``normalise=True``.
-        normalise_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``normalise_func`` when normalisation is
-            enabled. If ``None``, no additional keyword arguments are passed.
-        perturb_func : Callable[..., numpy.ndarray] or None, optional
-            Perturbation function passed to Quantus. The function must be compatible
-            with Quantus perturbation functions, accepting at least an input array and
-            feature indices, and returning the perturbed array. If ``None``, Quantus
-            uses its default perturbation function.
-        perturb_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``perturb_func``. If ``None``, no additional
-            keyword arguments are passed.
+
+        Notes
+        -----
+        This wrapper uses the default Pearson correlation, attribution
+        normalisation and baseline-replacement functions provided by Quantus.
+
+        Quantus enables result aggregation by default for this metric.
+        Therefore, the returned result may contain an aggregate of the
+        correlations obtained for the evaluated perturbation steps rather than
+        one independent score per input observation.
         """
         super().__init__(context, params)
-        self.similarity_func = similarity_func
-        self.normalise_func = normalise_func
-        self.normalise_func_kwargs = normalise_func_kwargs
-        self.perturb_func = perturb_func
-        self.perturb_func_kwargs = perturb_func_kwargs
+
 
     def run(self):
         """
         Compute the Sensitivity-N metric.
 
-        The method selects the observations defined in the metric context,
-        retrieves their input data, labels and attribution values, and passes them
-        to :class:`quantus.SensitivityN`. The model is set to evaluation mode
-        before computing the metric.
+        The method selects the observations defined in the metric context and
+        passes their input data, target labels and attribution values to
+        :class:`quantus.SensitivityN`.
+
+        Quantus orders the features by decreasing attribution value and
+        progressively perturbs them in groups of size ``features_in_step``. It
+        compares the changes in the target model output with the corresponding
+        attribution values using Pearson correlation. Only the perturbation
+        steps covered by ``n_max_percentage`` are included.
+
+        If all attribution values are negative, their treatment depends on the
+        ``abs`` parameter. Their absolute values are used when ``abs=True``;
+        otherwise, the metric is skipped.
+
+        The model is set to evaluation mode before the metric is computed.
 
         Returns
         -------
         List[float]
-            Sensitivity-N scores as returned by Quantus. Higher values indicate
-            stronger agreement between attribution sums and model output changes
-            after perturbation.
+            Sensitivity-N result returned by Quantus. Higher values indicate
+            stronger agreement between attribution values and target-output
+            changes caused by perturbing the corresponding features. With the
+            default Quantus configuration, the correlations obtained across
+            the evaluated perturbation steps are aggregated.
 
         Raises
         ------
         MetricSkipped
-            If all attribution values are negative, since the metric is skipped for
-            that attribution configuration.
+            If all attribution values are negative and ``abs`` is ``False``.
         """
         ctx = self.context
         p = self.params
-
-        if np.all(ctx.attributions < 0.0):
-            raise MetricSkipped(
-                f"{self.NAME} skipped: all attributions are negative."
-            )
 
         n_max_percentage = float(p.get("n_max_percentage", 0.8))
         features_in_step = int(p.get("features_in_step", 1))
@@ -130,24 +128,28 @@ class SensitivityN(BaseMetric):
         normalise = bool(p.get("normalise", True))
         perturb_baseline = str(p.get("perturb_baseline", "black"))
 
+        attributions = ctx.attributions
+        if np.all(attributions < 0.0):
+            if not abs_:
+                raise MetricSkipped(
+                    f"{self.NAME} skipped: all attributions are negative."
+                )
+            else:
+                attributions = np.abs(attributions)
+
         ctx.model.eval()
 
         results = quantus.SensitivityN(
-            similarity_func=self.similarity_func,
             n_max_percentage=n_max_percentage,
             features_in_step=features_in_step,
             abs=abs_,
             normalise=normalise,
-            normalise_func=self.normalise_func,
-            normalise_func_kwargs=self.normalise_func_kwargs,
-            perturb_func=self.perturb_func,
-            perturb_baseline=perturb_baseline,
-            perturb_func_kwargs=self.perturb_func_kwargs
+            perturb_baseline=perturb_baseline
         )(
             model=ctx.model,
             x_batch=ctx.X_test.loc[ctx.observations].to_numpy(copy=True),
             y_batch=ctx.y_test.loc[ctx.observations].to_numpy(copy=True),
-            a_batch=ctx.attributions
+            a_batch=attributions
         )
 
         return results

@@ -4,7 +4,7 @@ import numpy as np
 
 from xai_metrics.base import BaseMetric, MetricContext, register_metric, MetricSkipped
 
-from typing import Mapping, Any, Callable, Dict
+from typing import Mapping, Any
 
 @register_metric
 class Consistency(BaseMetric):
@@ -29,7 +29,7 @@ class Consistency(BaseMetric):
     def __init__(
         self,
         context: MetricContext,
-        params: Mapping[str, Any] | None = None,
+        params: Mapping[str, Any] | None = None
     ):
         """
         Parameters
@@ -109,7 +109,7 @@ class Consistency(BaseMetric):
 
         results = quantus.Consistency(
             abs=abs_,
-            normalise=normalise,
+            normalise=normalise
         )(
             model=ctx.model,
             x_batch=ctx.X_test.loc[ctx.observations].to_numpy(copy=True),

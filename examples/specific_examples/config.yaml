@@ -24,3 +24,23 @@ metrics:
   - name: Faithfulness
     params:
       base_strategy: mean
+
+  - name: MonotonicityCorrelation
+    params:
+      eps: 1e-5
+      nr_samples: 100
+      features_in_step: 1
+      abs: true
+      normalise: true
+      perturb_baseline: mean
+
+  - name: MonotonicityMetric
+    params:
+      base_strategy: mean
+
+  - name: Monotonicity
+    params:
+      features_in_step: 1
+      abs: true
+      normalise: true
+      perturb_baseline: black

@@ -5,20 +5,30 @@ from scipy.stats import spearmanr
 
 from xai_metrics.base import BaseMetric, MetricContext, register_metric, MetricSkipped
 
-from typing import Mapping, Any, Callable, Dict
+from typing import Mapping, Any
 
 @register_metric
 class MonotonicityCorrelation(BaseMetric):
     """
     Quantus Monotonicity Correlation metric.
 
-    This metric evaluates whether features with larger attribution values have
-    a stronger and more monotonic effect on the model output when they are
-    perturbed. It computes the correlation between attribution values and the
-    output variation caused by perturbing groups of features.
+    This metric evaluates whether feature attribution values are monotonically
+    related to the uncertainty produced in the target model output when the
+    corresponding features are perturbed.
 
-    By default, this wrapper uses a safe Spearman correlation implementation
-    that returns ``0.0`` when one of the compared vectors has zero variance.
+    For each observation, features are ordered by increasing attribution value
+    and divided into groups. Each group is perturbed repeatedly, and its output
+    uncertainty is estimated from the mean squared change in the target model
+    output relative to the original output magnitude. The metric then computes
+    the Spearman correlation between the summed attribution values of the
+    feature groups and their corresponding uncertainty estimates.
+
+    This wrapper uses a safe Spearman correlation implementation that returns
+    ``0.0`` when either of the compared vectors has zero variance, avoiding
+    undefined correlation values.
+
+    Higher scores indicate a stronger positive monotonic relationship between
+    feature importance and the uncertainty caused by perturbing those features.
 
     The metric is based on the Monotonicity Correlation metric proposed by
     Nguyen and Rodríguez Martínez (2020) and implemented in Quantus.
@@ -29,11 +39,6 @@ class MonotonicityCorrelation(BaseMetric):
         self,
         context: MetricContext,
         params: Mapping[str, Any] | None = None,
-        similarity_func: Callable[..., float | np.ndarray] | None = None,
-        normalise_func: Callable[..., np.ndarray] | None = None,
-        normalise_func_kwargs: Dict[str, Any] | None = None,
-        perturb_func: Callable[..., np.ndarray] | None = None,
-        perturb_func_kwargs: Dict[str, Any] | None = None,
     ):
         """
         Parameters
@@ -71,35 +76,15 @@ class MonotonicityCorrelation(BaseMetric):
               ``"uniform"``. The default value is ``"uniform"``.
 
             If ``None``, an empty dictionary is used.
-        similarity_func : Callable[..., float | numpy.ndarray] or None, optional
-            Function used to compare attribution values with output variation. The
-            function must accept ``a`` and ``b`` as inputs and may accept
-            ``batched`` and other keyword arguments. If ``None``,
-            :meth:`_safe_spearman` is used.
-        normalise_func : Callable[..., numpy.ndarray] or None, optional
-            Custom normalisation function passed to Quantus. The function must
-            accept the attribution array as its first argument and may accept
-            additional keyword arguments from ``normalise_func_kwargs``. If
-            ``None``, Quantus uses its default normalisation behaviour when
-            ``normalise=True``.
-        normalise_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``normalise_func`` when normalisation is
-            enabled. If ``None``, no additional keyword arguments are passed.
-        perturb_func : Callable[..., numpy.ndarray] or None, optional
-            Perturbation function passed to Quantus. The function must be
-            compatible with Quantus perturbation functions, accepting at least an
-            input array and feature indices, and returning the perturbed array. If
-            ``None``, Quantus uses its default perturbation function.
-        perturb_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``perturb_func``. If ``None``, no
-            additional keyword arguments are passed.
+
+        Notes
+        -----
+        This wrapper uses :meth:`_safe_spearman` as the similarity function.
+        The default normalisation and perturbation functions provided by
+        Quantus are used.
         """
         super().__init__(context, params)
-        self.similarity_func = similarity_func or self._safe_spearman
-        self.normalise_func = normalise_func
-        self.normalise_func_kwargs = normalise_func_kwargs
-        self.perturb_func = perturb_func
-        self.perturb_func_kwargs = perturb_func_kwargs
+
 
     def _safe_spearman(
         self,
@@ -157,31 +142,38 @@ class MonotonicityCorrelation(BaseMetric):
         """
         Compute the Monotonicity Correlation metric.
 
-        The method selects the observations defined in the metric context,
-        retrieves their input data, labels and attribution values, and passes them
-        to :class:`quantus.MonotonicityCorrelation`. The model is set to evaluation
-        mode before computing the metric.
+        The method selects the observations defined in the metric context and
+        passes their input data, target labels and attribution values to
+        :class:`quantus.MonotonicityCorrelation`.
+
+        For each observation, Quantus orders features by increasing attribution
+        value and perturbs each feature group ``nr_samples`` times. It estimates
+        the uncertainty associated with each group as the mean squared change
+        in the target model output, scaled relative to the magnitude of the
+        original output. The internal safe Spearman function then compares
+        these uncertainty estimates with the corresponding attribution sums.
+
+        If all attribution values are negative, their treatment depends on the
+        ``abs`` parameter. Their absolute values are used when ``abs=True``;
+        otherwise, the metric is skipped.
+
+        The model is set to evaluation mode before the metric is computed.
 
         Returns
         -------
         List[float]
-            Monotonicity Correlation score for each evaluated observation. Higher
-            values indicate a stronger monotonic relationship between attribution
-            importance and model output variation after perturbation.
+            Monotonicity Correlation score for each evaluated observation.
+            Higher values indicate a stronger positive monotonic relationship
+            between the attribution values and the uncertainty caused by
+            perturbing the corresponding feature groups.
 
         Raises
         ------
         MetricSkipped
-            If all attribution values are negative, since the metric is skipped for
-            that attribution configuration.
+            If all attribution values are negative and ``abs`` is ``False``.
         """
         ctx = self.context
         p = self.params
-
-        if np.all(ctx.attributions < 0.0):
-            raise MetricSkipped(
-                f"{self.NAME} skipped: all attributions are negative."
-            )
 
         eps = float(p.get("eps", 1e-5))
         nr_samples = int(p.get("nr_samples", 100))
@@ -190,25 +182,30 @@ class MonotonicityCorrelation(BaseMetric):
         normalise = bool(p.get("normalise", True))
         perturb_baseline = str(p.get("perturb_baseline", "uniform"))
 
+        attributions = ctx.attributions
+        if np.all(attributions < 0.0):
+            if not abs_:
+                raise MetricSkipped(
+                    f"{self.NAME} skipped: all attributions are negative."
+                )
+            else:
+                attributions = np.abs(attributions)
+
         ctx.model.eval()
 
         results = quantus.MonotonicityCorrelation(
-            similarity_func=self.similarity_func,
+            similarity_func=self._safe_spearman,
             eps=eps,
             nr_samples=nr_samples,
             features_in_step=features_in_step,
             abs=abs_,
             normalise=normalise,
-            normalise_func=self.normalise_func,
-            normalise_func_kwargs=self.normalise_func_kwargs,
-            perturb_func=self.perturb_func,
-            perturb_baseline=perturb_baseline,
-            perturb_func_kwargs=self.perturb_func_kwargs
+            perturb_baseline=perturb_baseline
         )(
             model=ctx.model,
             x_batch=ctx.X_test.loc[ctx.observations].to_numpy(copy=True),
             y_batch=ctx.y_test.loc[ctx.observations].to_numpy(copy=True),
-            a_batch=ctx.attributions
+            a_batch=attributions
         )
 
         return results
