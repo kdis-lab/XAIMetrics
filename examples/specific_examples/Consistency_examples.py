@@ -1,41 +1,14 @@
 # examples/specific_examples/Consistency_examples.py
+from pathlib import Path
 import numpy as np
 
-from load_data import load_data_specific_example, PROJECT_ROOT
-
-from xai_metrics.base import MetricContext
 from xai_metrics.config import ConfigController
 from xai_metrics.metrics.faithfulness import Consistency
 from xai_metrics.runner import run_evaluation
 
-model, X_test, y_test, attributions, observations = load_data_specific_example()
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-# direct class without config
-context = MetricContext(
-    model=model,
-    X_test=X_test,
-    y_test=y_test,
-    observations=observations,
-    attributions=attributions,
-    device="cpu"
-)
-
-metric = Consistency(
-    context=context,
-    params={
-        "abs": True,
-        "normalise": True
-    }
-)
-
-scores = metric.run()
-
-print("\nDirect class usage")
-print("------------------")
-print("Consistency scores:", scores)
-print("Mean Consistency:", float(np.mean(scores)))
-
-# direct class with config
+# direct class use
 config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"
 
 context, metadata = ConfigController(config=config_path).build_context()
@@ -49,7 +22,7 @@ metric = Consistency(
 
 scores = metric.run()
 
-print("\nDirect class with config usage")
+print("\nDirect class usage")
 print("------------------")
 print("Consistency scores:", scores)
 print("Mean Consistency:", float(np.mean(scores)))

@@ -17,8 +17,8 @@
       "metric_params": {
         "base_strategy": "mean"
       },
-      "LIME": -0.4813783902979324,
-      "SHAP": 0.40757754145842956
+      "LIME": -0.4813783902979323,
+      "SHAP": 0.4075775414584294
     },
     {
       "dataset_name": "hydraulic",
@@ -28,8 +28,8 @@
         "nr_samples": 200,
         "normalise": true
       },
-      "LIME": 16.640208615280137,
-      "SHAP": 8.274788693815779
+      "LIME": 17.295901591626134,
+      "SHAP": 7.852704441428229
     },
     {
       "dataset_name": "hydraulic",
