@@ -11,5 +11,16 @@ context:
 metrics:
   - name: Consistency
     params:
-      abs: true
+      abs: false
       normalise: true
+
+  - name: FaithfulnessEstimate
+    params:
+      features_in_step: 1
+      abs: false
+      normalise: true
+      perturb_baseline: mean
+
+  - name: Faithfulness
+    params:
+      base_strategy: mean

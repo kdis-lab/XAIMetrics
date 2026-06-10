@@ -13,13 +13,20 @@ class Faithfulness(BaseMetric):
     """
     AIX360 Faithfulness metric.
 
-    This metric evaluates the correlation between feature importance values and
-    the effect of removing each feature from the input. For each observation,
-    features are individually replaced by a baseline value and the resulting
-    change in the predicted class probability is compared with the attribution
-    values.
+    This metric evaluates the relationship between feature attribution values
+    and the effect that replacing each feature with its baseline value has on
+    the model output.
 
-    The wrapped AIX360 implementation expects a model exposing a
+    For each observation, the wrapped AIX360 implementation determines the
+    predicted class and replaces each feature individually with its
+    corresponding baseline value. It then computes the correlation between the
+    attribution values and the predicted probabilities obtained after those
+    replacements.
+
+    Higher scores indicate stronger agreement between the importance assigned
+    to the features and their influence on the model prediction.
+
+    The wrapped AIX360 implementation requires a model exposing a
     ``predict_proba`` method.
 
     The metric is based on the faithfulness metric proposed by Alvarez-Melis
@@ -30,9 +37,7 @@ class Faithfulness(BaseMetric):
     def __init__(
         self,
         context: MetricContext,
-        params: Mapping[str, Any] | None = None,
-        base_func: Callable[..., Any] | None = None,
-        base_func_kwargs: Dict[str, Any] | None = None
+        params: Mapping[str, Any] | None = None
     ):
         """
         Parameters
@@ -56,42 +61,39 @@ class Faithfulness(BaseMetric):
               value is ``"mean"``.
 
             If ``None``, an empty dictionary is used.
-        base_func : Callable[[Any], Any] or None, optional
-            Custom function used to compute baseline values from ``context.X_test``.
-            The function must accept a ``pandas.DataFrame`` as its first argument and
-            may accept additional keyword arguments from ``base_func_kwargs``. It must
-            return an array-like object with one baseline value per feature.
-        base_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``base_func``. If ``None``, no
-            additional keyword arguments are passed.
         """
         super().__init__(context, params)
-        self.base_func = base_func
-        self.base_func_kwargs = base_func_kwargs
+
 
     def run(self):
         """
         Compute the Faithfulness metric.
 
         The method selects the observations defined in the metric context,
-        resolves the baseline values, and computes one faithfulness score per
-        selected observation using :func:`aix360.metrics.faithfulness_metric`.
+        resolves a baseline vector and evaluates each observation independently
+        using :func:`aix360.metrics.faithfulness_metric`.
+
+        For every feature, AIX360 replaces only that feature with its baseline
+        value and obtains the probability assigned to the original predicted
+        class. The final score is the negative Pearson correlation between the
+        attribution values and those probabilities.
 
         Returns
         -------
         List[float]
             Faithfulness score for each evaluated observation. Higher values
-            indicate stronger agreement between feature attribution values and
-            the effect of replacing those features with baseline values.
+            indicate that features with greater attribution values have a
+            stronger effect on the predicted class probability when replaced
+            by their baseline values.
 
         Raises
         ------
         ValueError
-            If ``base_strategy`` is not one of ``"mean"``, ``"median"`` or
+            If ``base_strategy`` is not ``"mean"``, ``"median"`` or
             ``"zero"``.
         AttributeError
-            If the model does not expose the ``predict_proba`` method required
-            by the AIX360 implementation.
+            If the model does not implement the ``predict_proba`` method
+            required by AIX360.
         """
         ctx = self.context
         p = self.params
@@ -101,9 +103,7 @@ class Faithfulness(BaseMetric):
         base = self._resolve_base(
             X_reference=ctx.X_test,
             base_values=p.get("base_values"),
-            base_strategy=p.get("base_strategy", "mean"),
-            base_func=self.base_func,
-            base_func_kwargs=self.base_func_kwargs
+            base_strategy=p.get("base_strategy", "mean")
         )
 
         scores = []
