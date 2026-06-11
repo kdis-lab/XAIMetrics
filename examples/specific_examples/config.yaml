@@ -9,6 +9,14 @@ context:
   attributions_path: "../attributions/hydraulic/IForest/LIME/hydraulic_IForest_lime_attributions.csv"
 
 metrics:
+  - name: Complexity
+    params:
+      normalise: true
+
+  - name: Sparseness
+    params:
+      normalise: true
+
   - name: Consistency
     params:
       abs: false
@@ -44,3 +52,18 @@ metrics:
       abs: true
       normalise: true
       perturb_baseline: black
+
+  - name: SensitivityN
+    params:
+      n_max_percentage: 1.0
+      features_in_step: 1
+      abs: false
+      normalise: true
+      perturb_baseline: uniform
+
+  - name: Sufficiency
+    params:
+      threshold: 0.6
+      distance_func: seuclidean
+      abs: true
+      normalise: true

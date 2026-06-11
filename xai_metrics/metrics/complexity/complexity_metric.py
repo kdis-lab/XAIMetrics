@@ -4,17 +4,29 @@ import numpy as np
 
 from xai_metrics.base import BaseMetric, MetricContext, register_metric
 
-from typing import Mapping, Any, Callable, Dict
+from typing import Mapping, Any
 
 @register_metric
 class Complexity(BaseMetric):
     """
     Quantus Complexity metric.
 
-    This metric evaluates how complex an explanation is by computing the
-    entropy of the attribution distribution. Explanations with high entropy
-    distribute importance across many features, while explanations with low
-    entropy concentrate importance on fewer features.
+    This metric measures the complexity of an explanation as the entropy of
+    the relative contribution of each feature to the total attribution
+    magnitude. Before computing the entropy, Quantus applies the absolute-value
+    operation to the attribution values and represents each feature attribution
+    as a fraction of the total attribution magnitude.
+
+    Explanations whose importance is distributed across many features tend to
+    produce higher entropy values and are therefore considered more complex.
+    Conversely, explanations that concentrate most of their importance on a
+    small number of features tend to produce lower entropy values and are
+    considered easier to interpret.
+
+    For an explanation with ``n`` features, the maximum entropy is
+    approximately ``log(n)`` when the attribution magnitude is distributed
+    uniformly across all features. The scores returned by this wrapper are not
+    divided by this maximum value.
 
     The metric is based on the Complexity metric proposed by Bhatt et al.
     (2020) and implemented in Quantus.
@@ -24,9 +36,7 @@ class Complexity(BaseMetric):
     def __init__(
         self,
         context: MetricContext,
-        params: Mapping[str, Any] | None = None,
-        normalise_func: Callable[..., np.ndarray] | None = None,
-        normalise_func_kwargs: Dict[str, Any] | None = None
+        params: Mapping[str, Any] | None = None
     ):
         """
         Parameters
@@ -43,37 +53,50 @@ class Complexity(BaseMetric):
               metric. The default value is ``True``.
 
             If ``None``, an empty dictionary is used.
-        normalise_func : Callable[..., numpy.ndarray] or None, optional
-            Custom normalisation function passed to Quantus. The function must
-            accept the attribution array as its first argument and may accept
-            additional keyword arguments from ``normalise_func_kwargs``. If
-            ``None``, Quantus uses its default normalisation behaviour when
-            ``normalise=True``.
-        normalise_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``normalise_func`` when normalisation
-            is enabled. If ``None``, no additional keyword arguments are
-            passed.
+
+        Notes
+        -----
+        This wrapper uses the default normalisation function provided by
+        Quantus when ``normalise=True``.
+
+        Quantus applies the absolute-value operation to the attribution values
+        before computing the metric. This behaviour is fixed in this wrapper
+        because the ``abs`` parameter is not exposed through ``params``.
         """
         super().__init__(context, params)
-        self.normalise_func = normalise_func
-        self.normalise_func_kwargs = normalise_func_kwargs
 
     def run(self):
         """
         Compute the Complexity metric.
 
-        The method selects the observations defined in the metric context,
-        retrieves their input data, labels and attribution values, and passes
-        them to :class:`quantus.Complexity`.
+        The method selects the observations defined in the metric context and
+        passes their input data, labels and attribution values to
+        :class:`quantus.Complexity`.
 
-        If all attribution values are negative, their absolute values are used
-        before calling Quantus.
+        Quantus flattens each attribution vector, applies the absolute-value
+        operation and converts each feature attribution into its fractional
+        contribution to the total attribution magnitude. The complexity score
+        is then computed as the entropy of this distribution.
+
+        If all attribution values are negative, this wrapper converts them to
+        their absolute values before calling Quantus. Quantus also applies its
+        own absolute-value preprocessing to the attribution values.
+
+        The model is set to training mode before the metric is evaluated,
+        following the current implementation of this wrapper. However, the
+        Complexity calculation itself depends only on the attribution values
+        and does not use model predictions.
 
         Returns
         -------
         List[float]
             Complexity score for each evaluated observation. Lower values
-            indicate less complex explanations.
+            indicate that attribution importance is concentrated on fewer
+            features, while higher values indicate that importance is more
+            widely distributed.
+
+            The scores are not normalised by the theoretical maximum entropy
+            ``log(n)``, where ``n`` is the number of features.
         """
         ctx = self.context
         p = self.params
@@ -87,9 +110,7 @@ class Complexity(BaseMetric):
         ctx.model.train()
 
         results = quantus.Complexity(
-            normalise=normalise,
-            normalise_func=self.normalise_func,
-            normalise_func_kwargs=self.normalise_func_kwargs,
+            normalise=normalise
         )(
             model=ctx.model,
             x_batch=ctx.X_test.loc[ctx.observations],
