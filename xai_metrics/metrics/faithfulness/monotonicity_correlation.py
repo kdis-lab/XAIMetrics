@@ -1,4 +1,4 @@
-# XAI_metrics/metrics/faithfulness/monotonicity_correlation.py
+# xai_metrics/metrics/faithfulness/monotonicity_correlation.py
 import quantus
 import numpy as np
 from scipy.stats import spearmanr

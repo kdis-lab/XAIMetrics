@@ -1,4 +1,4 @@
-# XAI_metrics/metrics/faithfulness/monotonicity.py
+# xai_metrics/metrics/faithfulness/monotonicity.py
 import quantus
 import numpy as np
 

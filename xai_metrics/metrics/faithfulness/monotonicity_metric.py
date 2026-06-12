@@ -1,4 +1,4 @@
-# XAI_metrics/metrics/faithfulness/monotonicity_metric.py
+# xai_metrics/metrics/faithfulness/monotonicity_metric.py
 import numpy as np
 import pandas as pd
 from aix360.metrics import monotonicity_metric

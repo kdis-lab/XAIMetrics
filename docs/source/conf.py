@@ -30,7 +30,7 @@ autodoc_mock_imports = ["quantus", "xplique"]
 napoleon_use_ivar = True
 
 templates_path = ['_templates']
-exclude_patterns = []
+exclude_patterns = ["api/modules.rst", "api/xai_metrics.rst"]
 
 
 

@@ -1,11 +1,10 @@
-# XAI_metrics/metrics/sensitivity/avg_sensitivity.py
+# xai_metrics/metrics/sensitivity/avg_sensitivity.py
 import quantus
 import numpy as np
-from quantus.functions.perturb_func import batch_uniform_noise
 
 from xai_metrics.base import BaseMetric, MetricContext, register_metric, MetricSkipped
 
-from typing import Callable, Any, Mapping, Dict
+from typing import Any, Mapping
 from xai_metrics.base.types import ExplainFunc
 
 @register_metric
@@ -13,12 +12,28 @@ class AvgSensitivity(BaseMetric):
     """
     Quantus Average Sensitivity metric.
 
-    This metric evaluates explanation robustness by repeatedly perturbing each
-    input, recomputing its explanation with ``explain_func``, and measuring the
-    average explanation change across the sampled perturbations.
+    This metric measures how much an explanation changes, on average, when
+    small random perturbations are applied to the corresponding input.
 
-    The metric is based on the Average Sensitivity metric proposed by Yeh et al.
-    (2019) and also discussed by Bhatt et al. (2020), as implemented in
+    For each observation, Quantus generates several perturbed versions of the
+    input and recomputes their explanations using ``explain_func``. The
+    sensitivity associated with each perturbation is computed as the norm of
+    the difference between the original and perturbed explanations, divided by
+    the norm of the original explanation. The final score is the average of
+    these sensitivity values over all sampled perturbations.
+
+    Lower scores indicate that the explanation changes less under small input
+    perturbations and is therefore considered more robust. Higher scores
+    indicate greater sensitivity to perturbations.
+
+    This wrapper uses the default similarity, norm, normalisation and
+    perturbation functions provided by Quantus. By default, Quantus compares
+    explanations using their element-wise difference, computes the numerator
+    and denominator with the Frobenius norm, and generates perturbations using
+    uniform noise.
+
+    The metric is based on Average Sensitivity proposed by Yeh et al. (2019)
+    and subsequently discussed by Bhatt et al. (2020), as implemented in
     Quantus.
     """
     NAME = 'AvgSensitivity'
@@ -27,14 +42,7 @@ class AvgSensitivity(BaseMetric):
         self,
         context: MetricContext,
         explain_func: ExplainFunc,
-        params: Mapping[str, Any] | None = None,
-        similarity_func: Callable[..., np.ndarray] | None = None,
-        norm_numerator: Callable[..., np.ndarray] | None = None,
-        norm_denominator: Callable[..., np.ndarray] | None = None,
-        normalise_func: Callable[..., np.ndarray] | None = None,
-        normalise_func_kwargs: Dict[str, Any] | None = None,
-        perturb_func: Callable[..., np.ndarray] | None = None,
-        perturb_func_kwargs: Dict[str, Any] | None = None,
+        params: Mapping[str, Any] | None = None
     ):
         """
         Initialize the Average Sensitivity metric.
@@ -69,41 +77,21 @@ class AvgSensitivity(BaseMetric):
               Quantus uses its default behaviour. The default value is ``None``.
 
             If ``None``, an empty dictionary is used.
-        similarity_func : Callable[..., numpy.ndarray] or None, optional
-            Function used to compare the original and perturbed attribution values.
-            The function must be compatible with the Quantus similarity interface.
-            If ``None``, Quantus uses its default difference function.
-        norm_numerator : Callable[..., numpy.ndarray] or None, optional
-            Function used to compute the norm of the explanation difference in the
-            numerator of the sensitivity ratio. If ``None``, Quantus uses its
-            default Frobenius norm.
-        norm_denominator : Callable[..., numpy.ndarray] or None, optional
-            Function used to compute the norm of the original attribution values in
-            the denominator of the sensitivity ratio. If ``None``, Quantus uses its
-            default Frobenius norm.
-        normalise_func : Callable[..., numpy.ndarray] or None, optional
-            Custom normalisation function passed to Quantus. The function must
-            accept the attribution array as its first argument and may accept
-            additional keyword arguments from ``normalise_func_kwargs``. If
-            ``None``, Quantus uses its default normalisation behaviour when
-            ``normalise=True``.
-        normalise_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``normalise_func`` when normalisation is
-            enabled. If ``None``, no additional keyword arguments are passed.
-        perturb_func : Callable[..., numpy.ndarray] or None, optional
-            Perturbation function passed to Quantus. The function must be
-            compatible with Quantus perturbation functions, accepting at least an
-            input array and feature indices, and returning the perturbed array. If
-            ``None``, ``quantus.functions.perturb_func.batch_uniform_noise`` is
-            used.
-        perturb_func_kwargs : Dict[str, Any] or None, optional
-            Keyword arguments passed to ``perturb_func``. If ``None``, no
-            additional keyword arguments are passed.
+
+        Notes
+        -----
+        The wrapper uses the default functions provided by Quantus:
+
+        - element-wise difference as the explanation comparison function;
+        - Frobenius norm for the numerator and denominator;
+        - the default Quantus normalisation function when
+          ``normalise=True``;
+        - uniform-noise perturbations.
 
         Raises
         ------
         ValueError
-            If ``explain_func`` is not provided.
+            If ``explain_func`` is ``None``.
         """
         super().__init__(context, params)
 
@@ -111,44 +99,42 @@ class AvgSensitivity(BaseMetric):
             raise ValueError("AvgSensitivity requires 'explain_func' to be provided via dependencies.")
 
         self.explain_func = explain_func
-
-        self.similarity_func = similarity_func
-        self.norm_numerator = norm_numerator
-        self.norm_denominator = norm_denominator
-        self.normalise_func = normalise_func
-        self.normalise_func_kwargs = normalise_func_kwargs
-        self.perturb_func = perturb_func or batch_uniform_noise
-        self.perturb_func_kwargs = perturb_func_kwargs
     
     def run(self):
         """
         Compute the Average Sensitivity metric.
 
-        The method selects the observations defined in the metric context,
-        retrieves their input data, labels and attribution values, and passes them
-        to :class:`quantus.AvgSensitivity`. The model is set to training mode before
-        computing the metric, and ``ctx.device`` is forwarded to Quantus when
-        available.
+        The method selects the observations defined in the metric context and
+        passes their inputs, target labels, original attributions and
+        explanation function to :class:`quantus.AvgSensitivity`.
+
+        Quantus repeatedly perturbs each input, recomputes its explanation and
+        measures the relative change with respect to the original explanation.
+        The score returned for each observation is the average sensitivity
+        across the configured number of perturbations.
+
+        If every attribution value is negative, their treatment depends on the
+        ``abs`` parameter. When ``abs=True``, their absolute values are passed
+        to Quantus. When ``abs=False``, the metric is skipped.
+
+        The model is set to training mode before evaluation, following the
+        current behaviour of this wrapper. The device stored in the metric
+        context is forwarded to Quantus.
 
         Returns
         -------
-        List[float]
-            Average Sensitivity score for each evaluated observation. Lower values
-            indicate more robust explanations under random input perturbations.
+        list[float]
+            Average Sensitivity score for each evaluated observation. Lower
+            values indicate explanations that are more robust to small random
+            input perturbations.
 
         Raises
         ------
         MetricSkipped
-            If all attribution values are negative, since the metric is skipped for
-            that attribution configuration.
+            If every attribution value is negative and ``abs`` is ``False``.
         """
         ctx = self.context
         p = self.params
-
-        if np.all(ctx.attributions < 0.0):
-            raise MetricSkipped(
-                f"{self.NAME} skipped: all attributions are negative."
-            )
 
         nr_samples = int(p.get("nr_samples", 200))
         abs_ = bool(p.get("abs", False))
@@ -158,26 +144,28 @@ class AvgSensitivity(BaseMetric):
         if upper_bound is not None:
             upper_bound = float(upper_bound)
 
+        attributions = ctx.attributions
+        if np.all(attributions < 0.0):
+            if not abs_:
+                raise MetricSkipped(
+                    f"{self.NAME} skipped: all attributions are negative."
+                )
+            else:
+                attributions = np.abs(attributions)
+
         ctx.model.train()
 
         results = quantus.AvgSensitivity(
-            similarity_func=self.similarity_func,
-            norm_numerator=self.norm_numerator,
-            norm_denominator=self.norm_denominator,
             nr_samples=nr_samples,
             abs=abs_,
             normalise=normalise,
-            normalise_func=self.normalise_func,
-            normalise_func_kwargs=self.normalise_func_kwargs,
-            perturb_func=self.perturb_func,
             lower_bound=lower_bound,
             upper_bound=upper_bound,
-            perturb_func_kwargs=self.perturb_func_kwargs
         )(
             model=ctx.model,
             x_batch=ctx.X_test.loc[ctx.observations].to_numpy(copy=True),
             y_batch=ctx.y_test.loc[ctx.observations].to_numpy(copy=True),
-            a_batch=ctx.attributions,
+            a_batch=attributions,
             explain_func=self.explain_func,
             device=ctx.device
         )

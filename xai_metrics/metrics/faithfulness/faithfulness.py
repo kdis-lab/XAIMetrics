@@ -1,4 +1,4 @@
-# XAI_metrics/metrics/faithfulness/faithfulness.py
+# xai_metrics/metrics/faithfulness/faithfulness.py
 import numpy as np
 import pandas as pd
 from aix360.metrics import faithfulness_metric

@@ -1,4 +1,4 @@
-# XAI_metrics/metrics/complexity/sparseness.py
+# xai_metrics/metrics/complexity/sparseness.py
 import quantus
 import numpy as np
 

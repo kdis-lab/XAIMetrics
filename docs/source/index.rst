@@ -1,18 +1,12 @@
-.. XAI_metrics documentation master file, created by
-   sphinx-quickstart on Fri May 22 09:46:02 2026.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 XAI_metrics documentation
 =========================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
-
-
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: API
 
-   api/modules
+   api/xai_metrics.base
+   api/xai_metrics.config
+   api/xai_metrics.metrics
+   api/xai_metrics.reporting
+   api/xai_metrics.runner

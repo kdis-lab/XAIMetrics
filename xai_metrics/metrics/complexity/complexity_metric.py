@@ -1,4 +1,4 @@
-# XAI_metrics/metrics/complexity/complexity_metric.py
+# xai_metrics/metrics/complexity/complexity_metric.py
 import quantus
 import numpy as np
 

@@ -67,3 +67,10 @@ metrics:
       distance_func: seuclidean
       abs: true
       normalise: true
+
+  - name: AvgSensitivity
+    params:
+      nr_samples: 200
+      abs: false
+      normalise: false
+      lower_bound: 0.2

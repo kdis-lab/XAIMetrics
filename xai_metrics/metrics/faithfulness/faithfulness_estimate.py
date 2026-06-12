@@ -1,4 +1,4 @@
-# XAI_metrics/metrics/faithfulness/faithfulness_estimate.py
+# xai_metrics/metrics/faithfulness/faithfulness_estimate.py
 import quantus
 import numpy as np
 
