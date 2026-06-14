@@ -74,3 +74,18 @@ metrics:
       abs: false
       normalise: false
       lower_bound: 0.2
+
+  - name: LocalLipschitzEstimate
+    params:
+      nr_samples: 200
+      abs: false
+      normalise: true
+      perturb_mean: 0.0
+      perturb_std: 0.1
+
+  - name: MaxSensitivity
+    params:
+      nr_samples: 200
+      abs: false
+      normalise: false
+      lower_bound: 0.2

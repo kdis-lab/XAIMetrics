@@ -17,15 +17,9 @@ class MonotonicityMetric(BaseMetric):
     predicted class increases monotonically as features are progressively
     restored from a baseline input.
 
-    For each observation, the wrapped AIX360 implementation first determines
-    the class predicted for the complete original input. It then creates an
-    input from the baseline vector and restores the original feature values
-    cumulatively, following the increasing order of their attribution values.
-    The probability assigned to the original predicted class is evaluated
-    after each feature is restored.
-
-    The metric returns ``True`` when the resulting sequence of probabilities is
-    monotonically non-decreasing. Otherwise, it returns ``False``.
+    For each observation, features are restored in increasing order of their
+    attribution values. The metric returns ``True`` when the resulting sequence
+    of predicted-class probabilities is monotonically non-decreasing.
 
     The wrapped AIX360 implementation requires a classification model exposing
     a ``predict_proba`` method.
@@ -70,24 +64,21 @@ class MonotonicityMetric(BaseMetric):
         """
         Compute the Monotonicity metric.
 
-        The method selects the observations defined in the metric context,
-        resolves a common baseline vector from the complete test dataset and
-        evaluates each selected observation independently using
+        The method resolves a common baseline vector from the complete test
+        dataset and evaluates each selected observation independently using
         :func:`aix360.metrics.monotonicity_metric`.
 
         For each observation, AIX360 determines the class predicted for the
-        complete original input. Starting from the baseline vector, it then
-        restores features cumulatively in increasing order of attribution
-        value. After each feature is restored, it obtains the probability
-        assigned to the original predicted class and checks whether the
-        resulting probability sequence is monotonically non-decreasing.
+        original input. Starting from the baseline, it restores features
+        cumulatively in increasing order of attribution value and evaluates the
+        probability assigned to that class after each restoration.
 
         Returns
         -------
         List[bool]
             Monotonicity result for each evaluated observation. ``True``
-            indicates that the probability assigned to the original predicted
-            class never decreases as features are progressively restored.
+            indicates that the predicted-class probability never decreases as
+            features are progressively restored.
 
         Raises
         ------
@@ -130,33 +121,30 @@ class MonotonicityMetric(BaseMetric):
         """
         Resolve the baseline vector used by the Monotonicity metric.
 
-        Explicit baseline values are used when provided. Otherwise, a single
-        baseline vector is computed feature-wise from the reference dataset
-        using the selected strategy.
+        Explicit baseline values are used when provided. Otherwise, the
+        baseline is computed feature-wise from the reference dataset using the
+        selected strategy.
 
         Parameters
         ----------
         X_reference : pandas.DataFrame or numpy.ndarray
-            Reference dataset used to compute the baseline when
-            ``base_values`` is not provided. Rows represent observations and
-            columns represent input features.
+            Reference dataset used to compute the baseline. Rows represent
+            observations and columns represent input features.
         base_values : array-like or None, optional
-            Explicit baseline values containing one value per input feature.
-            If provided, they are converted to a floating-point NumPy array and
-            returned without applying ``base_strategy``.
+            Explicit baseline containing one value per feature. If provided,
+            it is converted to a floating-point NumPy array and returned
+            directly.
         base_strategy : str, default="mean"
-            Strategy used to compute the baseline from ``X_reference``.
-            Supported values are:
+            Strategy used when ``base_values`` is not provided:
 
             - ``"mean"``: feature-wise mean of the reference dataset.
             - ``"median"``: feature-wise median of the reference dataset.
-            - ``"zero"``: vector of zeros with one value per feature.
+            - ``"zero"``: vector of zeros.
 
         Returns
         -------
         numpy.ndarray
-            One-dimensional floating-point array containing one baseline value
-            per input feature.
+            One-dimensional baseline array containing one value per feature.
 
         Raises
         ------

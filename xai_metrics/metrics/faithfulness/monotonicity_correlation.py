@@ -13,22 +13,17 @@ class MonotonicityCorrelation(BaseMetric):
     Quantus Monotonicity Correlation metric.
 
     This metric evaluates whether feature attribution values are monotonically
-    related to the uncertainty produced in the target model output when the
-    corresponding features are perturbed.
+    related to the uncertainty caused by perturbing the corresponding features.
+    Features are grouped in increasing order of attribution, and each group is
+    perturbed repeatedly to estimate its effect on the target model output. The
+    score is the Spearman correlation between the attribution sums and the
+    estimated output variations.
 
-    For each observation, features are ordered by increasing attribution value
-    and divided into groups. Each group is perturbed repeatedly, and its output
-    uncertainty is estimated from the mean squared change in the target model
-    output relative to the original output magnitude. The metric then computes
-    the Spearman correlation between the summed attribution values of the
-    feature groups and their corresponding uncertainty estimates.
+    This wrapper uses a safe Spearman correlation that returns ``0.0`` when
+    either input vector has zero variance.
 
-    This wrapper uses a safe Spearman correlation implementation that returns
-    ``0.0`` when either of the compared vectors has zero variance, avoiding
-    undefined correlation values.
-
-    Higher scores indicate a stronger positive monotonic relationship between
-    feature importance and the uncertainty caused by perturbing those features.
+    Higher scores indicate a stronger positive relationship between feature
+    importance and the uncertainty caused by perturbing those features.
 
     The metric is based on the Monotonicity Correlation metric proposed by
     Nguyen and Rodríguez Martínez (2020) and implemented in Quantus.
@@ -79,9 +74,9 @@ class MonotonicityCorrelation(BaseMetric):
 
         Notes
         -----
-        This wrapper uses :meth:`_safe_spearman` as the similarity function.
-        The default normalisation and perturbation functions provided by
-        Quantus are used.
+        The wrapper uses :meth:`_safe_spearman` as the similarity function and
+        the default normalisation and perturbation functions provided by
+        Quantus.
         """
         super().__init__(context, params)
 
@@ -94,32 +89,26 @@ class MonotonicityCorrelation(BaseMetric):
         **kwargs: Any
     ) -> float | np.ndarray:
         """
-        Compute Spearman correlation safely.
-
-        This helper avoids undefined Spearman correlations when one of the input
-        vectors has zero variance. In that case, it returns ``0.0`` instead of
-        ``nan``.
+        Compute the Spearman correlation while handling constant inputs.
 
         Parameters
         ----------
         a : Any
-            First input array or batch of arrays.
+            First vector or batch of vectors.
         b : Any
-            Second input array or batch of arrays.
+            Second vector or batch of vectors.
         batched : bool, default=False
-            Whether ``a`` and ``b`` contain batches of vectors. If ``True``, the
-            Spearman correlation is computed independently for each pair of
-            vectors.
+            Whether to compute one correlation for each pair of vectors in
+            ``a`` and ``b``.
         **kwargs : Any
-            Additional keyword arguments. These are accepted for compatibility
-            with Quantus similarity functions and are not used.
+            Additional unused arguments accepted for compatibility with
+            Quantus.
 
         Returns
         -------
         float or numpy.ndarray
-            Spearman correlation score. If ``batched=False``, a single float is
-            returned. If ``batched=True``, a NumPy array with one score per input
-            pair is returned.
+            Spearman correlation coefficient. A value of ``0.0`` is returned
+            when either compared vector has zero variance.
         """
         a = np.asarray(a, dtype=float)
         b = np.asarray(b, dtype=float)
@@ -142,30 +131,22 @@ class MonotonicityCorrelation(BaseMetric):
         """
         Compute the Monotonicity Correlation metric.
 
-        The method selects the observations defined in the metric context and
-        passes their input data, target labels and attribution values to
-        :class:`quantus.MonotonicityCorrelation`.
+        The method passes the selected inputs, labels and attribution values to
+        :class:`quantus.MonotonicityCorrelation`. Quantus perturbs groups of
+        features repeatedly, estimates their relative effect on the target
+        output and compares those estimates with the corresponding attribution
+        sums using :meth:`_safe_spearman`.
 
-        For each observation, Quantus orders features by increasing attribution
-        value and perturbs each feature group ``nr_samples`` times. It estimates
-        the uncertainty associated with each group as the mean squared change
-        in the target model output, scaled relative to the magnitude of the
-        original output. The internal safe Spearman function then compares
-        these uncertainty estimates with the corresponding attribution sums.
-
-        If all attribution values are negative, their treatment depends on the
-        ``abs`` parameter. Their absolute values are used when ``abs=True``;
-        otherwise, the metric is skipped.
-
-        The model is set to evaluation mode before the metric is computed.
+        If all attribution values are negative, their absolute values are used
+        when ``abs=True``; otherwise, the metric is skipped. The model is set to
+        evaluation mode before the computation.
 
         Returns
         -------
         List[float]
             Monotonicity Correlation score for each evaluated observation.
-            Higher values indicate a stronger positive monotonic relationship
-            between the attribution values and the uncertainty caused by
-            perturbing the corresponding feature groups.
+            Higher values indicate a stronger positive relationship between
+            attribution importance and output variation.
 
         Raises
         ------

@@ -14,20 +14,14 @@ class Faithfulness(BaseMetric):
     AIX360 Faithfulness metric.
 
     This metric evaluates whether feature attribution values reflect the
-    influence of the corresponding features on the model prediction.
+    influence of the corresponding features on the model prediction. For each
+    observation, every feature is individually replaced with a baseline value
+    and the probability assigned to the original predicted class is recorded.
+    The score is the negative Pearson correlation between the attribution
+    values and these probabilities.
 
-    For each observation, the wrapped AIX360 implementation first determines
-    the class predicted by the model. It then replaces each feature
-    individually with its corresponding baseline value and obtains the
-    probability assigned to the original predicted class. Finally, it computes
-    the negative Pearson correlation between the attribution values and the
-    probabilities obtained after feature replacement.
-
-    A high positive score indicates that features with larger attribution
-    values tend to produce larger decreases in the predicted class probability
-    when replaced by their baseline values. Conversely, a low or negative score
-    indicates weak or inverse agreement between the assigned importance and the
-    influence of the features on the prediction.
+    Higher scores indicate stronger agreement between feature importance and
+    the effect of replacing features with their baseline values.
 
     The wrapped AIX360 implementation requires a classification model exposing
     a ``predict_proba`` method.
@@ -72,24 +66,22 @@ class Faithfulness(BaseMetric):
         """
         Compute the Faithfulness metric.
 
-        The method selects the observations defined in the metric context,
-        resolves a common baseline vector from the complete test dataset and
-        evaluates each selected observation independently using
+        The method resolves a common baseline vector from the complete test
+        dataset and evaluates each selected observation independently using
         :func:`aix360.metrics.faithfulness_metric`.
 
-        For each observation, AIX360 determines the originally predicted class.
-        Each feature is then replaced individually with its baseline value, and
-        the probability assigned to that class is recorded. The score is the
-        negative Pearson correlation between the attribution values and these
-        perturbed-input probabilities.
+        For each observation, AIX360 determines the predicted class, replaces
+        each feature individually with its baseline value and records the
+        resulting probability for that class. The returned score is the
+        negative Pearson correlation between these probabilities and the
+        attribution values.
 
         Returns
         -------
         List[float]
-            Faithfulness score for each evaluated observation. Higher positive
-            values indicate stronger agreement between feature importance and
-            the decrease in predicted class probability caused by replacing
-            individual features.
+            Faithfulness score for each evaluated observation. Higher values
+            indicate that features with larger attribution values produce
+            greater decreases in the predicted class probability when replaced.
 
         Raises
         ------
@@ -102,9 +94,8 @@ class Faithfulness(BaseMetric):
 
         Notes
         -----
-        The underlying Pearson correlation may be undefined and return ``nan``
-        when the attribution values or the perturbed-input probabilities have
-        zero variance.
+        The score may be ``nan`` when the attribution values or the probabilities
+        obtained after feature replacement have zero variance.
         """
         ctx = self.context
         p = self.params
@@ -138,33 +129,27 @@ class Faithfulness(BaseMetric):
         """
         Resolve the baseline vector used by the Faithfulness metric.
 
-        Explicit baseline values are used when provided. Otherwise, a single
-        baseline vector is computed feature-wise from the reference dataset
-        using the selected strategy.
+        Explicit baseline values are used when provided. Otherwise, one
+        baseline value per feature is computed from the reference dataset
+        according to the selected strategy.
 
         Parameters
         ----------
         X_reference : pandas.DataFrame or numpy.ndarray
-            Reference dataset used to compute the baseline when
-            ``base_values`` is not provided. Rows represent observations and
-            columns represent input features.
+            Reference dataset used to compute the baseline. Rows represent
+            observations and columns represent features.
         base_values : array-like or None, optional
-            Explicit baseline values containing one value per input feature.
-            If provided, they are converted to a floating-point NumPy array and
-            returned without applying ``base_strategy``.
+            Explicit baseline values containing one value per feature. If
+            provided, ``base_strategy`` is ignored.
         base_strategy : str, default="mean"
-            Strategy used to compute the baseline from ``X_reference``.
-            Supported values are:
-
-            - ``"mean"``: feature-wise mean of the reference dataset.
-            - ``"median"``: feature-wise median of the reference dataset.
-            - ``"zero"``: vector of zeros with one value per feature.
+            Strategy used to compute the baseline. Supported values are
+            ``"mean"``, ``"median"`` and ``"zero"``.
 
         Returns
         -------
         numpy.ndarray
             One-dimensional floating-point array containing one baseline value
-            per input feature.
+            per feature.
 
         Raises
         ------

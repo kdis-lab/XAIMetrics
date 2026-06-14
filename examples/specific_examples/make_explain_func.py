@@ -1,4 +1,4 @@
-# examples/specific_examples/make_explan_func.py
+# examples/specific_examples/make_explain_func.py
 import numpy as np
 import pandas as pd
 import torch

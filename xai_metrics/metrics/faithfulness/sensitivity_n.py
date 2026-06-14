@@ -11,22 +11,18 @@ class SensitivityN(BaseMetric):
     """
     Quantus Sensitivity-N metric.
 
-    This metric evaluates whether the attribution values assigned to groups of
-    features agree with the variation in the target model output produced when
-    those features are perturbed.
+    This metric evaluates the agreement between feature attribution values and
+    the variation in the target model output caused by perturbing the
+    corresponding features.
 
-    For each observation, features are ordered by decreasing attribution value
-    and progressively perturbed in groups of size ``features_in_step``. At each
-    perturbation step, Quantus records the change in the target output and the
-    attribution values associated with the processed feature group. Pearson
-    correlation is then used to measure the agreement between both quantities
-    for the evaluated perturbation steps.
+    Quantus orders features by decreasing attribution value and progressively
+    perturbs them in groups. At each step, it compares the target-output change
+    with the attribution sum of the processed feature group using Pearson
+    correlation across the evaluated observations.
 
-    The number of evaluated steps is limited by ``n_max_percentage``, which
-    determines the maximum proportion of input features considered by the
-    experiment. Higher correlation values indicate stronger agreement between
-    the attribution values and the effect of the corresponding perturbations
-    on the model output.
+    The number of perturbation steps is limited by ``n_max_percentage``.
+    Higher correlation values indicate stronger agreement between the
+    explanation and the model behaviour.
 
     The metric is based on the Sensitivity-N test proposed by Ancona et al.
     (2018) and implemented in Quantus.
@@ -74,13 +70,9 @@ class SensitivityN(BaseMetric):
 
         Notes
         -----
-        This wrapper uses the default Pearson correlation, attribution
-        normalisation and baseline-replacement functions provided by Quantus.
-
-        Quantus enables result aggregation by default for this metric.
-        Therefore, the returned result may contain an aggregate of the
-        correlations obtained for the evaluated perturbation steps rather than
-        one independent score per input observation.
+        The wrapper uses the default Pearson correlation, normalisation and
+        baseline-replacement functions provided by Quantus. Quantus aggregates
+        the step-wise correlations by default.
         """
         super().__init__(context, params)
 
@@ -89,30 +81,24 @@ class SensitivityN(BaseMetric):
         """
         Compute the Sensitivity-N metric.
 
-        The method selects the observations defined in the metric context and
-        passes their input data, target labels and attribution values to
-        :class:`quantus.SensitivityN`.
+        The method passes the selected input data, target labels and attribution
+        values to :class:`quantus.SensitivityN`. Quantus progressively perturbs
+        feature groups ordered by decreasing attribution value and computes the
+        Pearson correlation between their attribution sums and the resulting
+        target-output changes.
 
-        Quantus orders the features by decreasing attribution value and
-        progressively perturbs them in groups of size ``features_in_step``. It
-        compares the changes in the target model output with the corresponding
-        attribution values using Pearson correlation. Only the perturbation
-        steps covered by ``n_max_percentage`` are included.
-
-        If all attribution values are negative, their treatment depends on the
-        ``abs`` parameter. Their absolute values are used when ``abs=True``;
-        otherwise, the metric is skipped.
-
-        The model is set to evaluation mode before the metric is computed.
+        Only the perturbation steps covered by ``n_max_percentage`` are
+        evaluated. If all attribution values are negative, their absolute
+        values are used when ``abs=True``; otherwise, the metric is skipped.
+        The model is set to evaluation mode before the computation.
 
         Returns
         -------
         List[float]
             Sensitivity-N result returned by Quantus. Higher values indicate
             stronger agreement between attribution values and target-output
-            changes caused by perturbing the corresponding features. With the
-            default Quantus configuration, the correlations obtained across
-            the evaluated perturbation steps are aggregated.
+            changes. With the default Quantus configuration, the step-wise
+            correlations are aggregated.
 
         Raises
         ------

@@ -11,22 +11,18 @@ class Complexity(BaseMetric):
     """
     Quantus Complexity metric.
 
-    This metric measures the complexity of an explanation as the entropy of
-    the relative contribution of each feature to the total attribution
-    magnitude. Before computing the entropy, Quantus applies the absolute-value
-    operation to the attribution values and represents each feature attribution
-    as a fraction of the total attribution magnitude.
+    This metric measures explanation complexity using the entropy of the
+    attribution distribution. Quantus takes the absolute attribution values
+    and expresses each feature contribution as a fraction of the total
+    attribution magnitude.
 
-    Explanations whose importance is distributed across many features tend to
-    produce higher entropy values and are therefore considered more complex.
-    Conversely, explanations that concentrate most of their importance on a
-    small number of features tend to produce lower entropy values and are
-    considered easier to interpret.
+    Higher scores indicate that importance is distributed across more features
+    and therefore corresponds to more complex explanations. Lower scores
+    indicate that importance is concentrated on fewer features.
 
     For an explanation with ``n`` features, the maximum entropy is
-    approximately ``log(n)`` when the attribution magnitude is distributed
-    uniformly across all features. The scores returned by this wrapper are not
-    divided by this maximum value.
+    approximately ``log(n)`` when importance is distributed uniformly. The
+    scores returned by this wrapper are not divided by this maximum value.
 
     The metric is based on the Complexity metric proposed by Bhatt et al.
     (2020) and implemented in Quantus.
@@ -56,12 +52,10 @@ class Complexity(BaseMetric):
 
         Notes
         -----
-        This wrapper uses the default normalisation function provided by
-        Quantus when ``normalise=True``.
-
-        Quantus applies the absolute-value operation to the attribution values
-        before computing the metric. This behaviour is fixed in this wrapper
-        because the ``abs`` parameter is not exposed through ``params``.
+        The wrapper uses the default normalisation function provided by
+        Quantus. Quantus also applies the absolute-value operation to the
+        attributions because its ``abs`` parameter is not exposed by this
+        wrapper and defaults to ``True``.
         """
         super().__init__(context, params)
 
@@ -69,34 +63,23 @@ class Complexity(BaseMetric):
         """
         Compute the Complexity metric.
 
-        The method selects the observations defined in the metric context and
-        passes their input data, labels and attribution values to
-        :class:`quantus.Complexity`.
-
-        Quantus flattens each attribution vector, applies the absolute-value
-        operation and converts each feature attribution into its fractional
-        contribution to the total attribution magnitude. The complexity score
-        is then computed as the entropy of this distribution.
+        The method passes the selected input data, labels and attribution
+        values to :class:`quantus.Complexity`. Quantus flattens each explanation,
+        takes its absolute values and computes the entropy of the fractional
+        feature contributions.
 
         If all attribution values are negative, this wrapper converts them to
-        their absolute values before calling Quantus. Quantus also applies its
-        own absolute-value preprocessing to the attribution values.
-
-        The model is set to training mode before the metric is evaluated,
-        following the current implementation of this wrapper. However, the
-        Complexity calculation itself depends only on the attribution values
-        and does not use model predictions.
+        absolute values before calling Quantus. The model is set to training
+        mode following the current wrapper implementation, although the metric
+        itself depends only on the attribution values.
 
         Returns
         -------
         List[float]
             Complexity score for each evaluated observation. Lower values
-            indicate that attribution importance is concentrated on fewer
-            features, while higher values indicate that importance is more
-            widely distributed.
-
-            The scores are not normalised by the theoretical maximum entropy
-            ``log(n)``, where ``n`` is the number of features.
+            indicate that importance is concentrated on fewer features, while
+            higher values indicate that it is more widely distributed. Scores
+            are not normalised by the theoretical maximum ``log(n)``.
         """
         ctx = self.context
         p = self.params

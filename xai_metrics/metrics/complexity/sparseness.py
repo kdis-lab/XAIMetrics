@@ -12,19 +12,12 @@ class Sparseness(BaseMetric):
     Quantus Sparseness metric.
 
     This metric measures how concentrated the attribution magnitude is across
-    the input features. Quantus applies the absolute-value operation to the
-    attribution values and computes the Gini index of the resulting attribution
-    vector.
+    the input features using the Gini index. Quantus applies the absolute-value
+    operation to the attributions before computing the score.
 
-    Explanations that assign most of their attribution magnitude to a small
-    subset of features obtain higher scores and are considered sparser.
-    Conversely, explanations that distribute attribution magnitude more
-    uniformly across the features obtain lower scores.
-
-    A score close to ``0`` indicates that attribution magnitude is distributed
-    relatively uniformly across the features. Higher values indicate greater
-    inequality in the attribution distribution and, therefore, a sparser
-    explanation.
+    Higher scores indicate that importance is concentrated on a smaller subset
+    of features and therefore correspond to sparser explanations. Lower scores
+    indicate a more uniform distribution of attribution magnitude.
 
     The metric is based on the Sparseness metric proposed by Chalasani et al.
     (2020) and implemented in Quantus.
@@ -54,12 +47,10 @@ class Sparseness(BaseMetric):
 
         Notes
         -----
-        This wrapper uses the default normalisation function provided by
-        Quantus when ``normalise=True``.
-
-        Quantus applies the absolute-value operation to the attribution values
-        before computing the metric. This behaviour is fixed in this wrapper
-        because the ``abs`` parameter is not exposed through ``params``.
+        The wrapper uses the default normalisation function provided by
+        Quantus. Quantus applies the absolute-value operation to the
+        attributions because its ``abs`` parameter is not exposed by this
+        wrapper and defaults to ``True``.
         """
         super().__init__(context, params)
 
@@ -67,32 +58,22 @@ class Sparseness(BaseMetric):
         """
         Compute the Sparseness metric.
 
-        The method selects the observations defined in the metric context and
-        passes their input data, labels and attribution values to
-        :class:`quantus.Sparseness`.
-
-        Quantus flattens each attribution vector, applies the absolute-value
-        operation, sorts the resulting attribution magnitudes and computes
-        their Gini index. The calculation depends only on the attribution
-        values; the input data, labels and model are passed as part of the
-        standard Quantus metric interface.
+        The method passes the selected input data, labels and attribution
+        values to :class:`quantus.Sparseness`. Quantus flattens each
+        explanation, takes the absolute attribution values, sorts them and
+        computes their Gini index.
 
         If all attribution values are negative, this wrapper converts them to
-        their absolute values before calling Quantus. Quantus also applies its
-        own absolute-value preprocessing, including when the attribution array
-        contains a mixture of positive and negative values.
-
-        The model is set to training mode before the metric is evaluated,
-        following the current implementation of this wrapper. However, the
-        Sparseness calculation itself does not use model predictions.
+        absolute values before calling Quantus. The model is set to training
+        mode following the current wrapper implementation, although the metric
+        itself depends only on the attribution values.
 
         Returns
         -------
         List[float]
             Sparseness score for each evaluated observation. Higher values
             indicate that attribution magnitude is concentrated on fewer
-            features, while lower values indicate a more uniform attribution
-            distribution.
+            features, while lower values indicate a more uniform distribution.
         """
         ctx = self.context
         p = self.params

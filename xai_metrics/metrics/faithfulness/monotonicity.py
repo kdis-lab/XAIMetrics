@@ -11,21 +11,13 @@ class Monotonicity(BaseMetric):
     """
     Quantus Monotonicity metric.
 
-    This metric evaluates whether the target model output evolves
-    monotonically as feature groups are progressively introduced according to
-    their attribution values.
+    This metric evaluates whether the target model output increases
+    monotonically as features are progressively introduced from a baseline
+    input. Features are processed in increasing order of attribution value and
+    may be introduced individually or in groups.
 
-    For each observation, features are ordered by increasing attribution value.
-    Quantus starts from an input defined by the selected baseline and processes
-    the features in groups of size ``features_in_step``. After each group is
-    introduced, the model output associated with the target label is evaluated.
-    The explanation satisfies the monotonicity criterion when the resulting
-    sequence of target outputs is monotonically non-decreasing.
-
-    The metric returns one Boolean value per observation. ``True`` indicates
-    that introducing successive feature groups never decreases the target
-    model output, whereas ``False`` indicates that the monotonicity condition
-    is violated at least once.
+    For each observation, the metric returns ``True`` when the sequence of
+    target outputs is monotonically non-decreasing and ``False`` otherwise.
 
     The metric is based on the Monotonicity metric proposed by Arya et al.
     (2019) and the monotonic attribute functions described by Luss et al.
@@ -69,7 +61,7 @@ class Monotonicity(BaseMetric):
 
         Notes
         -----
-        This wrapper uses the default normalisation and perturbation functions
+        The wrapper uses the default normalisation and perturbation functions
         provided by Quantus.
         """
         super().__init__(context, params)
@@ -79,28 +71,22 @@ class Monotonicity(BaseMetric):
         """
         Compute the Monotonicity metric.
 
-        The method selects the observations defined in the metric context and
-        passes their input data, target labels and attribution values to
-        :class:`quantus.Monotonicity`.
+        The method passes the selected input data, target labels and attribution
+        values to :class:`quantus.Monotonicity`. For each observation, Quantus
+        starts from a baseline input, processes features in increasing order of
+        attribution value and evaluates the target model output after each
+        group is introduced.
 
-        For each observation, Quantus orders the features by increasing
-        attribution value and processes them in groups of size
-        ``features_in_step`` starting from a baseline input. The target model
-        output is evaluated after each step. The metric returns ``True`` when
-        the resulting sequence is monotonically non-decreasing.
-
-        If all attribution values are negative, their treatment depends on the
-        ``abs`` parameter. Their absolute values are used when ``abs=True``;
-        otherwise, the metric is skipped.
-
-        The model is set to evaluation mode before the metric is computed.
+        If all attribution values are negative, their absolute values are used
+        when ``abs=True``; otherwise, the metric is skipped. The model is set to
+        evaluation mode before the computation.
 
         Returns
         -------
         List[bool]
             Monotonicity result for each evaluated observation. ``True``
-            indicates that the target model output is monotonically
-            non-decreasing across the feature-processing steps.
+            indicates that the target output is monotonically non-decreasing
+            across the feature-introduction steps.
 
         Raises
         ------

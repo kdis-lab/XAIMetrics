@@ -12,29 +12,21 @@ class AvgSensitivity(BaseMetric):
     """
     Quantus Average Sensitivity metric.
 
-    This metric measures how much an explanation changes, on average, when
-    small random perturbations are applied to the corresponding input.
+    This metric evaluates explanation robustness by measuring the average
+    relative change in an explanation when small random perturbations are
+    applied to its input. For each observation, Quantus generates several
+    perturbed inputs, recomputes their explanations using ``explain_func`` and
+    compares them with the original explanation.
 
-    For each observation, Quantus generates several perturbed versions of the
-    input and recomputes their explanations using ``explain_func``. The
-    sensitivity associated with each perturbation is computed as the norm of
-    the difference between the original and perturbed explanations, divided by
-    the norm of the original explanation. The final score is the average of
-    these sensitivity values over all sampled perturbations.
+    The sensitivity of each perturbation is computed from the norm of the
+    explanation difference relative to the norm of the original explanation.
+    The final score is the average over all sampled perturbations.
 
-    Lower scores indicate that the explanation changes less under small input
-    perturbations and is therefore considered more robust. Higher scores
-    indicate greater sensitivity to perturbations.
-
-    This wrapper uses the default similarity, norm, normalisation and
-    perturbation functions provided by Quantus. By default, Quantus compares
-    explanations using their element-wise difference, computes the numerator
-    and denominator with the Frobenius norm, and generates perturbations using
-    uniform noise.
+    Lower scores indicate more robust explanations, whereas higher scores
+    indicate greater sensitivity to small input changes.
 
     The metric is based on Average Sensitivity proposed by Yeh et al. (2019)
-    and subsequently discussed by Bhatt et al. (2020), as implemented in
-    Quantus.
+    and discussed by Bhatt et al. (2020), as implemented in Quantus.
     """
     NAME = 'AvgSensitivity'
 
@@ -81,17 +73,14 @@ class AvgSensitivity(BaseMetric):
         Notes
         -----
         The wrapper uses the default functions provided by Quantus:
-
-        - element-wise difference as the explanation comparison function;
-        - Frobenius norm for the numerator and denominator;
-        - the default Quantus normalisation function when
-          ``normalise=True``;
-        - uniform-noise perturbations.
+        element-wise difference for comparing explanations, the Frobenius norm
+        for the numerator and denominator, the default normalisation function
+        and uniform-noise perturbations.
 
         Raises
         ------
         ValueError
-            If ``explain_func`` is ``None``.
+            If ``explain_func`` is not provided.
         """
         super().__init__(context, params)
 
@@ -104,34 +93,27 @@ class AvgSensitivity(BaseMetric):
         """
         Compute the Average Sensitivity metric.
 
-        The method selects the observations defined in the metric context and
-        passes their inputs, target labels, original attributions and
-        explanation function to :class:`quantus.AvgSensitivity`.
+        The method passes the selected inputs, target labels, original
+        attributions and explanation function to
+        :class:`quantus.AvgSensitivity`. Quantus repeatedly perturbs each input,
+        recomputes its explanation and averages the relative explanation
+        changes across the configured number of samples.
 
-        Quantus repeatedly perturbs each input, recomputes its explanation and
-        measures the relative change with respect to the original explanation.
-        The score returned for each observation is the average sensitivity
-        across the configured number of perturbations.
-
-        If every attribution value is negative, their treatment depends on the
-        ``abs`` parameter. When ``abs=True``, their absolute values are passed
-        to Quantus. When ``abs=False``, the metric is skipped.
-
-        The model is set to training mode before evaluation, following the
-        current behaviour of this wrapper. The device stored in the metric
-        context is forwarded to Quantus.
+        If all attribution values are negative, their absolute values are used
+        when ``abs=True``; otherwise, the metric is skipped. The model is set
+        to training mode and the device stored in the context is forwarded to
+        Quantus.
 
         Returns
         -------
-        list[float]
+        List[float]
             Average Sensitivity score for each evaluated observation. Lower
-            values indicate explanations that are more robust to small random
-            input perturbations.
+            values indicate greater robustness to random input perturbations.
 
         Raises
         ------
         MetricSkipped
-            If every attribution value is negative and ``abs`` is ``False``.
+            If all attribution values are negative and ``abs`` is ``False``.
         """
         ctx = self.context
         p = self.params
