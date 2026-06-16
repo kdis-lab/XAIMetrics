@@ -16,13 +16,10 @@ Subpackages
 Submodules
 ----------
 
-xai\_metrics.metrics.autodiscover module
-----------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: xai_metrics.metrics.autodiscover
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   xai_metrics.metrics.autodiscover
 
 Module contents
 ---------------

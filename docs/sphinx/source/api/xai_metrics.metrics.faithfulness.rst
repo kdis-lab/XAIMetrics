@@ -4,69 +4,17 @@ xai\_metrics.metrics.faithfulness package
 Submodules
 ----------
 
-xai\_metrics.metrics.faithfulness.consistency module
-----------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: xai_metrics.metrics.faithfulness.consistency
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.faithfulness.faithfulness module
------------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.faithfulness
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.faithfulness.faithfulness\_estimate module
----------------------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.faithfulness_estimate
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.faithfulness.monotonicity module
------------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.monotonicity
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.faithfulness.monotonicity\_correlation module
-------------------------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.monotonicity_correlation
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.faithfulness.monotonicity\_metric module
--------------------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.monotonicity_metric
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.faithfulness.sensitivity\_n module
--------------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.sensitivity_n
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.faithfulness.sufficiency module
-----------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.faithfulness.sufficiency
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   xai_metrics.metrics.faithfulness.consistency
+   xai_metrics.metrics.faithfulness.faithfulness
+   xai_metrics.metrics.faithfulness.faithfulness_estimate
+   xai_metrics.metrics.faithfulness.monotonicity
+   xai_metrics.metrics.faithfulness.monotonicity_correlation
+   xai_metrics.metrics.faithfulness.monotonicity_metric
+   xai_metrics.metrics.faithfulness.sensitivity_n
+   xai_metrics.metrics.faithfulness.sufficiency
 
 Module contents
 ---------------

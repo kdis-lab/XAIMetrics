@@ -4,13 +4,10 @@ xai\_metrics.metrics.fidelity.soundness package
 Submodules
 ----------
 
-xai\_metrics.metrics.fidelity.soundness.non\_sensitivity module
----------------------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: xai_metrics.metrics.fidelity.soundness.non_sensitivity
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   xai_metrics.metrics.fidelity.soundness.non_sensitivity
 
 Module contents
 ---------------

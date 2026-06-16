@@ -4,21 +4,11 @@ xai\_metrics.metrics.complexity package
 Submodules
 ----------
 
-xai\_metrics.metrics.complexity.complexity\_metric module
----------------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: xai_metrics.metrics.complexity.complexity_metric
-   :members:
-   :show-inheritance:
-   :undoc-members:
-
-xai\_metrics.metrics.complexity.sparseness module
--------------------------------------------------
-
-.. automodule:: xai_metrics.metrics.complexity.sparseness
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   xai_metrics.metrics.complexity.complexity_metric
+   xai_metrics.metrics.complexity.sparseness
 
 Module contents
 ---------------

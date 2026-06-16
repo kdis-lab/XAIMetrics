@@ -4,13 +4,10 @@ xai\_metrics.metrics.sensitivity package
 Submodules
 ----------
 
-xai\_metrics.metrics.sensitivity.avg\_sensitivity module
---------------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: xai_metrics.metrics.sensitivity.avg_sensitivity
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   xai_metrics.metrics.sensitivity.avg_sensitivity
 
 Module contents
 ---------------

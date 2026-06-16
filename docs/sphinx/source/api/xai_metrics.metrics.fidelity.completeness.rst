@@ -4,13 +4,10 @@ xai\_metrics.metrics.fidelity.completeness package
 Submodules
 ----------
 
-xai\_metrics.metrics.fidelity.completeness.completeness\_metric module
-----------------------------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: xai_metrics.metrics.fidelity.completeness.completeness_metric
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   xai_metrics.metrics.fidelity.completeness.completeness_metric
 
 Module contents
 ---------------

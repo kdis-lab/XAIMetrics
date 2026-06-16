@@ -168,13 +168,13 @@ def run_evaluation(
     each metric.
 
     When ``context`` is ``None``, contexts are built from ``config`` through
-    :class:`~xai_metrics.config.ConfigController`. When a context is supplied
+    :class:`ConfigController`. When a context is supplied
     directly, ``metadata`` must also be provided.
 
     Runtime keyword arguments are forwarded as dependencies to metric
     constructors when their names match constructor parameters. The special
     ``model_loader`` argument is also passed to
-    :class:`~xai_metrics.config.ConfigController`.
+    :class:`ConfigController`.
 
     The special ``explain_funcs`` argument may contain a mapping from XAI
     method names to explanation functions. Method names are matched
@@ -183,7 +183,7 @@ def run_evaluation(
 
     Successfully evaluated metrics are stored together with the parameters
     defined for them in the configuration. Metrics that raise
-    :class:`~xai_metrics.base.MetricSkipped` are recorded separately and do not
+    :class:`MetricSkipped` are recorded separately and do not
     stop the remaining evaluations.
 
     Finally, the collected outputs are transformed into report dataframes. If

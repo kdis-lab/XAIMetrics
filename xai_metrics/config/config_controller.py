@@ -386,7 +386,7 @@ class ConfigController:
         labels and attribution file. The method loads these objects, validates
         their indexes, converts attribution values to a NumPy array, optionally
         moves the model to the configured device, and returns both the
-        :class:`~xai_metrics.base.MetricContext` and its identifying metadata.
+        :class:`MetricContext` and its identifying metadata.
 
         Parameters
         ----------
@@ -493,7 +493,7 @@ class ConfigController:
 
         The method first obtains all context configurations through
         :meth:`_iter_context_configs` and then builds each corresponding
-        :class:`~xai_metrics.base.MetricContext`.
+        :class:`MetricContext`.
 
         Returns
         -------
