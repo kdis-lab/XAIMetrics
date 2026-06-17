@@ -132,3 +132,11 @@ explainers:
       num_samples: 5000
       labels: [1]
       distance_metric: euclidean
+
+  - name: SHAP
+    params:
+      mode: classification
+      algorithm: auto
+      max_background_samples: 100
+      output_index: 1
+      random_state: 42
