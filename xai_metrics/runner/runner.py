@@ -168,13 +168,13 @@ def run_evaluation(
     each metric.
 
     When ``context`` is ``None``, contexts are built from ``config`` through
-    :class:`ConfigController`. When a context is supplied
+    :class:`~xai_metrics.config.ConfigController`. When a context is supplied
     directly, ``metadata`` must also be provided.
 
     Runtime keyword arguments are forwarded as dependencies to metric
     constructors when their names match constructor parameters. The special
     ``model_loader`` argument is also passed to
-    :class:`ConfigController`.
+    :class:`~xai_metrics.config.ConfigController`.
 
     The special ``explain_funcs`` argument may contain a mapping from XAI
     method names to explanation functions. Method names are matched
@@ -183,7 +183,7 @@ def run_evaluation(
 
     Successfully evaluated metrics are stored together with the parameters
     defined for them in the configuration. Metrics that raise
-    :class:`MetricSkipped` are recorded separately and do not
+    :class:`~xai_metrics.base.MetricSkipped` are recorded separately and do not
     stop the remaining evaluations.
 
     Finally, the collected outputs are transformed into report dataframes. If
@@ -294,6 +294,7 @@ def run_evaluation(
     }
 
     context_outputs = []
+    report_paths = {}
 
     for ctx, ctx_metadata in context_list:
 
@@ -314,21 +315,47 @@ def run_evaluation(
         deps.update(runtime_deps)
 
         if explain_funcs is not None:
-            normalized_explain_funcs = {
-                str(name).lower(): func
-                for name, func in explain_funcs.items()
+            dataset_name = str(ctx_metadata["dataset_name"]).lower()
+            xai_method_name = str(ctx_metadata["xai_method_name"]).lower()
+
+            normalized = {
+                str(key).lower(): value
+                for key, value in explain_funcs.items()
             }
 
-            xai_method_name = str(ctx_metadata['xai_method_name']).lower()
-            explain_func = normalized_explain_funcs.get(xai_method_name)
+            # Si los valores son funciones, el mapping es global.
+            is_global_mapping = all(callable(value) for value in normalized.values())
+
+            if is_global_mapping:
+                available_funcs = normalized
+            else:
+                dataset_mapping = normalized.get(dataset_name)
+
+                if dataset_mapping is None:
+                    raise ValueError(
+                        f"No explain_funcs provided for dataset '{dataset_name}'. "
+                        f"Available datasets: {list(normalized)}"
+                    )
+
+                available_funcs = {
+                    str(method).lower(): func
+                    for method, func in dataset_mapping.items()
+                }
+
+            explain_func = available_funcs.get(xai_method_name)
+
+            # Permite que "shap_local" encuentre una función registrada como "shap".
+            if explain_func is None and xai_method_name == "shap_local":
+                explain_func = available_funcs.get("shap")
 
             if explain_func is None:
                 raise ValueError(
-                    f"No explain_func provided for XAI method '{xai_method_name}'. "
-                    f"Available: {list(normalized_explain_funcs.keys())}"
+                    f"No explain_func provided for dataset '{dataset_name}' "
+                    f"and XAI method '{xai_method_name}'. "
+                    f"Available methods: {list(available_funcs)}"
                 )
 
-            deps['explain_func'] = explain_func
+            deps["explain_func"] = explain_func
 
         metrics = build_metrics_from_config(
             filtered_cfg,
@@ -355,14 +382,13 @@ def run_evaluation(
 
         context_outputs.append(out)
     
-    reports = build_reports(context_outputs)
-    report_paths = {}
+        if report_output_dir is not None:
+            report_paths = save_reports(
+                reports=build_reports(context_outputs),
+                output_dir=report_output_dir,
+            )
 
-    if report_output_dir is not None:
-        report_paths = save_reports(
-            reports=reports,
-            output_dir=report_output_dir,
-        )
+    reports = build_reports(context_outputs)
 
     return {
         "contexts": context_outputs,
