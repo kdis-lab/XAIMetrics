@@ -6,7 +6,7 @@ from xai_metrics.metrics import autodiscover_metrics
 from xai_metrics.config import ConfigController
 from xai_metrics.reporting import build_reports, save_reports
 import xai_metrics.metrics as metrics_pkg
-import xai_metrics.base.registry as registry
+import xai_metrics.base.metric_registry as metric_registry
 
 from typing import Iterable, Any, Mapping, Dict, List
 import warnings
@@ -263,7 +263,7 @@ def run_evaluation(
     )
 
     if context is None:
-        context_list = config_controller.build_contexts()
+        context_list = config_controller.build_metric_contexts()
     else:
         context_list = [
             (context, _validate_context_metadata(metadata))
@@ -278,7 +278,7 @@ def run_evaluation(
     metric_names = _resolve_metric_selection(
         selected_metrics,
         configured_metrics,
-        registry.METRIC_REGISTRY.keys(),
+        metric_registry.METRIC_REGISTRY.keys(),
     )
     allowed = set(metric_names)
 

@@ -11,7 +11,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # direct class use
 config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"
 
-context, metadata = ConfigController(config=config_path).build_context()
+context, metadata = ConfigController(config=config_path).build_metric_context()
 metric = SensitivityN(
     context=context,
     params={

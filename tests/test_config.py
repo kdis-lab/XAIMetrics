@@ -73,7 +73,7 @@ def test_validate_observations_casts_to_x_test_index_dtype():
     assert observations == [1, 2]
 
 
-def test_build_context_loads_model_data_labels_and_attributions(tmp_path):
+def test_build_metric_context_loads_model_data_labels_and_attributions(tmp_path):
     X_test_path = tmp_path / "X_test.csv"
     y_test_path = tmp_path / "y_test.csv"
     attributions_path = tmp_path / "attributions.csv"
@@ -111,7 +111,7 @@ def test_build_context_loads_model_data_labels_and_attributions(tmp_path):
         model_loader=lambda model_path: nn.Identity()
     )
 
-    context, metadata = controller.build_context()
+    context, metadata = controller.build_metric_context()
 
     assert isinstance(context, MetricContext)
     assert isinstance(context.model, nn.Identity)
@@ -131,7 +131,7 @@ def test_build_context_loads_model_data_labels_and_attributions(tmp_path):
     }
 
 
-def test_build_context_rejects_non_torch_model(tmp_path):
+def test_build_metric_context_rejects_non_torch_model(tmp_path):
     X_test_path = tmp_path / "X_test.csv"
     y_test_path = tmp_path / "y_test.csv"
     attributions_path = tmp_path / "attributions.csv"
@@ -156,4 +156,4 @@ def test_build_context_rejects_non_torch_model(tmp_path):
     )
 
     with pytest.raises(TypeError, match="torch.nn.Module"):
-        controller.build_context()
+        controller.build_metric_context()

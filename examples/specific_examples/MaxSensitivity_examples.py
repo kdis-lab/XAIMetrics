@@ -16,7 +16,7 @@ X_train = pd.read_csv(X_train_path, index_col=0)
 # direct class use
 config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"
 
-context, metadata = ConfigController(config=config_path).build_context()
+context, metadata = ConfigController(config=config_path).build_metric_context()
 metric = MaxSensitivity(
     context=context,
     params={

@@ -1,8 +1,18 @@
 # xai_metrics/base/base_explainer.py
+from dataclasses import dataclass
 import numpy as np
-import torch.nn as nn
+import pandas as pd
+from torch.nn import Module
+
 from typing import Mapping, Any
 from xai_metrics.base.types import ExplainFunc
+
+@dataclass(frozen=True)
+class ExplainerContext:
+    X_background: pd.DataFrame
+    y_background: pd.Series | None = None
+    device: str | None = None
+
 
 class BaseExplainer:
     """
@@ -15,7 +25,11 @@ class BaseExplainer:
     """
     NAME: str = "explainer"
 
-    def __init__(self, params: Mapping[str, Any] | None = None):
+    def __init__(
+        self,
+        context: ExplainerContext,
+        params: Mapping[str, Any] | None = None
+    ):
         """
         Parameters
         ----------
@@ -24,12 +38,13 @@ class BaseExplainer:
             the mapping is stored in :attr:`params`. If ``None``, an empty
             dictionary is used.
         """
+        self.context = context
         self.params = dict(params or {})
 
 
     def explain(
         self,
-        model: nn.Module,
+        model: Module,
         inputs: Any,
         targets: Any | None = None,
         **kwargs: Any
@@ -65,7 +80,7 @@ class BaseExplainer:
     
     def __call__(
         self,
-        model: nn.Module,
+        model: Module,
         inputs: Any,
         targets: Any | None = None,
         **kwargs: Any
