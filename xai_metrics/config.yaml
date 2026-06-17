@@ -3,13 +3,13 @@ context:
   model_name: "IForest"
   xai_method_name: "LIME"
 
-  model_path: "prueba/results/models/hydraulic/IForest/hydraulic_IForest_seed_0.pkl"
-  X_test_path: "prueba/data/hydraulic/X_test_train_norm.csv"
-  y_test_path: "prueba/data/hydraulic/y_test_train.csv"
+  model_path: "examples/models/hydraulic/IForest/hydraulic_IForest_seed_0.pkl"
+  X_test_path: "examples/data/hydraulic/X_test.csv"
+  y_test_path: "examples/data/hydraulic/y_test.csv"
   attributions_path: "prueba/results/attributions/hydraulic/IForest/LIME/hydraulic_IForest_lime_attributions.csv"
 
-  X_background_path: "../data/hydraulic/X_train.csv"
-  y_background_path: "../data/hydraulic/y_train.csv"
+  X_background_path: "examples/data/hydraulic/X_train.csv"
+  y_background_path: "examples/data/hydraulic/y_train.csv"
 
   # device: "cuda"
   # datasets_dir: "prueba/data"

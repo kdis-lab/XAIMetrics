@@ -11,6 +11,9 @@ from xai_metrics.base.types import ExplainFunc
 class ExplainerContext:
     X_background: pd.DataFrame
     y_background: pd.Series | None = None
+    model: Any | None = None
+    X_batch: pd.DataFrame | None = None
+    y_batch: pd.Series | None = None
     device: str | None = None
 
 

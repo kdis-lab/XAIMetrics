@@ -510,7 +510,10 @@ class ConfigController:
         ]
 
 
-    def build_explainers_context(self, ctx_cfg: Mapping[str, Any] | None = None) -> ExplainerContext:
+    def build_explainers_context(
+        self,
+        ctx_cfg: Mapping[str, Any] | None = None
+    ) -> ExplainerContext:
         ctx_cfg = dict(ctx_cfg or self.config.get("context") or {})
 
         if not ctx_cfg:
@@ -522,11 +525,7 @@ class ConfigController:
         if missing:
             raise ValueError(f"Missing explainer context config fields: {missing}")
         
-        device = ctx_cfg.get("device")
-        if device is not None:
-            device = str(device)
-            if device.startswith("cuda") and not torch.cuda.is_available():
-                raise RuntimeError(f"Device {device!r} requested but CUDA is not available.")
+        model = self.model_loader(ctx_cfg["model_path"])
             
         X_background = pd.read_csv(ctx_cfg["X_background_path"], index_col=0)
 
@@ -545,8 +544,44 @@ class ConfigController:
 
             y_background = y_background_df.iloc[:, 0]
 
+        
+        X_batch_path = ctx_cfg.get("X_batch_path", ctx_cfg.get("X_test_path"))
+        
+        X_batch = None
+        if X_batch_path is not None:
+            X_batch = pd.read_csv(X_batch_path, index_col=0)
+        
+        y_batch_path = ctx_cfg.get("y_batch_path", ctx_cfg.get("y_test_path"))
+
+        y_batch = None
+        if y_batch_path is not None:
+            y_batch_df = pd.read_csv(y_batch_path, index_col=0)
+
+            if y_batch_df.shape[1] > 1:
+                warnings.warn(
+                    "y_batch contains more than one column. "
+                    f"Only the first column will be used: {y_batch_df.columns[0]!r}. "
+                    f"Ignored columns: {list(y_batch_df.columns[1:])}.",
+                    UserWarning,
+                    stacklevel=2,
+                )
+
+            y_batch = y_batch_df.iloc[:, 0]
+
+            if X_batch is not None:
+                X_batch, y_batch = self._validate_X_y_indexes(X_batch, y_batch)
+        
+        device = ctx_cfg.get("device")
+        if device is not None:
+            device = str(device)
+            if device.startswith("cuda") and not torch.cuda.is_available():
+                raise RuntimeError(f"Device {device!r} requested but CUDA is not available.")
+
         return ExplainerContext(
             X_background=X_background,
             y_background=y_background,
+            model=model,
+            X_batch=X_batch,
+            y_batch=y_batch,
             device=device
         )
