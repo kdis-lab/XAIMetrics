@@ -1,7 +1,7 @@
 # XAI_metrics/runner/runner.py
 from pathlib import Path
 
-from xai_metrics.base import MetricContext, build_metrics_from_config, MetricSkipped, ExplainerContext, build_explainers_from_config, METRIC_REGISTRY, EXPLAINER_REGISTRY
+from xai_metrics.base import MetricContext, build_metrics_from_config, MetricSkipped, ExplainerContext, build_explainers_from_config, list_metrics, list_explainers
 from xai_metrics.metrics import autodiscover_metrics
 from xai_metrics.config import ConfigController
 from xai_metrics.reporting import build_reports, save_reports, save_attributions
@@ -110,7 +110,7 @@ def run_explanation(
     explainer_names = _resolve_explainer_selection(
         selected_explainers,
         configured_explainers,
-        EXPLAINER_REGISTRY.keys()
+        list_explainers()
     )
     allowed = set(explainer_names)
 
@@ -476,7 +476,7 @@ def run_evaluation(
     metric_names = _resolve_metric_selection(
         selected_metrics,
         configured_metrics,
-        METRIC_REGISTRY.keys(),
+        list_metrics(),
     )
     allowed = set(metric_names)
 
