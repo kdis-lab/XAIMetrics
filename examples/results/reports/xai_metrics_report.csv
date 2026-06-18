@@ -1,5 +1,5 @@
-dataset_name,model_name,metric,metric_params,LIME,SHAP
-hydraulic,IForest,Complexity,"{""normalise"": true}",1.218711283816869,1.498499752271559
-hydraulic,IForest,Faithfulness,"{""base_strategy"": ""mean""}",-0.4813783902979324,0.40757754145842956
-hydraulic,IForest,LocalLipschitzEstimate,"{""normalise"": true, ""nr_samples"": 200}",18.937280944924005,8.218653307083393
-hydraulic,IForest,Sparseness,"{""normalise"": true}",0.5324807803220825,0.38579770108192357
+dataset_name,model_name,metric,metric_params,BreakDown,LIME,SHAP
+hydraulic,IForest,Complexity,"{""normalise"": true}",1.4618588343175816,1.3153222538590965,1.4945908262443113
+hydraulic,IForest,Faithfulness,"{""base_strategy"": ""mean""}",-0.37796555027166556,-0.5443634790698483,-0.46395084406148224
+hydraulic,IForest,LocalLipschitzEstimate,"{""normalise"": true, ""nr_samples"": 200}",12.394265530506617,14.846090575918351,8.301046951003984
+hydraulic,IForest,Sparseness,"{""normalise"": true}",0.425344892268442,0.491551039205557,0.37177384198101715

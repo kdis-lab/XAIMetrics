@@ -1,20 +1,20 @@
 context:
-  dataset_name: "hydraulic"
-  model_name: "IForest"
-  xai_method_name: "LIME"
+  # dataset_name: "hydraulic"
+  # model_name: "IForest"
+  # xai_method_name: "LIME"
 
-  model_path: "examples/models/hydraulic/IForest/hydraulic_IForest_seed_0.pkl"
-  X_test_path: "examples/data/hydraulic/X_test.csv"
-  y_test_path: "examples/data/hydraulic/y_test.csv"
-  attributions_path: "prueba/results/attributions/hydraulic/IForest/LIME/hydraulic_IForest_lime_attributions.csv"
+  # model_path: "examples/models/hydraulic/IForest/hydraulic_IForest_seed_0.pkl"
+  # X_test_path: "examples/data/hydraulic/X_test.csv"
+  # y_test_path: "examples/data/hydraulic/y_test.csv"
+  # attributions_path: "prueba/results/attributions/hydraulic/IForest/LIME/hydraulic_IForest_lime_attributions.csv"
 
-  X_background_path: "examples/data/hydraulic/X_train.csv"
-  y_background_path: "examples/data/hydraulic/y_train.csv"
+  # X_background_path: "examples/data/hydraulic/X_train.csv"
+  # y_background_path: "examples/data/hydraulic/y_train.csv"
 
-  # device: "cuda"
-  # datasets_dir: "prueba/data"
-  # models_dir: "prueba/results/models"
-  # attributions_dir: "prueba/results/attributions"
+  device: "cuda"
+  datasets_dir: "examples/data"
+  models_dir: "examples/models"
+  attributions_dir: "examples/attributions"
 
 metrics:
   - name: Complexity

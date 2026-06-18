@@ -7,8 +7,9 @@
       "metric_params": {
         "normalise": true
       },
-      "LIME": 1.218711283816869,
-      "SHAP": 1.498499752271559
+      "BreakDown": 1.4618588343175816,
+      "LIME": 1.3153222538590965,
+      "SHAP": 1.4945908262443113
     },
     {
       "dataset_name": "hydraulic",
@@ -17,8 +18,9 @@
       "metric_params": {
         "base_strategy": "mean"
       },
-      "LIME": -0.4813783902979324,
-      "SHAP": 0.40757754145842956
+      "BreakDown": -0.37796555027166556,
+      "LIME": -0.5443634790698483,
+      "SHAP": -0.46395084406148224
     },
     {
       "dataset_name": "hydraulic",
@@ -28,8 +30,9 @@
         "nr_samples": 200,
         "normalise": true
       },
-      "LIME": 18.937280944924005,
-      "SHAP": 8.218653307083393
+      "BreakDown": 12.394265530506617,
+      "LIME": 14.846090575918351,
+      "SHAP": 8.301046951003984
     },
     {
       "dataset_name": "hydraulic",
@@ -38,8 +41,9 @@
       "metric_params": {
         "normalise": true
       },
-      "LIME": 0.5324807803220825,
-      "SHAP": 0.38579770108192357
+      "BreakDown": 0.425344892268442,
+      "LIME": 0.491551039205557,
+      "SHAP": 0.37177384198101715
     }
   ]
 }

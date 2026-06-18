@@ -42,6 +42,15 @@ class ExplainerContext:
     device: str | None = None
 
 
+class ExplainerSkipped(Exception):
+    """
+    Exception raised when an explainer cannot generate attributions.
+
+    This exception should be used when an explainer is not applicable to the
+    current context, model, data, targets, or configuration.
+    """
+
+
 class BaseExplainer:
     """
     Base class for explanation methods.
