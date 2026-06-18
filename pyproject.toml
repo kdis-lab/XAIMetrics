@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "aix360>=0.3.0",
+    "dalex>=1.7.2",
     "lime>=0.2.0.1",
     "numpy>=2.4.6",
     "pandas>=3.0.3",
