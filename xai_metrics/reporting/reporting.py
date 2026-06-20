@@ -548,8 +548,8 @@ def save_reports(
         ignore_index=True
     )
 
-    csv_path = out_dir / f"{report_name}.csv"
-    json_path = out_dir / f"{report_name}.json"
+    csv_path = out_dir / f"{report_name}_{timestamped_report_name}.csv"
+    json_path = out_dir / f"{report_name}_{timestamped_report_name}.json"
 
     csv_df = combined_report.copy()
 
@@ -626,7 +626,7 @@ def save_reports(
 
             metric_csv_path = (
                 metric_dir
-                / f"{safe_metric_name}_{timestamped_report_name}"
+                / f"{safe_metric_name}_{timestamped_report_name}.csv"
             )
 
             metric_csv_df = combined_metric_report.copy()

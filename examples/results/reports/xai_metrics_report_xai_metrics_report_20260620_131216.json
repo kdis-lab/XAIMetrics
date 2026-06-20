@@ -7,7 +7,8 @@
       "metric_params": {
         "normalise": true
       },
-      "BreakDown": 1.4618588343175816
+      "BreakDown": 1.4618588343175816,
+      "LIME": 1.3153222538590965
     },
     {
       "dataset_name": "hydraulic",
@@ -16,7 +17,19 @@
       "metric_params": {
         "base_strategy": "mean"
       },
-      "BreakDown": -0.37796555027166556
+      "BreakDown": -0.37796555027166556,
+      "LIME": -0.5443634790698483
+    },
+    {
+      "dataset_name": "hydraulic",
+      "model_name": "IForest",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 200,
+        "normalise": true
+      },
+      "BreakDown": 13.522458460202225,
+      "LIME": 14.073417745273167
     },
     {
       "dataset_name": "hydraulic",
@@ -25,7 +38,8 @@
       "metric_params": {
         "normalise": true
       },
-      "BreakDown": 0.425344892268442
+      "BreakDown": 0.425344892268442,
+      "LIME": 0.491551039205557
     }
   ]
 }

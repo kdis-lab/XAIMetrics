@@ -146,3 +146,15 @@ explainers:
       mode: classification
       output_index: 1
       random_state: 42
+
+  - name: MAPLE
+    params:
+      mode: classification
+      output_index: 1
+      fe_type: rf
+      n_estimators: 200
+      max_features: 0.5
+      min_samples_leaf: 10
+      regularization: 0.001
+      validation_size: 0.2
+      random_state: 42

@@ -1,0 +1,5 @@
+dataset_name,model_name,metric,metric_params,BreakDown,LIME
+hydraulic,IForest,Complexity,"{""normalise"": true}",1.4618588343175816,1.3153222538590965
+hydraulic,IForest,Faithfulness,"{""base_strategy"": ""mean""}",-0.37796555027166556,-0.5443634790698483
+hydraulic,IForest,LocalLipschitzEstimate,"{""normalise"": true, ""nr_samples"": 200}",13.522458460202225,14.073417745273167
+hydraulic,IForest,Sparseness,"{""normalise"": true}",0.425344892268442,0.491551039205557
