@@ -1,11 +1,11 @@
-# XAI_metrics/reporting/reporting.py
+# xai_metrics/reporting/reporting.py
 import json
 import datetime
 from pathlib import Path
 import pandas as pd
 import numpy as np
 
-from typing import Mapping, Any, Sequence, Dict
+from typing import Mapping, Any, Sequence, Dict, List
 
 def _serialize(value: Any) -> Any:
     """
@@ -106,6 +106,53 @@ def _to_csv_cell(value: Any) -> Any:
         )
     
     return serialized
+
+
+def _timestamp_suffix(experiment_started_at: Any | None = None) -> str:
+    if experiment_started_at is None:
+        experiment_started_at = datetime.datetime.now()
+
+    if isinstance(experiment_started_at, datetime.datetime):
+        return experiment_started_at.strftime("%Y%m%d_%H%M%S")
+    
+    return str(experiment_started_at)
+
+
+def _observation_values(value: Any, observations: Sequence[Any]) -> list[Any] | None:
+    serialized = _serialize(value)
+    n_observations = len(observations)
+
+    if isinstance(value, pd.Series):
+        values = value.to_list()
+    elif isinstance(value, pd.DataFrame):
+        values = value.to_numpy().tolist()
+    elif isinstance(value, np.ndarray):
+        arr = np.asarray(value)
+
+        if arr.ndim == 0:
+            values = [arr.item()]
+        elif arr.shape[0] == n_observations:
+            values = arr.tolist()
+        else:
+            values = arr.ravel().tolist()
+    elif isinstance(value, (list, tuple)):
+        values = list(value)
+    else:
+        values = [serialized]
+
+    if len(values) != n_observations:
+        return None
+
+    return [_serialize(item) for item in values]
+
+
+def _safe_path_name(value: Any) -> str:
+    safe = "".join(
+        char if char.isalnum() or char in "._-" else "_"
+        for char in str(value)
+    ).strip("_")
+
+    return safe or "report"
 
 
 def build_reports(
@@ -283,6 +330,106 @@ def build_reports(
     return reports
 
 
+def build_observation_reports(
+    context_outputs: Sequence[Mapping[str, Any]]
+) -> Dict[str, Dict[str, Dict[str, pd.DataFrame]]]:
+    grouped = {}
+
+    for context_out in context_outputs:
+        metadata = context_out['metadata']
+
+        dataset_name = metadata['dataset_name']
+        model_name = metadata['model_name']
+        xai_method_name = metadata['xai_method_name']
+
+        observations = list(context_out.get("observations", []))
+
+        if not observations:
+            raise ValueError(
+                "Observation reports require each context output to include "
+                "an 'observations' field."
+            )
+        
+        context_metric_params = context_out.get("metric_params", {})
+
+        for metric_name, metric_value in context_out['results'].items():
+            metric_params = _serialize(context_metric_params.get(metric_name, {}))
+
+            if isinstance(metric_value, Mapping):
+                values_to_report = {
+                    f"{metric_name}.{key}": value
+                    for key, value in metric_value.items()
+                }
+            else:
+                values_to_report = {metric_name: metric_value}
+
+            for report_metric_name, value in values_to_report.items():
+                group = grouped.setdefault(
+                    (report_metric_name, dataset_name, model_name),
+                    {
+                        "methods": {},
+                        "metric_params": metric_params,
+                        "observations": observations
+                    }
+                )
+
+                previous_params_signature = json.dumps(
+                    _serialize(group["metric_params"]),
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    default=str,
+                )
+                metric_params_signature = json.dumps(
+                    _serialize(metric_params),
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    default=str,
+                )
+
+                if previous_params_signature != metric_params_signature:
+                    raise ValueError(
+                        "Different parameters were found for metric "
+                        f"'{report_metric_name}' in dataset '{dataset_name}' "
+                        f"and model '{model_name}'."
+                    )
+
+                if list(group["observations"]) != observations:
+                    raise ValueError(
+                        "Observation indexes must be identical for every XAI "
+                        f"method in metric '{report_metric_name}', dataset "
+                        f"'{dataset_name}' and model '{model_name}'."
+                    )
+
+                group["methods"][xai_method_name] = _observation_values(
+                    value,
+                    observations,
+                )
+
+    reports = {}
+
+    for (metric_name, dataset_name, model_name), group in grouped.items():
+        report_df = pd.DataFrame(
+            group['methods'],
+            index=group['observations']
+        )
+        report_df.index.name = "observation"
+        report_df = report_df.reset_index()
+
+        report_df.insert(0, "dataset_name", dataset_name)
+        report_df.insert(1, "model_name", model_name)
+        report_df.insert(
+            3,
+            "metric_params",
+            [group["metric_params"] for _ in range(len(report_df))]
+        )
+
+        reports.setdefault(metric_name, {})
+        reports[metric_name].setdefault(dataset_name, {})
+        reports[metric_name][dataset_name][model_name] = report_df
+
+    return reports
+
+
 def save_attributions(
     context_outputs: Sequence[Mapping[str, Any]],
     output_dir: str | Path
@@ -320,7 +467,9 @@ def save_attributions(
 def save_reports(
     reports: Mapping[str, Mapping[str, pd.DataFrame]],
     output_dir: str | Path,
-    report_name: str = "xai_metrics_report"
+    report_name: str = "xai_metrics_report",
+    observation_reports: Mapping[str, Mapping[str, Mapping[str, pd.DataFrame]]] | None = None,
+    experiment_started_at: Any | None = None
 ) -> Dict[str, str]:
     """ 
     Save all metric reports as consolidated CSV and JSON files.
@@ -359,6 +508,9 @@ def save_reports(
     out_dir = Path(output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    timestamp = _timestamp_suffix(experiment_started_at)
+    timestamped_report_name = f"{report_name}_{timestamp}"
+
     report_frames = []
 
     for dataset_reports in reports.values():
@@ -366,7 +518,7 @@ def save_reports(
             report_frames.append(report_df.copy())
 
     if not report_frames:
-        raise ValueError("No reoprts are available to save.")
+        raise ValueError("No reports are available to save.")
     
     combined_report = pd.concat(
         report_frames,
@@ -402,9 +554,7 @@ def save_reports(
     csv_df = combined_report.copy()
 
     for column_name in csv_df.columns:
-        csv_df[column_name] = csv_df[column_name].map(
-            _to_csv_cell
-        )
+        csv_df[column_name] = csv_df[column_name].map(_to_csv_cell)
 
     csv_df.to_csv(csv_path, index=False, encoding="utf-8")
 
@@ -424,7 +574,70 @@ def save_reports(
             default=str,
         )
 
-    return {
+    paths = {
         "csv": str(csv_path),
         "json": str(json_path),
     }
+
+    if observation_reports is not None:
+        observation_paths = {}
+
+        for metric_name, metric_reports in observation_reports.items():
+            metric_frames = []
+
+            for dataset_reports in metric_reports.values():
+                for report_df in dataset_reports.values():
+                    metric_frames.append(report_df.copy())
+
+            if not metric_frames:
+                continue
+
+            combined_metric_report = pd.concat(
+                metric_frames,
+                ignore_index=True,
+                sort=False
+            )
+
+            fixed_observation_columns = [
+                "dataset_name",
+                "model_name",
+                "observation",
+                "metric_params"
+            ]
+
+            xai_method_columns = [
+                column
+                for column in combined_metric_report.columns
+                if column not in fixed_observation_columns
+            ]
+
+            combined_metric_report = combined_metric_report[
+                fixed_observation_columns + sorted(xai_method_columns)
+            ]
+
+            combined_metric_report = combined_metric_report.sort_values(
+                by=["dataset_name", "model_name", "observation"],
+                ignore_index=True,
+            )
+
+            safe_metric_name = _safe_path_name(metric_name)
+            metric_dir = out_dir / safe_metric_name
+            metric_dir.mkdir(parents=True, exist_ok=True)
+
+            metric_csv_path = (
+                metric_dir
+                / f"{safe_metric_name}_{timestamped_report_name}"
+            )
+
+            metric_csv_df = combined_metric_report.copy()
+
+            for column_name in metric_csv_df.columns:
+                metric_csv_df[column_name] = metric_csv_df[column_name].map(_to_csv_cell)
+
+            metric_csv_df.to_csv(metric_csv_path, index=False, encoding="utf-8")
+
+            observation_paths[metric_name] = str(metric_csv_path)
+
+        paths['observation_csv'] = observation_paths
+
+    return paths

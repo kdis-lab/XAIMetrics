@@ -1,10 +1,11 @@
-# XAI_metrics/runner/runner.py
+# xai_metrics/runner/runner.py
 from pathlib import Path
+import datetime
 
 from xai_metrics.base import MetricContext, build_metrics_from_config, MetricSkipped, ExplainerContext, build_explainers_from_config, list_metrics, list_explainers, ExplainerSkipped
 from xai_metrics.metrics import autodiscover_metrics
 from xai_metrics.config import ConfigController
-from xai_metrics.reporting import build_reports, save_reports, save_attributions
+from xai_metrics.reporting import build_reports, save_reports, save_attributions, build_observation_reports
 from xai_metrics.explainers import autodiscover_explainers
 import xai_metrics.metrics as metrics_pkg
 import xai_metrics.explainers as explainers_pkg
@@ -465,6 +466,7 @@ def run_evaluation(
         If configured or selected metrics cannot be executed because they are
         missing from the configuration or metric registry.
     """
+    experiment_started_at = datetime.datetime.now()
     autodiscover_metrics(metrics_pkg)
 
     config_controller = ConfigController(
@@ -575,10 +577,13 @@ def run_evaluation(
         
         out = {
             "metadata": ctx_metadata,
+            "observations": list(ctx.observations),
             "results": {},
             "metric_params": {},
             "skipped": {}
         }
+
+        context_outputs.append(out)
 
         for metric in metrics:
             name = getattr(metric, "NAME", metric.__class__.__name__)
@@ -589,22 +594,31 @@ def run_evaluation(
                 out['results'][name] = metric.run()
                 out['metric_params'][name] = metric_params_by_name.get(name, {})
                 print(f"  [metric] Finished {name}")
+
             except MetricSkipped as exc:
                 out['skipped'][name] = str(exc)
                 print(f"  [metric] Skipped {name}: {exc}")
 
-        context_outputs.append(out)
-    
-        if report_output_dir is not None:
-            report_paths = save_reports(
-                reports=build_reports(context_outputs),
-                output_dir=report_output_dir,
-            )
+            if report_output_dir is not None and any(
+                context_out['results']
+                for context_out in context_outputs
+            ):
+                reports = build_reports(context_outputs)
+                observation_reports = build_observation_reports(context_outputs)
+
+                report_paths = save_reports(
+                    reports=reports,
+                    observation_reports=observation_reports,
+                    output_dir=report_output_dir,
+                    experiment_started_at=experiment_started_at
+                )
 
     reports = build_reports(context_outputs)
+    observation_reports = build_observation_reports(context_outputs)
 
     return {
         "contexts": context_outputs,
         "reports": reports,
+        "observation_reports": observation_reports,
         "report_paths": report_paths,
     }

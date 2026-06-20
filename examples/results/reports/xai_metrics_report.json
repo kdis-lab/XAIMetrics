@@ -30,9 +30,9 @@
         "nr_samples": 200,
         "normalise": true
       },
-      "BreakDown": 12.394265530506617,
-      "LIME": 14.846090575918351,
-      "SHAP": 8.301046951003984
+      "BreakDown": 12.61549921252807,
+      "LIME": 13.53188233672635,
+      "SHAP": 8.69455543476986
     },
     {
       "dataset_name": "hydraulic",
