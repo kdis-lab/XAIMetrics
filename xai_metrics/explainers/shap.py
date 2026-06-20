@@ -21,31 +21,18 @@ class SHAPExplainer(BaseExplainer):
     ):
         super().__init__(context, params)
 
-        if context.model is None:
-            raise ValueError("SHAPExplainer requires context.model.")
-
-        self.predict_fn = self._get_predict_fn(context.model)
-
         self.cols = list(context.X_background.columns)
-
-        background = self._to_numpy(self.context.X_background)
+        self.background = self._to_numpy(self.context.X_background)
 
         max_background_samples = self.params.get("max_background_samples")
         if max_background_samples is not None:
             background = shap.sample(
-                background,
+                self.background,
                 int(max_background_samples),
                 random_state=self.params.get("random_state", 42)
             )
 
-        self.explainer = shap.Explainer(
-            self.predict_fn,
-            background,
-            algorithm=self.params.get("algorithm", "auto"),
-            output_names=self.params.get("output_names"),
-            feature_names=self.cols,
-            seed=self.params.get("random_state", 42)
-        )
+        self._explainers = {}
 
 
     def _to_numpy(self, inputs: Any) -> np.ndarray:
@@ -121,6 +108,32 @@ class SHAPExplainer(BaseExplainer):
         
         default_output = int(self.params.get("default_output", 1))
         return shap_values[:, :, default_output]
+
+
+    def _build_explainer(self, model: Module) -> shap.Explainer:
+        predict_fn = self._get_predict_fn(model)
+
+        return shap.Explainer(
+            predict_fn,
+            self.background,
+            algorithm=self.params.get("algorithm", "auto"),
+            output_names=self.params.get("output_names"),
+            feature_names=self.cols,
+            seed=self.params.get("random_state", 42)
+        )
+
+
+    def _get_explainer(self, model: Module) -> shap.Explainer:
+        key = id(model)
+        cached = self._explainers.get(key)
+
+        if cached is not None and cached[0] is model:
+            return cached[1]
+
+        explainer = self._build_explainer(model)
+        self._explainers[key] = (model, explainer)
+
+        return explainer
     
 
     def explain(
@@ -132,13 +145,15 @@ class SHAPExplainer(BaseExplainer):
     ) -> np.ndarray[tuple[Any, ...], np.dtype[Any]]:
         X_np = self._to_numpy(inputs)
 
+        explainer = self._get_explainer(model)
+
         max_evals = self.params.get("max_evals")
         max_evals = int(max_evals) if max_evals is not None else "auto"
 
         batch_size = self.params.get("batch_size")
         batch_size = int(batch_size) if batch_size is not None else "auto"
 
-        explanation = self.explainer(
+        explanation = explainer(
             X_np,
             max_evals=max_evals,
             batch_size=batch_size

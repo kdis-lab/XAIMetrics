@@ -166,9 +166,6 @@ class MAPLEExplainer(BaseExplainer):
         params: Mapping[str, Any] | None = None
     ):
         super().__init__(context, params)
-
-        if context.model is None:
-            raise ValueError("MAPLEExplainer requires context.model.")
         
         self.cols = list(context.X_background.columns)
         background = self._to_numpy(context.X_background)
@@ -178,23 +175,9 @@ class MAPLEExplainer(BaseExplainer):
                 "MAPLEExplainer requires at least three background observations."
             )
         
-        X_train, X_val = self._split_background(background)
+        self.X_train, self.X_val = self._split_background(background)
 
-        y_train = self._model_response(context.model, X_train)
-        y_val = self._model_response(context.model, X_val)
-
-        self.explainer = _MAPLEModel(
-            X_train=X_train,
-            y_train=y_train,
-            X_val=X_val,
-            y_val=y_val,
-            fe_type=self.params.get("fe_type", "rf"),
-            n_estimators=int(self.params.get("n_estimators", 200)),
-            max_features=self.params.get("max_features", 0.5),
-            min_samples_leaf=int(self.params.get("min_samples_leaf", 10)),
-            regularization=float(self.params.get("regularization", 0.001)),
-            random_state=self.params.get("random_state", 42)
-        )
+        self._explainers = {}
 
 
     def _to_numpy(self, inputs: Any) -> np.ndarray:
@@ -300,6 +283,36 @@ class MAPLEExplainer(BaseExplainer):
         return prediction.reshape(-1).astype(float)
     
 
+    def _build_explainer(self, model: Module) -> _MAPLEModel:
+        y_train = self._model_response(model, self.X_train)
+        y_val = self._model_response(model, self.X_val)
+
+        return  _MAPLEModel(
+            X_train=self.X_train,
+            y_train=y_train,
+            X_val=self.X_val,
+            y_val=y_val,
+            fe_type=self.params.get("fe_type", "rf"),
+            n_estimators=int(self.params.get("n_estimators", 200)),
+            max_features=self.params.get("max_features", 0.5),
+            min_samples_leaf=int(self.params.get("min_samples_leaf", 10)),
+            regularization=float(self.params.get("regularization", 0.001)),
+            random_state=self.params.get("random_state", 42)
+        )
+    
+    def _get_explainer(self, model: Module) -> _MAPLEModel:
+        key = id(model)
+        cached = self._explainers.get(key)
+
+        if cached is not None and cached[0] is model:
+            return cached[1]
+
+        explainer = self._build_explainer(model)
+        self._explainers[key] = (model, explainer)
+
+        return explainer
+    
+
     def explain(
         self,
         model: Module,
@@ -309,8 +322,10 @@ class MAPLEExplainer(BaseExplainer):
     ) -> np.ndarray[Tuple[Any, ...], np.dtype[Any]]:
         X = self._to_numpy(inputs)
 
+        explainer = self._get_explainer(model)
+
         attributions = np.asarray([
-            self.explainer.explain(row)
+            explainer.explain(row)
             for row in X
         ])
 

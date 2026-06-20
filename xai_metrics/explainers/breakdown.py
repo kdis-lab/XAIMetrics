@@ -20,22 +20,9 @@ class BreakDownExplainer(BaseExplainer):
         params: Mapping[str, Any] | None = None
     ):
         super().__init__(context, params)
-
-        if context.model is None:
-            raise ValueError("BreakDownExplainer requires context.model.")
         
         self.cols = list(context.X_background.columns)
-        
-        self.explainer = dx.Explainer(
-            model=context.model,
-            data=context.X_background,
-            y=context.y_background,
-            predict_function=self._get_predict_fn(context.model),
-            label=self.params.get("label", type(context.model).__name__),
-            verbose=self.params.get("verbose", False),
-            precalculate=self.params.get("precalculate", True),
-            model_type=self.params.get("mode", "classification")
-        )
+        self._explainers = {}
 
 
     def _to_dataframe(self, inputs: Any) -> pd.DataFrame:
@@ -110,6 +97,32 @@ class BreakDownExplainer(BaseExplainer):
         return weights
     
 
+    def _build_explainer(self, model: Module) -> dx.Explainer:
+        return dx.Explainer(
+            model=model,
+            data=self.context.X_background,
+            y=self.context.y_background,
+            predict_function=self._get_predict_fn(model),
+            label=self.params.get("label", type(model).__name__),
+            verbose=self.params.get("verbose", False),
+            precalculate=self.params.get("precalculate", True),
+            model_type=self.params.get("mode", "classification")
+        )
+    
+
+    def _get_explainer(self, model: Module) -> dx.Explainer:
+        key = id(model)
+        cached = self._explainers.get(key)
+
+        if cached is not None and cached[0] is model:
+            return cached[1]
+
+        explainer = self._build_explainer(model)
+        self._explainers[key] = (model, explainer)
+
+        return explainer
+    
+
     def explain(
         self,
         model: Module,
@@ -119,10 +132,11 @@ class BreakDownExplainer(BaseExplainer):
     ) -> np.ndarray[tuple[Any, ...], np.dtype[Any]]:
         X_df = self._to_dataframe(inputs)
 
-        attributions = []
+        explainer = self._get_explainer(model)
 
+        attributions = []
         for _, row in X_df.iterrows():
-            explanation = self.explainer.predict_parts(
+            explanation = explainer.predict_parts(
                 new_observation=row.to_frame().T,
                 type="break_down",
                 order=self.params.get("order"),
