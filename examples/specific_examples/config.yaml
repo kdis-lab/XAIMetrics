@@ -89,3 +89,9 @@ metrics:
       abs: false
       normalise: false
       lower_bound: 0.2
+
+  - name: RelativeInputStability
+    params:
+      nr_samples: 200
+      abs: false
+      normalise: false
