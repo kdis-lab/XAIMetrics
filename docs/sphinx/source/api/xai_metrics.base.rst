@@ -9,7 +9,8 @@ Submodules
 
    xai_metrics.base.base_explainer
    xai_metrics.base.base_metric
-   xai_metrics.base.registry
+   xai_metrics.base.explainer_registry
+   xai_metrics.base.metric_registry
    xai_metrics.base.types
 
 Module contents

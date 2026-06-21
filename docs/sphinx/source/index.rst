@@ -7,6 +7,7 @@ XAI_metrics documentation
 
    api/xai_metrics.base
    api/xai_metrics.config
+   api/xai_metrics.explainers
    api/xai_metrics.metrics
    api/xai_metrics.reporting
    api/xai_metrics.runner

@@ -9,6 +9,7 @@ Subpackages
 
    xai_metrics.base
    xai_metrics.config
+   xai_metrics.explainers
    xai_metrics.metrics
    xai_metrics.reporting
    xai_metrics.runner
