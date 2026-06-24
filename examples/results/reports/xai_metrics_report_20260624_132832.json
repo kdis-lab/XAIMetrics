@@ -1,0 +1,31 @@
+{
+  "report": [
+    {
+      "dataset_name": "hydraulic",
+      "model_name": "IForest",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "BreakDown": 1.4618588343175816
+    },
+    {
+      "dataset_name": "hydraulic",
+      "model_name": "IForest",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "BreakDown": -0.37796555027166556
+    },
+    {
+      "dataset_name": "hydraulic",
+      "model_name": "IForest",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "BreakDown": 0.425344892268442
+    }
+  ]
+}
