@@ -1,0 +1,53 @@
+{
+  "report": [
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "BreakDown": 1.4648072405304984,
+      "LIME": 1.4968247894269027,
+      "MAPLE": 1.8041126848950557,
+      "SHAP": 1.4874543049149107
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "BreakDown": 0.48379480554239346,
+      "LIME": 0.017774759517610053,
+      "MAPLE": 0.20364163198512722,
+      "SHAP": 0.5451506776635687
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 200,
+        "normalise": true
+      },
+      "BreakDown": 3.2695131148500542,
+      "LIME": 12.828574313298196,
+      "MAPLE": 4.236452257771701,
+      "SHAP": 3.138063862709452
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "BreakDown": 0.618465568033,
+      "LIME": 0.6315810976981484,
+      "MAPLE": 0.5060041311610993,
+      "SHAP": 0.5956216866005876
+    }
+  ]
+}
