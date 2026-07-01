@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 import json
+import datetime
 
 from xai_metrics.reporting.reporting import (
     _serialize,
@@ -42,14 +43,18 @@ def test_build_reports_groups_metrics_by_dataset_model_and_xai_method():
                 "model_name": "model",
                 "xai_method_name": "lime",
             },
-            "results": {
-                "MetricA": np.array([1.0, 2.0, 3.0]),
-                "MetricB": {"part1": [2.0, 4.0]},
-            },
-            "metric_params": {
-                "MetricA": {"normalise": True},
-                "MetricB": {"base_strategy": "mean"},
-            }
+            "results": [
+                {
+                    "metric": "MetricA",
+                    "value": np.array([1.0, 2.0, 3.0]),
+                    "metric_params": {"normalise": True},
+                },
+                {
+                    "metric": "MetricB",
+                    "value": {"part1": [2.0, 4.0]},
+                    "metric_params": {"base_strategy": "mean"},
+                },
+            ],
         },
         {
             "metadata": {
@@ -57,15 +62,19 @@ def test_build_reports_groups_metrics_by_dataset_model_and_xai_method():
                 "model_name": "model",
                 "xai_method_name": "shap",
             },
-            "results": {
-                "MetricA": np.array([4.0, 6.0]),
-                "MetricB": {"part1": [10.0]},
-            },
-            "metric_params": {
-                "MetricA": {"normalise": True},
-                "MetricB": {"base_strategy": "mean"},
-            }
-        }
+            "results": [
+                {
+                    "metric": "MetricA",
+                    "value": np.array([4.0, 6.0]),
+                    "metric_params": {"normalise": True},
+                },
+                {
+                    "metric": "MetricB",
+                    "value": {"part1": [10.0]},
+                    "metric_params": {"base_strategy": "mean"},
+                },
+            ],
+        },
     ]
 
     reports = build_reports(context_outputs)
@@ -99,10 +108,18 @@ def test_build_reports_keeps_non_numeric_values_serialized():
                 "model_name": "model",
                 "xai_method_name": "lime",
             },
-            "results": {
-                "MetricText": {"status": "ok"},
-                "MetricArray": np.array(["a", "b"]),
-            },
+            "results": [
+                {
+                    "metric": "MetricText",
+                    "value": {"status": "ok"},
+                    "metric_params": {},
+                },
+                {
+                    "metric": "MetricArray",
+                    "value": np.array(["a", "b"]),
+                    "metric_params": {},
+                },
+            ],
         }
     ]
 
@@ -130,13 +147,17 @@ def test_save_reports_creates_csv_and_json(tmp_path):
         }
     }
 
-    paths = save_reports(reports, output_dir=tmp_path)
+    paths = save_reports(
+        reports,
+        output_dir=tmp_path,
+        experiment_started_at=datetime.datetime(2024, 1, 2, 3, 4, 5),
+    )
 
     csv_path = paths['csv']
     json_path = paths['json']
 
-    assert csv_path.endswith("xai_metrics_report.csv")
-    assert json_path.endswith("xai_metrics_report.json")
+    assert csv_path.endswith("xai_metrics_report_20240102_030405.csv")
+    assert json_path.endswith("xai_metrics_report_20240102_030405.json")
 
     saved_csv = pd.read_csv(csv_path)
 
