@@ -1,0 +1,4054 @@
+{
+  "report": [
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.1308195187104566,
+      "MAPLE": 0.810517643799529,
+      "SHAP": 1.6312308771306427
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 2.344844330923983,
+      "MAPLE": 1.8278389525255745,
+      "SHAP": 2.1670662229031694
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8190476190188357,
+      "MAPLE": 0.8222222221777495,
+      "SHAP": 0.8190476190188357
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.04385628794594574,
+      "MAPLE": 0.025880430585230135,
+      "SHAP": 0.027709682753350482
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.05245763222245503,
+      "MAPLE": 0.04793324669513111,
+      "SHAP": 0.008464010169281357
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 7.8299595239017075,
+      "MAPLE": 3.171402596669485,
+      "SHAP": 1.898171429090353
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.833814422934146,
+      "MAPLE": 1.7273445800164444,
+      "SHAP": 3.693749333817468
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.35787815126050426,
+      "MAPLE": 0.11901266759203488,
+      "SHAP": 0.049264705882352954
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 5.5285714285714285,
+      "MAPLE": 4.385714285714286,
+      "SHAP": 5.542857142857143
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 0.0002470902160926329,
+      "MAPLE": 0.17552566560602703,
+      "SHAP": 0.0010764061673491424
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 502.62010736138126,
+      "MAPLE": 235580.70230678577,
+      "SHAP": 972.8914197784139
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.1594816671532989,
+      "MAPLE": 0.012382793605508126,
+      "SHAP": 0.2995003963063819
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.533691920669931,
+      "MAPLE": 0.6885312946963685,
+      "SHAP": 0.5690923208609615
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "AutoEncoder",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.7966157796548247,
+      "MAPLE": 0.0,
+      "SHAP": 0.8074270561152277
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.181565043585216,
+      "MAPLE": 0.8345960362652206,
+      "SHAP": null
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 2.675364541382191,
+      "MAPLE": 1.967610704006872,
+      "SHAP": 2.463964928472058
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.5390476190327498,
+      "MAPLE": 0.5707936507631678,
+      "SHAP": 0.5390476190327498
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.24454929936217976,
+      "MAPLE": 0.09745596658643918,
+      "SHAP": -0.12552700504901962
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.05933474451283237,
+      "MAPLE": 0.004963555528924143,
+      "SHAP": 0.03084070045247808
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 8.920034297247236,
+      "MAPLE": 2.1057414002820445,
+      "SHAP": 7.80287513869393
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.6386087101428273,
+      "MAPLE": 2.100509503124509,
+      "SHAP": 2.760592815662772
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.24922969187675073,
+      "MAPLE": 0.24028803920712255,
+      "SHAP": -0.4315126050420168
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 5.7,
+      "MAPLE": 4.6571428571428575,
+      "SHAP": 5.7
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 0.0003352801693394625,
+      "MAPLE": 0.00013214217607686646,
+      "SHAP": 0.0009724496084221116
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 51.99468574381933,
+      "MAPLE": 29.033082405134575,
+      "SHAP": null
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.18084255071024474,
+      "MAPLE": 0.018716244643646584,
+      "SHAP": 0.25001593793244625
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.30822253848654657,
+      "MAPLE": 0.634111126640893,
+      "SHAP": 0.456604365845284
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.5793698861829375,
+      "MAPLE": 0.0,
+      "SHAP": 0.6093985923711568
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.0634469551971761,
+      "MAPLE": 0.9302952989761651,
+      "SHAP": 2.018871013998748
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 2.504810637374132,
+      "MAPLE": 2.4523519075315057,
+      "SHAP": 2.385537067352115
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.5004988661988945,
+      "MAPLE": 0.5948051947388328,
+      "SHAP": 0.5004988661988945
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.1574287717423484,
+      "MAPLE": 0.09680181076325851,
+      "SHAP": -0.1713763721431385
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.011151711462579405,
+      "MAPLE": -0.025296410701621395,
+      "SHAP": -0.020679936553781756
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 9.847357128665394,
+      "MAPLE": 3.176905828825136,
+      "SHAP": 5.010439769089129
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.581648955105148,
+      "MAPLE": 1.929596662964989,
+      "SHAP": 2.919363532016818
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.020629537008819355,
+      "MAPLE": -0.012798687660259232,
+      "SHAP": -0.4312883420993431
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.1,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 7.714285714285714,
+      "MAPLE": 7.0285714285714285,
+      "SHAP": 6.714285714285714
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 0.0001847804650987548,
+      "MAPLE": 0.1817596804375412,
+      "SHAP": 1.050647660559151
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 2666567.093474097,
+      "MAPLE": 6538293499.276709,
+      "SHAP": 543017.1688048039
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.2887971153692137,
+      "MAPLE": -0.1730624246806371,
+      "SHAP": 0.03252582888762943
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.4265561974429779,
+      "MAPLE": 0.44939556173887574,
+      "SHAP": 0.48921738110509033
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.4705394866563834,
+      "MAPLE": 0.5852362874816563,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.1307006053731876,
+      "MAPLE": 0.8610098687733505,
+      "SHAP": 1.155942796801912
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 2.513381084136182,
+      "MAPLE": 1.704332209615659,
+      "SHAP": 2.3658384913303183
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.5551927437479947,
+      "MAPLE": 0.5551927437479947,
+      "SHAP": 0.5551927437479947
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.09891799880940304,
+      "MAPLE": 0.04199073334687606,
+      "SHAP": -0.03594865804995755
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.009049438088865715,
+      "MAPLE": 0.008410167815620009,
+      "SHAP": -0.0013765852405864302
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 9.785667837235634,
+      "MAPLE": 2.2371061000683357,
+      "SHAP": 2.4055579563749374
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.754869935114839,
+      "MAPLE": 2.3749958393274424,
+      "SHAP": 1.5218979635464578
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.21775210084033617,
+      "MAPLE": 0.2756266384173355,
+      "SHAP": -0.13781512605042012
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 5.571428571428571,
+      "MAPLE": 7.214285714285714,
+      "SHAP": 5.585714285714285
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 0.00016943369641424515,
+      "MAPLE": 6.483566785068952e-05,
+      "SHAP": 0.0010663255620061928
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 6636.147934902693,
+      "MAPLE": 12454.821330462773,
+      "SHAP": 158349.70945452605
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.22990197331291046,
+      "MAPLE": 0.02300276063296163,
+      "SHAP": 0.01780259653956323
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.4199497674297289,
+      "MAPLE": 0.7299855076890785,
+      "SHAP": 0.5076797589496547
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.5241832646169765,
+      "MAPLE": 0.0,
+      "SHAP": 0.6534929363711655
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.0740116825546042,
+      "MAPLE": 57.28739688485797,
+      "SHAP": 2.6712282568946755
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.9395757626448412,
+      "MAPLE": 1.4293420245626174,
+      "SHAP": 0.9075848219513001
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.9437641723048381,
+      "MAPLE": 0.9440233235434837,
+      "SHAP": 0.9437641723048381
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.7328268437386447,
+      "MAPLE": 0.24094139894052846,
+      "SHAP": -0.36065216169026204
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.016190761291829236,
+      "MAPLE": 0.09733729985901222,
+      "SHAP": 0.008678401946587384
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 8.084966393168148,
+      "MAPLE": 1.9770473379434954,
+      "SHAP": 0.5559809407791912
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.9012237260640539,
+      "MAPLE": 167.42645887139025,
+      "SHAP": 10.17452451778118
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.32563137951012217,
+      "MAPLE": 0.2882436568863493,
+      "SHAP": 0.6628261800026611
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 6.314285714285714,
+      "MAPLE": 4.714285714285714,
+      "SHAP": 6.057142857142857
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 0.01794729850481233,
+      "MAPLE": 2.7082461791140733,
+      "SHAP": 0.011505207034841737
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 2049395.413731811,
+      "MAPLE": 2351155221.5257897,
+      "SHAP": 1475979.2330201631
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.13799478644213345,
+      "MAPLE": 0.07396641704130169,
+      "SHAP": -0.09184419267354094
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.8622216179050302,
+      "MAPLE": 0.7778950373675324,
+      "SHAP": 0.8704787624558907
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8478839154833481,
+      "MAPLE": 0.9189791149066991,
+      "SHAP": 0.8869508448540706
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.1238881534684586,
+      "MAPLE": 0.9485214010461522,
+      "SHAP": 1.2083943426826522
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 2.4189020969092776,
+      "MAPLE": 1.73882278656859,
+      "SHAP": 2.164525171587435
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.9999999999683445,
+      "MAPLE": 0.999999999951985,
+      "SHAP": 0.9999999999683445
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.48156406891171155,
+      "MAPLE": -0.004865452757052288,
+      "SHAP": -0.6226348768294815
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.012255315271506048,
+      "MAPLE": -0.015621393180842309,
+      "SHAP": -0.02904995276853754
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 8.445635303375258,
+      "MAPLE": 3.1353928135199394,
+      "SHAP": 2.1383925577490692
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.7959644138984874,
+      "MAPLE": 1.9270230772510752,
+      "SHAP": 2.993561517242152
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 0.5285714285714286,
+      "MAPLE": 0.5285714285714286,
+      "SHAP": 0.5571428571428572
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.2689425770308123,
+      "MAPLE": 0.14231112907548496,
+      "SHAP": 0.07293417366946779
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 4.4714285714285715,
+      "MAPLE": 4.228571428571429,
+      "SHAP": 4.642857142857143
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 0.00015893848110508954,
+      "MAPLE": 0.04753856855819916,
+      "SHAP": 0.0006951432833904208
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 4921.298623387539,
+      "MAPLE": 1729690.793094832,
+      "SHAP": 2924.716192210471
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": 0.16046262129376654,
+      "MAPLE": -0.2991402478604606,
+      "SHAP": -0.08411458404004088
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.493754315195239,
+      "MAPLE": 0.7004440036541978,
+      "SHAP": 0.5707695743459611
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.9428571428571428,
+      "MAPLE": 0.0,
+      "SHAP": 0.9285714285714286
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 0.7915752361339763,
+      "MAPLE": 1.1553178558131985,
+      "SHAP": 0.970782561388148
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.7020198726817155,
+      "MAPLE": 1.573731939866256,
+      "SHAP": 1.6041230319606365
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.796462585014006,
+      "MAPLE": 0.796462585014006,
+      "SHAP": 0.796462585014006
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.03821576808599015,
+      "MAPLE": -0.03877831117302583,
+      "SHAP": -0.011662017012220043
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.03280143463722471,
+      "MAPLE": 0.031170186190418857,
+      "SHAP": 0.020261996143587827
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 7.1012948764790895,
+      "MAPLE": 5.886918779758606,
+      "SHAP": 3.6591546174697522
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.5491947671783202,
+      "MAPLE": 2.8860533616467334,
+      "SHAP": 1.8026753719927644
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.15429517679974933,
+      "MAPLE": 0.14955645413169605,
+      "SHAP": 0.0692630315404107
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.014285714285714285,
+      "MAPLE": 0.014285714285714285,
+      "SHAP": 0.014285714285714285
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.2714285714285714,
+      "MAPLE": 1.2571428571428571,
+      "SHAP": 1.2571428571428571
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 3016.6809561423856,
+      "MAPLE": 558.6727735216808,
+      "SHAP": 18.711523950549623
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 296210.0735533656,
+      "MAPLE": 52631.90802860444,
+      "SHAP": 67275.73280518336
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": 0.18913561380620192,
+      "MAPLE": 0.11663885628671919,
+      "SHAP": 0.28574784889520105
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.3602333078958151,
+      "MAPLE": 0.4431330925288586,
+      "SHAP": 0.4216047075478432
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "AutoEncoder",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.7639281818773882,
+      "MAPLE": 0.8301460452005934,
+      "SHAP": 0.826091028237966
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 0.8364147429965222,
+      "MAPLE": 0.8995731109954277,
+      "SHAP": 1.1817704129615951
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.903127949259819,
+      "MAPLE": 1.2546819144604042,
+      "SHAP": 1.7054768726797562
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.7907482993008632,
+      "MAPLE": 0.7907482993008632,
+      "SHAP": 0.7907482993008632
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.3067854933457358,
+      "MAPLE": 0.1276082710335955,
+      "SHAP": -0.5198316500921135
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.05062599098136974,
+      "MAPLE": 0.029864680400580823,
+      "SHAP": -0.044621942411801244
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 12.25157761995004,
+      "MAPLE": 4.946832536690162,
+      "SHAP": 7.272730479536858
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.5048456342745515,
+      "MAPLE": 2.471809059552577,
+      "SHAP": 2.017005328188814
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.29540816326530617,
+      "MAPLE": 0.2108193662707608,
+      "SHAP": 0.3086734693877552
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.08571428571428572,
+      "MAPLE": 0.07142857142857142,
+      "SHAP": 0.1
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 0.7571428571428571,
+      "MAPLE": 1.6428571428571428,
+      "SHAP": 0.7571428571428571
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 3.0314568863840035,
+      "MAPLE": 11.025730855744717,
+      "SHAP": 7.167963589594521
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 860.5386478773354,
+      "MAPLE": 8183.0328033133155,
+      "SHAP": 3083.9411968231734
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.06319507664261469,
+      "MAPLE": 0.04115152118803869,
+      "SHAP": 0.04818730949896485
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.15849984208002946,
+      "MAPLE": 0.5923604512917988,
+      "SHAP": 0.3510303876449419
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "ECOD",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8021361504776293,
+      "MAPLE": 0.0,
+      "SHAP": 0.8261290926721521
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 0.6676700234893208,
+      "MAPLE": 0.7597547804483857,
+      "SHAP": 1.0683139908105737
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.61903700994041,
+      "MAPLE": 1.411131819541805,
+      "SHAP": 1.5633912097267764
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.48417233558690875,
+      "MAPLE": 0.48417233558690875,
+      "SHAP": 0.48417233558690875
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.034388492675041175,
+      "MAPLE": 0.13487777864799658,
+      "SHAP": 0.02224664232370602
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.06469235579989913,
+      "MAPLE": -0.0011857170120255088,
+      "SHAP": -0.0005744908201645019
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 8.996424347965668,
+      "MAPLE": 5.1346788374440315,
+      "SHAP": 4.937844235498115
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.3778215332200494,
+      "MAPLE": 1.7301474641060146,
+      "SHAP": 1.8700847428908638
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.27388262799867374,
+      "MAPLE": 0.1637801275297036,
+      "SHAP": 0.29740742366123923
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.11428571428571428,
+      "MAPLE": 0.02857142857142857,
+      "SHAP": 0.08571428571428572
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.1285714285714286,
+      "MAPLE": 1.1285714285714286,
+      "SHAP": 1.1285714285714286
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 3.485355275752745,
+      "MAPLE": 18.350542658984363,
+      "SHAP": 10.517538768206332
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 918.2308357292419,
+      "MAPLE": 5813.151332090282,
+      "SHAP": 2849.869992386216
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.0318264200225917,
+      "MAPLE": -0.13571192032865756,
+      "SHAP": -0.014175704186919616
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.4260530998239725,
+      "MAPLE": 0.5311012611788837,
+      "SHAP": 0.4525800951964782
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "HBOS",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.6045402472381097,
+      "MAPLE": 0.47910883630490375,
+      "SHAP": 0.5849904932767352
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 0.7623368914135941,
+      "MAPLE": 0.7758527978114671,
+      "SHAP": 1.6383512086515135
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.7482048529255778,
+      "MAPLE": 1.3949942612308706,
+      "SHAP": 1.64823830280855
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8421768707191487,
+      "MAPLE": 0.8421768707191487,
+      "SHAP": 0.8421768707191487
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.13157592005453103,
+      "MAPLE": -0.09418770477451537,
+      "SHAP": -0.02391670056972517
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.14585218058722202,
+      "MAPLE": -0.13015805912961037,
+      "SHAP": -0.029104107979502754
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 9.898243436333404,
+      "MAPLE": 4.54627390038502,
+      "SHAP": 3.6726748501672057
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.4325858935726516,
+      "MAPLE": 1.757044129904843,
+      "SHAP": 2.6311139768107883
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.14234693877551022,
+      "MAPLE": 0.2535714285714286,
+      "SHAP": -0.04234693877551022
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.02857142857142857,
+      "SHAP": 0.02857142857142857
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 14.956909932190786,
+      "MAPLE": 5.173760317921759,
+      "SHAP": 7.2226496686894714
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 575.1943503699327,
+      "MAPLE": 37.218891376990065,
+      "SHAP": 65.70897368741954
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.33670374097211897,
+      "MAPLE": 0.16298043022488246,
+      "SHAP": -0.37741386126970833
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.3178784898226626,
+      "MAPLE": 0.5283252435229718,
+      "SHAP": 0.3907609316379633
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8577234349354066,
+      "MAPLE": 0.8285035573363465,
+      "SHAP": 0.8425202923696724
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 0.8798414470786113,
+      "MAPLE": 3.1570011940050744,
+      "SHAP": 1.7723571810182164
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.5362448742934138,
+      "MAPLE": 1.4414616534594544,
+      "SHAP": 1.5514717264666567
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8421768707191487,
+      "MAPLE": 0.8421768707191487,
+      "SHAP": 0.8421768707191487
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.33781196433198146,
+      "MAPLE": -0.0248858339593518,
+      "SHAP": -0.6327807771666333
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.08527571479699969,
+      "MAPLE": 0.04618442113196276,
+      "SHAP": -0.03211815033125083
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 8.016690590732942,
+      "MAPLE": 3.721398955385295,
+      "SHAP": 1.6262759637940745
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.842887027864476,
+      "MAPLE": 7.564896583423006,
+      "SHAP": 5.224025081920838
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.33112244897959187,
+      "MAPLE": 0.47040816326530616,
+      "SHAP": 0.6188775510204083
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.05714285714285714,
+      "MAPLE": 0.02857142857142857,
+      "SHAP": 0.07142857142857142
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0285714285714285,
+      "MAPLE": 1.042857142857143,
+      "SHAP": 1.042857142857143
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 28.665521705930527,
+      "MAPLE": 174.8800299243331,
+      "SHAP": 133.95028994570188
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 166712.25794421675,
+      "MAPLE": 18295301.147475444,
+      "SHAP": 271783.488817586
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.017891656871491204,
+      "MAPLE": 0.03895901474925238,
+      "SHAP": 0.27075761027917106
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.46927993817766306,
+      "MAPLE": 0.5134152582047313,
+      "SHAP": 0.4603069202204645
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8663589004255412,
+      "MAPLE": 0.8872196135457671,
+      "SHAP": 0.9126435777695465
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 0.8267220181815315,
+      "MAPLE": 1.4657481784423234,
+      "SHAP": 2.3370382651333186
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.6118835272320193,
+      "MAPLE": 1.5431304865783537,
+      "SHAP": 1.589529369681764
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8662131518979058,
+      "MAPLE": 0.8662131518979058,
+      "SHAP": 0.8662131518979058
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.04626807051948131,
+      "MAPLE": 0.15571293314326895,
+      "SHAP": -0.09709926380605564
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.05637671131146778,
+      "MAPLE": -0.07176264358235732,
+      "SHAP": 0.030029607768517666
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 7.570482188248434,
+      "MAPLE": 4.00795397418185,
+      "SHAP": 2.8960864946964886
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.6464378301298979,
+      "MAPLE": 3.0891236440128833,
+      "SHAP": 6.070233545355113
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.01836734693877551,
+      "MAPLE": 0.25000000000000006,
+      "SHAP": 0.07040816326530613
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.014285714285714285,
+      "MAPLE": 0.014285714285714285,
+      "SHAP": 0.02857142857142857
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 0.2,
+      "MAPLE": 0.17142857142857143,
+      "SHAP": 0.2
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 25.10617087808912,
+      "MAPLE": 132.51941842849732,
+      "SHAP": 31.868499054618482
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 10698.514019615614,
+      "MAPLE": 29154.24777296719,
+      "SHAP": 5127.72385015139
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": 0.007884454451023967,
+      "MAPLE": -0.19398498149334675,
+      "SHAP": 0.039569816897603374
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.42303284943324704,
+      "MAPLE": 0.4578945595005689,
+      "SHAP": 0.4332514894104057
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8747378726816839,
+      "MAPLE": 0.8998816992320834,
+      "SHAP": 0.905115323816283
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.0221498552144754,
+      "MAPLE": 0.9303545406789395,
+      "SHAP": 1.1222299736867112
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.9868398197861372,
+      "MAPLE": 1.9426103501379997,
+      "SHAP": 1.2971157908980302
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.8234610917336905,
+      "MAPLE": 0.8234610917336905,
+      "SHAP": 0.8234610917336905
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.3153695317099509,
+      "MAPLE": -0.020036393907282214,
+      "SHAP": -0.3766007909371546
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.13920412396790813,
+      "MAPLE": 0.2141420823833646,
+      "SHAP": -0.17829726159158477
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 10.427928155488715,
+      "MAPLE": 6.107797458012842,
+      "SHAP": 1.3897121796232574
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.7311920141115114,
+      "MAPLE": 1.3711284437244422,
+      "SHAP": 2.309532216466979
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.20247984364137678,
+      "MAPLE": 0.36516546216827306,
+      "SHAP": 0.0017669620345950143
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.023809523809523808,
+      "MAPLE": 0.0,
+      "SHAP": 0.023809523809523808
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 4.904761904761905,
+      "MAPLE": 2.119047619047619,
+      "SHAP": 3.5238095238095237
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 4.942376971549916,
+      "MAPLE": 17.924364475816894,
+      "SHAP": 1.6133951065863488
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 24547163.010361318,
+      "MAPLE": 4882909.438011742,
+      "SHAP": 21244843.268201966
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.028335278721434813,
+      "MAPLE": 0.1737614941136856,
+      "SHAP": -0.7317724891446498
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.7760061343443349,
+      "MAPLE": 0.44381897279562843,
+      "SHAP": 0.6534374123261272
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.8303731934960669,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.7080053220957787,
+      "MAPLE": 1.0532082778496448,
+      "SHAP": 0.5987122441155921
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.579265055918807,
+      "MAPLE": 1.8129478693274457,
+      "SHAP": 1.8959238808920276
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.544715447141186,
+      "MAPLE": 0.544715447141186,
+      "SHAP": 0.544715447141186
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.2320037705100442,
+      "MAPLE": -0.011669600545284578,
+      "SHAP": 0.058217068363417945
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.12581026988280186,
+      "MAPLE": 0.05544964977078715,
+      "SHAP": 0.1425411291225699
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 8.64729570381049,
+      "MAPLE": 4.252171957007282,
+      "SHAP": 4.955452920070579
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 2.1372674101308746,
+      "MAPLE": 2.9035125011467207,
+      "SHAP": 0.8099279392892038
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.05970177742661182,
+      "MAPLE": 0.09382057150507678,
+      "SHAP": -0.524547280223256
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.2619047619047619,
+      "MAPLE": 0.23809523809523808,
+      "SHAP": 0.2857142857142857
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 4.0476190476190474,
+      "MAPLE": 1.0238095238095237,
+      "SHAP": 1.7142857142857142
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 6087.7965360098615,
+      "MAPLE": 4.452837740543144,
+      "SHAP": 275.17302388860554
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 296631.11642436835,
+      "MAPLE": 184211.48051974984,
+      "SHAP": 11083.876665906617
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.35323516898591173,
+      "MAPLE": -0.01728054526217737,
+      "SHAP": -0.493013718989503
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.5944507220948365,
+      "MAPLE": 0.48795518546813127,
+      "SHAP": 0.4539760362321068
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.5388954299668586,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.280903594443601,
+      "MAPLE": 0.9276533590873777,
+      "SHAP": 2.780936081967301
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.5867652154740843,
+      "MAPLE": 1.71191102112849,
+      "SHAP": 1.7267383817786754
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.6039488966170931,
+      "MAPLE": 0.6039488966170931,
+      "SHAP": 0.6039488966170931
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.1654914297246203,
+      "MAPLE": 0.00743188719483349,
+      "SHAP": -0.05715985821928195
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.11434073094402585,
+      "MAPLE": 0.04388745079662304,
+      "SHAP": 0.014083432930592669
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 12.065457091025058,
+      "MAPLE": 4.01055218137173,
+      "SHAP": 12.866829480760012
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.9711882124579274,
+      "MAPLE": 1.9284733642206564,
+      "SHAP": 3.308630849648661
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.37096353181376607,
+      "MAPLE": -0.0952928376514417,
+      "SHAP": -0.6812231069441308
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.2619047619047619,
+      "MAPLE": 0.30952380952380953,
+      "SHAP": 0.2619047619047619
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 6.357142857142857,
+      "MAPLE": 3.7857142857142856,
+      "SHAP": 4.976190476190476
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 1692.857405637498,
+      "MAPLE": 0.16331829943084744,
+      "SHAP": 10723.428919164728
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 143886.20470247034,
+      "MAPLE": 289.5191229664049,
+      "SHAP": 761926.1526404056
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.42542647971116326,
+      "MAPLE": 0.07928313790486495,
+      "SHAP": -0.5338897399378867
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.5922246333387561,
+      "MAPLE": 0.5423838282183411,
+      "SHAP": 0.5494322731506383
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.5916814973040095,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.2119494729095623,
+      "MAPLE": 1.0015367139956024,
+      "SHAP": 1.7624035549489594
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 1.496824789426903,
+      "MAPLE": 1.8049019697583386,
+      "SHAP": 1.487454304914912
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.49825783970910176,
+      "MAPLE": 0.49825783970910176,
+      "SHAP": 0.49825783970910176
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0981467943559762,
+      "MAPLE": 0.005251802134590894,
+      "SHAP": 0.35664886025888015
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.17296925770267937,
+      "MAPLE": 0.2631487167394949,
+      "SHAP": -0.28972426092272335
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 11.596272019049618,
+      "MAPLE": 4.542508567379561,
+      "SHAP": 3.4092373880459337
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.8927679924168839,
+      "MAPLE": 2.508808232925623,
+      "SHAP": 2.4231783292221833
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.4427757757275401,
+      "MAPLE": 0.3345488941911765,
+      "SHAP": 0.288010569804907
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.23809523809523808,
+      "MAPLE": 0.3333333333333333,
+      "SHAP": 0.2619047619047619
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 4.404761904761905,
+      "MAPLE": 1.119047619047619,
+      "SHAP": 3.119047619047619
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 2919.8902839965726,
+      "MAPLE": 5.045085053579466,
+      "SHAP": 0.12695996362360068
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 219869418.77244258,
+      "MAPLE": 788090.514062628,
+      "SHAP": 4611.668655417039
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.3270689362747921,
+      "MAPLE": -0.138098995014933,
+      "SHAP": -0.7413352027037791
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.6315810976981484,
+      "MAPLE": 0.505602858546078,
+      "SHAP": 0.5956216866005868
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.4880822298601805,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 2.1429395425637465,
+      "MAPLE": 11726.655530701293,
+      "SHAP": 0.9037288022137082
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.8083485872048257,
+      "MAPLE": -1.0000889005818412e-12,
+      "SHAP": 0.1764781101491518
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.9999999999756097,
+      "MAPLE": 0.9999999999756097,
+      "SHAP": 0.9999999999756097
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.20911925331979203,
+      "MAPLE": 0.0416877794766755,
+      "SHAP": -0.1643547271225715
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.6349976196129635,
+      "MAPLE": 0.23809320819352978,
+      "SHAP": -0.42967429845182653
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 7.38544765748077,
+      "MAPLE": 3.270051919583396,
+      "SHAP": 3.847457550241626
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 4.01687967202145,
+      "MAPLE": 16590.08059933602,
+      "SHAP": 2.650829484489538
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 1.0,
+      "MAPLE": 1.0,
+      "SHAP": 1.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.4523674124078757,
+      "MAPLE": 0.5269284763800571,
+      "SHAP": 0.5389872677602768
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 5.285714285714286,
+      "MAPLE": 3.6666666666666665,
+      "SHAP": 6.380952380952381
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 306.93579639474353,
+      "MAPLE": 0.6253282353474992,
+      "SHAP": 0.7028792533857948
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 23195324.930535775,
+      "MAPLE": 20199454.934101768,
+      "SHAP": 46262.842726879935
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": -0.09550072595445663,
+      "MAPLE": -0.25122914088460296,
+      "SHAP": -0.9636732517092921
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.8069127238643935,
+      "MAPLE": 0.8863324406451332,
+      "SHAP": 0.8874989025887194
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "AvgSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.0183275521273383,
+      "MAPLE": 1.0101700427297935,
+      "SHAP": 0.7451839353469074
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "Completeness",
+      "metric_params": {
+        "abs": false,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.9878831284527575,
+      "MAPLE": 1.7972083620512005,
+      "SHAP": 1.357262817385661
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "Consistency",
+      "metric_params": {
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.907084785111442,
+      "MAPLE": 0.907084785111442,
+      "SHAP": 0.907084785111442
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": -0.27261563773670644,
+      "MAPLE": 0.008502124865365532,
+      "SHAP": -0.46656154685508866
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "FaithfulnessEstimate",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": -0.09090061400216351,
+      "MAPLE": 0.15347575509486283,
+      "SHAP": -0.31520850999678457
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": true,
+        "perturb_mean": 0.0,
+        "perturb_std": 0.1
+      },
+      "LIME": 10.444861419628237,
+      "MAPLE": 4.340750605104799,
+      "SHAP": 1.3347378128776397
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "MaxSensitivity",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false,
+        "lower_bound": 0.2
+      },
+      "LIME": 1.7370067886294338,
+      "MAPLE": 1.2659538733873372,
+      "SHAP": 1.4763633574030097
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "Monotonicity",
+      "metric_params": {
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "MonotonicityCorrelation",
+      "metric_params": {
+        "eps": "1e-5",
+        "nr_samples": 100,
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "mean"
+      },
+      "LIME": 0.2539930979795506,
+      "MAPLE": 0.4038392122842752,
+      "SHAP": 0.2520730248420203
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "MonotonicityMetric",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.0,
+      "SHAP": 0.0
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "NonSensitivity",
+      "metric_params": {
+        "eps": "1e-5",
+        "features_in_step": 1,
+        "abs": true,
+        "normalise": true,
+        "perturb_baseline": "black"
+      },
+      "LIME": 4.0,
+      "MAPLE": 1.0714285714285714,
+      "SHAP": 1.6904761904761905
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "RelativeInputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 410.1661397458743,
+      "MAPLE": 11.567828821322149,
+      "SHAP": 337.99032970107237
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "RelativeOutputStability",
+      "metric_params": {
+        "nr_samples": 100,
+        "abs": false,
+        "normalise": false
+      },
+      "LIME": 163898403.10605702,
+      "MAPLE": 20938120482.042557,
+      "SHAP": 24656686.196627274
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "SensitivityN",
+      "metric_params": {
+        "n_max_percentage": 1.0,
+        "features_in_step": 1,
+        "abs": false,
+        "normalise": true,
+        "perturb_baseline": "uniform"
+      },
+      "LIME": 0.009218189820416072,
+      "MAPLE": -0.06824820960755257,
+      "SHAP": -0.8055397362093843
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "LIME": 0.776397778246747,
+      "MAPLE": 0.5168829552731287,
+      "SHAP": 0.6422838424428178
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "Sufficiency",
+      "metric_params": {
+        "threshold": 0.6,
+        "distance_func": "seuclidean",
+        "abs": true,
+        "normalise": true
+      },
+      "LIME": 0.0,
+      "MAPLE": 0.8971310045771452,
+      "SHAP": 0.0
+    }
+  ]
+}
