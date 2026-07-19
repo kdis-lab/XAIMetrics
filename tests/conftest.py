@@ -76,9 +76,11 @@ def explainer_context():
         device="cpu",
     )
 
-# -----------------------
-# METRICS TEST FIXTURE
-# -----------------------
+
+# ------------------------
+# METRICS TEST FIXTURES
+# ------------------------
+
 
 @pytest.fixture
 def context():
@@ -143,3 +145,52 @@ def assert_common_quantus_inputs(calls, context):
         call['a_batch'],
         context.attributions
     )
+
+
+# ---------------------------
+# EXPLAINERS TEST FIXTURES
+# ---------------------------
+
+class DummyClassificationModel:
+    def predict_proba(self, inputs):
+        inputs = np.asarray(inputs, dtype=float)
+
+        if inputs.ndim == 1:
+            inputs = inputs.reshape(1, -1)
+
+        score = inputs.mean(axis=1)
+
+        return np.column_stack([
+            1.0 - score,
+            score
+        ])
+    
+
+@pytest.fixture
+def xai_context():
+    return ExplainerContext(
+        model=None,
+        X_background=pd.DataFrame(
+            {
+                "x1": [0.0, 0.1, 0.2, 0.3, 0.4],
+                "x2": [1.0, 1.1, 1.2, 1.3, 1.4],
+                "x3": [2.0, 2.1, 2.2, 2.3, 2.4],
+            }
+        ),
+        y_background=pd.Series([0, 0, 1, 1, 1]),
+        X_batch=pd.DataFrame(
+            {
+                "x1": [10.0, 20.0],
+                "x2": [11.0, 21.0],
+                "x3": [12.0, 22.0],
+            },
+            index=[10, 20]
+        ),
+        y_batch=pd.Series([1, 0], index=[10, 20]),
+        device='cpu'
+    )
+
+
+@pytest.fixture
+def classification_model():
+    return DummyClassificationModel()
