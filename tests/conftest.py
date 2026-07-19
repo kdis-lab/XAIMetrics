@@ -1,6 +1,4 @@
 # tests/conftest.py
-from typing import Any
-
 import pytest
 import torch.nn as nn
 import pandas as pd
@@ -76,4 +74,72 @@ def explainer_context():
         X_batch=pd.DataFrame({"x1": [1.0], "x2": [2.0]}, index=[10]),
         y_batch=pd.Series([1], index=[10]),
         device="cpu",
+    )
+
+# -----------------------
+# METRICS TEST FIXTURE
+# -----------------------
+
+@pytest.fixture
+def context():
+    model = nn.Linear(3, 2)
+
+    return MetricContext(
+        model=model,
+        X_test=pd.DataFrame(
+            {
+                "x1": [1.0, 4.0, 7.0],
+                "x2": [2.0, 5.0, 8.0],
+                "x3": [3.0, 6.0, 9.0],
+            },
+            index=[10, 20, 30]
+        ),
+        y_test=pd.Series([0, 1, 0], index=[10, 20, 30]),
+        observations=[20, 10],
+        attributions=np.array(
+            [
+                [0.1, 0.2, 0.7],
+                [0.6, 0.3, 0.1]
+            ]
+        ),
+        device='cpu'
+    )
+
+
+@pytest.fixture
+def explain_func():
+    def explain(model, inputs, targets=None, **kwargs):
+        return np.asarray(inputs, dtype=float)
+    
+    return explain
+
+
+def fake_quantus_metric(result):
+    calls = {}
+
+    class FakeMetric:
+        def __init__(self, **kwargs):
+            calls['init'] = kwargs
+        
+        def __call__(self, **kwargs):
+            calls['call'] = kwargs
+            return result
+        
+    return FakeMetric, calls
+
+
+def assert_common_quantus_inputs(calls, context):
+    call = calls['call']
+
+    np.testing.assert_allclose(
+        np.asarray(call['x_batch']),
+        context.X_test.loc[context.observations].to_numpy()
+    )
+    np.testing.assert_array_equal(
+        np.asarray(call['y_batch']),
+        context.y_test.loc[context.observations].to_numpy()
+    )
+    np.testing.assert_allclose(
+        call['a_batch'],
+        context.attributions
     )
