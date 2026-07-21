@@ -34,13 +34,13 @@ results = run_evaluation(
     report_output_dir=None
 )
 
-context_result = results["contexts"][0]
-scores = context_result["results"]["Consistency"]
+context_result = results['contexts'][0]
+scores = context_result['results'][0]['value']
 
 print("\nrun_evaluation usage")
 print("--------------------")
 print("Config file:", config_path)
-print("Metadata:", context_result["metadata"])
+print("Metadata:", context_result['metadata'])
 print("Consistency scores:", scores)
 print("Mean Consistency:", float(np.mean(scores)))
-print("Report paths:", results["report_paths"])
+print("Report paths:", results['report_paths'])

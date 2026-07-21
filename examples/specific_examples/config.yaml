@@ -3,10 +3,10 @@ context:
   model_name: "IForest"
   xai_method_name: "LIME"
   device: "cpu"
-  model_path: "../models/hydraulic/IForest/hydraulic_IForest_seed_0.pkl"
-  X_test_path: "../data/hydraulic/X_test.csv"
-  y_test_path: "../data/hydraulic/y_test.csv"
-  attributions_path: "../attributions/hydraulic/IForest/LIME/hydraulic_IForest_lime_attributions.csv"
+  model_path: "examples/models/MetroPT3/IForest/MetroPT3_IForest_seed_0.pkl"
+  X_test_path: "examples/datasets/MetroPT3/X_test.csv"
+  y_test_path: "examples/datasets/MetroPT3/y_test.csv"
+  attributions_path: "examples/attributions/MetroPT3/IForest/LIME/MetroPT3_IForest_lime_attributions.csv"
 
 metrics:
   - name: Complexity
