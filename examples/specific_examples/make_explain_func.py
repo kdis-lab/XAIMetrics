@@ -1,5 +1,4 @@
 # examples/specific_examples/make_explain_func.py
-import pandas as pd
 from pathlib import Path
 
 from xai_metrics.config import ConfigController

@@ -99,3 +99,22 @@ metrics:
       nr_samples: 20
       abs: false
       normalise: false
+
+  - name: RelativeOutputStability
+    params:
+      nr_samples: 20
+      abs: false
+      normalise: false
+
+  - name: Completeness
+    params:
+      abs: false
+      normalise: true
+
+  - name: NonSensitivity
+    params:
+      eps: 1e-5
+      features_in_step: 1
+      abs: true
+      normalise: true
+      perturb_baseline: black

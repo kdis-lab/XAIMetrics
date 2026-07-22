@@ -1,7 +1,6 @@
 # examples/specific_examples/AvgSensitivity_examples.py
 from pathlib import Path
 import numpy as np
-import pandas as pd
 
 from xai_metrics.config import ConfigController
 from xai_metrics.metrics.sensitivity import AvgSensitivity
