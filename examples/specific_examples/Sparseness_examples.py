@@ -33,13 +33,13 @@ results = run_evaluation(
     report_output_dir=None
 )
 
-context_result = results["contexts"][0]
-scores = context_result["results"]["Sparseness"]
+context_result = results['contexts'][0]
+scores = context_result['results'][0]['value']
 
 print("\nrun_evaluation usage")
 print("--------------------")
 print("Config file:", config_path)
-print("Metadata:", context_result["metadata"])
+print("Metadata:", context_result['metadata'])
 print("Sparseness scores:", scores)
 print("Mean Sparseness:", float(np.mean(scores)))
-print("Report paths:", results["report_paths"])
+print("Report paths:", results['report_paths'])

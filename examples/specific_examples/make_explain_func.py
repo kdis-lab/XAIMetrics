@@ -1,17 +1,22 @@
 # examples/specific_examples/make_explain_func.py
 import pandas as pd
+from pathlib import Path
 
-from xai_metrics.base import ExplainerContext
+from xai_metrics.config import ConfigController
 from xai_metrics.explainers.lime import LIMEExplainer
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"
 
-def make_lime_explain_func(background, y_background=None, params=None):
-    if not isinstance(background, pd.DataFrame):
-        background = pd.DataFrame(background)
+def make_lime_explain_func():
+    context, _ = ConfigController(config_path).build_explainers_context()
 
-    context = ExplainerContext(
-        X_background=background,
-        y_background=y_background,
-    )
+    params = {
+        "mode": "classification",
+        "random_state": 42,
+        "num_samples": 5000,
+        "labels": [1],
+        "distance_metric": "euclidean"
+    }
 
     return LIMEExplainer(context=context, params=params).as_explain_func()

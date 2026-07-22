@@ -1,5 +1,5 @@
 context:
-  dataset_name: "hydraulic"
+  dataset_name: "MetroPT3"
   model_name: "IForest"
   xai_method_name: "LIME"
   device: "cpu"
@@ -7,6 +7,10 @@ context:
   X_test_path: "examples/datasets/MetroPT3/X_test.csv"
   y_test_path: "examples/datasets/MetroPT3/y_test.csv"
   attributions_path: "examples/attributions/MetroPT3/IForest/LIME/MetroPT3_IForest_lime_attributions.csv"
+  X_background_path: "examples/datasets/MetroPT3/X_background.csv"
+  y_background_path: "examples/datasets/MetroPT3/y_background.csv"
+  X_batch_path: "examples/datasets/MetroPT3/X_batch.csv"
+  y_batch_path: "examples/datasets/MetroPT3/y_batch.csv"
 
 metrics:
   - name: Complexity
@@ -70,14 +74,14 @@ metrics:
 
   - name: AvgSensitivity
     params:
-      nr_samples: 200
+      nr_samples: 20
       abs: false
       normalise: false
       lower_bound: 0.2
 
   - name: LocalLipschitzEstimate
     params:
-      nr_samples: 200
+      nr_samples: 20
       abs: false
       normalise: true
       perturb_mean: 0.0
@@ -85,13 +89,13 @@ metrics:
 
   - name: MaxSensitivity
     params:
-      nr_samples: 200
+      nr_samples: 20
       abs: false
       normalise: false
       lower_bound: 0.2
 
   - name: RelativeInputStability
     params:
-      nr_samples: 200
+      nr_samples: 20
       abs: false
       normalise: false
