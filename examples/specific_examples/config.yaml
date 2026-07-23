@@ -118,3 +118,39 @@ metrics:
       abs: true
       normalise: true
       perturb_baseline: black
+
+explainers:
+  - name: LIME
+    params:
+      mode: classification
+      random_state: 42
+      num_samples: 5000
+      labels: [1]
+      distance_metric: euclidean
+
+  - name: SHAP
+    params:
+      mode: classification
+      algorithm: auto
+      max_background_samples: 100
+      output_index: 1
+      random_state: 42
+
+  - name: BreakDown
+    params:
+      mode: classification
+      output_index: 1
+      random_state: 42
+
+  - name: MAPLE
+    params:
+      mode: classification
+      output_index: 1
+      fe_type: rf
+      n_estimators: 200
+      max_features: 0.5
+      min_samples_leaf: 10
+      regularization: 0.001
+      validation_size: 0.2
+      random_state: 42
+      n_jobs: -1
