@@ -6,7 +6,7 @@ from xai_metrics.config import ConfigController
 from xai_metrics.metrics.faithfulness import Monotonicity
 from xai_metrics.runner import run_evaluation
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 # direct class use
 config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"

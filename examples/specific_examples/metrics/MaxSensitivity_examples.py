@@ -1,37 +1,43 @@
-# examples/specific_examples/Completeness_examples.py
+# examples/specific_examples/MaxSensitivity_examples.py
 from pathlib import Path
 import numpy as np
 
 from xai_metrics.config import ConfigController
-from xai_metrics.metrics.fidelity.completeness import Completeness
+from xai_metrics.metrics.robustness import MaxSensitivity
 from xai_metrics.runner import run_evaluation
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+from make_explain_func import make_lime_explain_func
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 # direct class use
 config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"
 
 context, metadata = ConfigController(config=config_path).build_metric_context()
-metric = Completeness(
+metric = MaxSensitivity(
     context=context,
     params={
+        "nr_samples": 20,
         "abs": False,
-        "normalise": True
-    }
+        "normalise": False,
+        "lower_bound": 0.2
+    },
+    explain_func = make_lime_explain_func()
 )
 
 scores = metric.run()
 
 print("\nDirect class usage")
 print("------------------")
-print("Completeness scores:", scores)
-print("Mean Completeness:", float(np.mean(scores)))
+print("MaxSensitivity scores:", scores)
+print("Mean MaxSensitivity:", float(np.mean(scores)))
 
 # run_evaluation use
 results = run_evaluation(
-    selected_metrics=["Completeness"],
+    selected_metrics=["MaxSensitivity"],
     config=config_path,
-    report_output_dir=None
+    report_output_dir=None,
+    explain_func = make_lime_explain_func()
 )
 
 context_result = results['contexts'][0]
@@ -41,6 +47,6 @@ print("\nrun_evaluation usage")
 print("--------------------")
 print("Config file:", config_path)
 print("Metadata:", context_result['metadata'])
-print("Completeness scores:", scores)
-print("Mean Completeness:", float(np.mean(scores)))
+print("LocalLipschitzEstimate scores:", scores)
+print("Mean LocalLipschitzEstimate:", float(np.mean(scores)))
 print("Report paths:", results['report_paths'])

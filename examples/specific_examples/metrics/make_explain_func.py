@@ -4,7 +4,7 @@ from pathlib import Path
 from xai_metrics.config import ConfigController
 from xai_metrics.explainers.lime import LIMEExplainer
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"
 
 def make_lime_explain_func():

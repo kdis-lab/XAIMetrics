@@ -1,24 +1,26 @@
-# examples/specific_examples/Sufficiency_examples.py
+# examples/specific_examples/MonotonicityCorrelation_examples.py
 from pathlib import Path
 import numpy as np
 
 from xai_metrics.config import ConfigController
-from xai_metrics.metrics.faithfulness import Sufficiency
+from xai_metrics.metrics.faithfulness import MonotonicityCorrelation
 from xai_metrics.runner import run_evaluation
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 # direct class use
 config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"
 
 context, metadata = ConfigController(config=config_path).build_metric_context()
-metric = Sufficiency(
+metric = MonotonicityCorrelation(
     context=context,
     params={
-        "threshold": 0.6,
-        "distance_func": "seuclidean",
+        "eps": 1e-5,
+        "nr_samples": 100,
+        "features_in_step": 1,
         "abs": True,
-        "normalise": True
+        "normalise": True,
+        "perturb_baseline": "mean"
     }
 )
 
@@ -26,12 +28,12 @@ scores = metric.run()
 
 print("\nDirect class usage")
 print("------------------")
-print("Sufficiency scores:", scores)
-print("Mean Sufficiency:", float(np.mean(scores)))
+print("MonotonicityCorrelation scores:", scores)
+print("Mean MonotonicityCorrelation:", float(np.mean(scores)))
 
 # run_evaluation use
 results = run_evaluation(
-    selected_metrics=["Sufficiency"],
+    selected_metrics=["MonotonicityCorrelation"],
     config=config_path,
     report_output_dir=None
 )
@@ -43,6 +45,6 @@ print("\nrun_evaluation usage")
 print("--------------------")
 print("Config file:", config_path)
 print("Metadata:", context_result['metadata'])
-print("Sufficiency scores:", scores)
-print("Mean Sufficiency:", float(np.mean(scores)))
+print("MonotonicityCorrelation scores:", scores)
+print("Mean MonotonicityCorrelation:", float(np.mean(scores)))
 print("Report paths:", results['report_paths'])
