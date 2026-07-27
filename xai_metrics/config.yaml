@@ -111,6 +111,15 @@ metrics:
       normalise: false
       lower_bound: 0.2
 
+  - name: MuFidelity
+    params:
+      n_masks: 200
+      subset_probability: 0.5
+      baseline_mode: mean
+      abs: false
+      normalise: false
+      random_state: 42
+
 
 explainers:
   - name: LIME

@@ -9,6 +9,7 @@ CACHE_DIR="${TMPDIR:-/tmp}/xai-metrics-example-cache"
 mkdir -p "${CACHE_DIR}/matplotlib" "${CACHE_DIR}/xdg-cache"
 export MPLCONFIGDIR="${MPLCONFIGDIR:-${CACHE_DIR}/matplotlib}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${CACHE_DIR}/xdg-cache}"
+export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-}"
 
 if [[ -x "${PROJECT_ROOT}/.venv/bin/python" ]]; then
   PYTHON_BIN="${PROJECT_ROOT}/.venv/bin/python"

@@ -111,6 +111,13 @@ metrics:
       abs: false
       normalise: true
 
+  - name: MuFidelity
+    params:
+      one_hot_targets: true
+      num_classes: 2
+      nb_samples: 200
+      subset_percent: 0.5
+
   - name: NonSensitivity
     params:
       eps: 1e-5
