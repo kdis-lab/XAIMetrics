@@ -1,4 +1,4 @@
-# examples/specific_examples/Consistency_examples.py
+# examples/specific_examples/metrics/Consistency_examples.py
 from pathlib import Path
 import numpy as np
 

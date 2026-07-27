@@ -1,4 +1,4 @@
-# examples/specific_examples/SensitivityN_examples.py
+# examples/specific_examples/metrics/SensitivityN_examples.py
 from pathlib import Path
 import numpy as np
 

@@ -1,4 +1,4 @@
-# examples/specific_examples/MonotonicityMetric_examples.py
+# examples/specific_examples/metrics/NonSensitivity_examples.py
 from pathlib import Path
 import numpy as np
 

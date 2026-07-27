@@ -1,4 +1,4 @@
-# examples/specific_examples/LocalLipschitzEstimate_examples.py
+# examples/specific_examples/metrics/LocalLipschitzEstimate_examples.py
 from pathlib import Path
 import numpy as np
 

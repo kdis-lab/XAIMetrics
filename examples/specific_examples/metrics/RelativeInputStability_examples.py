@@ -1,4 +1,4 @@
-# examples/specific_examples/RelativeInputStability_examples.py
+# examples/specific_examples/metrics/RelativeInputStability_examples.py
 from pathlib import Path
 import numpy as np
 

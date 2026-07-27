@@ -1,4 +1,4 @@
-# examples/specific_examples/BreakDown_examples.py
+# examples/specific_examples/explainers/BreakDown_examples.py
 from pathlib import Path
 
 import numpy as np

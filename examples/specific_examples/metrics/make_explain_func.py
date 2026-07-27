@@ -1,4 +1,4 @@
-# examples/specific_examples/make_explain_func.py
+# examples/specific_examples/metrics/make_explain_func.py
 from pathlib import Path
 
 from xai_metrics.config import ConfigController

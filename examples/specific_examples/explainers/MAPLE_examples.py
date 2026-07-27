@@ -1,4 +1,4 @@
-# examples/specific_examples/MAPLE_examples.py
+# examples/specific_examples/explainers/MAPLE_examples.py
 from pathlib import Path
 
 import numpy as np
@@ -49,14 +49,14 @@ results = run_explanation(
     attribution_output_dir=None,
 )
 
-context_result = results["contexts"][0]
-runner_attributions = context_result["attributions"]["MAPLE"]
+context_result = results['contexts'][0]
+runner_attributions = context_result['attributions']['MAPLE']
 
 print("\nrun_explanation usage")
 print("---------------------")
 print("Config file:", config_path)
-print("Metadata:", context_result["metadata"])
+print("Metadata:", context_result['metadata'])
 print("Attributions shape:", runner_attributions.shape)
 print("First observation attributions:", runner_attributions[0])
 print("Mean absolute attribution:", float(np.mean(np.abs(runner_attributions))))
-print("Attribution paths:", results["attribution_paths"])
+print("Attribution paths:", results['attribution_paths'])

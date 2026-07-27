@@ -1,4 +1,4 @@
-# examples/specific_examples/Completeness_examples.py
+# examples/specific_examples/metrics/Completeness_examples.py
 from pathlib import Path
 import numpy as np
 

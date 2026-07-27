@@ -1,4 +1,4 @@
-# examples/specific_examples/LIME_examples.py
+# examples/specific_examples/explainers/LIME_examples.py
 from pathlib import Path
 
 import numpy as np

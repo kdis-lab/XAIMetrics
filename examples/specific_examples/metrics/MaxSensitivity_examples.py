@@ -1,4 +1,4 @@
-# examples/specific_examples/MaxSensitivity_examples.py
+# examples/specific_examples/metrics/MaxSensitivity_examples.py
 from pathlib import Path
 import numpy as np
 

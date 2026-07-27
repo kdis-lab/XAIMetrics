@@ -1,4 +1,4 @@
-# examples/specific_examples/SHAP_examples.py
+# examples/specific_examples/explainers/SHAP_examples.py
 from pathlib import Path
 
 import numpy as np

@@ -1,4 +1,4 @@
-# examples/specific_examples/FaithfulnessEstimate_examples.py
+# examples/specific_examples/metrics/FaithfulnessEstimate_examples.py
 from pathlib import Path
 import numpy as np
 

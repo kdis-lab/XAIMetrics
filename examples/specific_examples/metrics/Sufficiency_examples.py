@@ -1,4 +1,4 @@
-# examples/specific_examples/Sufficiency_examples.py
+# examples/specific_examples/metrics/Sufficiency_examples.py
 from pathlib import Path
 import numpy as np
 
