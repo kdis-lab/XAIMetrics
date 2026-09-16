@@ -111,6 +111,14 @@ metrics:
       abs: false
       normalise: true
 
+  - name: NonSensitivity
+    params:
+      eps: 1e-5
+      features_in_step: 1
+      abs: true
+      normalise: true
+      perturb_baseline: black
+
   - name: MuFidelity
     params:
       one_hot_targets: true
@@ -119,13 +127,21 @@ metrics:
       subset_percent: 0.5
       random_state: 42
 
-  - name: NonSensitivity
+  - name: Deletion
     params:
-      eps: 1e-5
-      features_in_step: 1
-      abs: true
-      normalise: true
-      perturb_baseline: black
+      baseline_mode: 0.0
+      steps: 10
+      max_percentage_perturbed: 1.0
+      batch_size: 64
+      activation: softmax
+
+  - name: Insertion
+    params:
+      baseline_mode: 0.0
+      steps: 10
+      max_percentage_perturbed: 1.0
+      batch_size: 64
+      activation: softmax
 
 explainers:
   - name: LIME

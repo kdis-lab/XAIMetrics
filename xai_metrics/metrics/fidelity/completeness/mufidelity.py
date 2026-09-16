@@ -91,7 +91,7 @@ class MuFidelity(BaseMetric):
             ctx.X_test.loc[ctx.observations].to_numpy(dtype=np.float32, copy=True),
             dtype=np.float32
         )
-        targets = np.asarray(ctx.y_test.loc[ctx.observations]).reshape(-1)
+        targets = None if ctx.y_test is None else np.asarray(ctx.y_test.loc[ctx.observations]).reshape(-1)
 
         nb_samples = int(p.get("nb_samples", p.get("n_masks", 200)))
         batch_size = p.get("batch_size", 64) or (len(inputs) * nb_samples)
@@ -139,9 +139,9 @@ class MuFidelity(BaseMetric):
             while generated < nb_samples:
                 count = min(perturbation_batch_size, nb_samples - generated)
                 generated += count
-                degraded, masks = self._perturb_samples(inputs, count)
-                repeated_targets = None if targets is None else np.repeat(targets, count, axis=0)
-                perturbed = self._score(degraded, repeated_targets).reshape(len(inputs), count)
+                degraded, masks = self._perturb_samples(inputs_slice, count)
+                repeated_targets = None if targets_slice is None else np.repeat(targets_slice, count, axis=0)
+                perturbed = self._score(degraded, repeated_targets).reshape(len(inputs_slice), count)
                 prediction_drops.append(base - perturbed)
                 attribution_sums.append(np.sum(phi * (1.0 - masks), axis=tuple(range(2, masks.ndim))))
 
@@ -151,4 +151,4 @@ class MuFidelity(BaseMetric):
                 correlation = spearmanr(prediction, attribute).statistic
                 correlations.append(0.0 if np.isnan(correlation) else float(correlation))
 
-        return float(np.mean(correlations))
+        return correlations
