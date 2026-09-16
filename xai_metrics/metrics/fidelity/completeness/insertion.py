@@ -76,6 +76,9 @@ class Insertion(BaseMetric):
 
         batch_size = int(p.get("batch_size", 64))
 
+        if batch_size <= 0:
+            raise ValueError("batch_size must be positive.")
+
         max_percentage_perturbed = float(p.get("max_percentage_perturbed", 1.0))
         if not 0.0 < max_percentage_perturbed <= 1.0:
             raise ValueError("max_percentage_perturbed must be in (0, 1].")

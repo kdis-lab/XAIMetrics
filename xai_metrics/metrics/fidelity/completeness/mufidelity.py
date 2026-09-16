@@ -95,6 +95,10 @@ class MuFidelity(BaseMetric):
 
         nb_samples = int(p.get("nb_samples", p.get("n_masks", 200)))
         batch_size = p.get("batch_size", 64) or (len(inputs) * nb_samples)
+
+        if batch_size <= 0:
+            raise ValueError("batch_size must be positive or None.")
+        
         self.grid_size = p.get("grid_size", None) or inputs.shape[1]
         self.subset_percent = float(p.get("subset_percent", p.get("subset_probability", 0.2)))
         self.operator = p.get("operator")

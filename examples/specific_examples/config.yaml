@@ -143,6 +143,21 @@ metrics:
       batch_size: 64
       activation: softmax
 
+  - name: AverageDrop
+    params:
+      batch_size: 64
+      activation: null
+
+  - name: AverageIncrease
+    params:
+      batch_size: 64
+      activation: null
+
+  - name: AverageGain
+    params:
+      batch_size: 64
+      activation: null
+
 explainers:
   - name: LIME
     params:
