@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from xai_metrics.base import BaseMetric, register_metric, MetricContext
+from xai_metrics.base import BaseMetric, register_metric, MetricContext, MetricSkipped
 
 from typing import Mapping, Any, Tuple, List
 
@@ -66,8 +66,8 @@ class AverageDrop(BaseMetric):
 
         for start in range(0, len(inputs), batch_size):
             stop = start + batch_size
-            target_batch = None if targets is None else targets[start:stop]
-            scores.append(self._score(inputs[start:stop], target_batch))
+            targets_batch = None if targets is None else targets[start:stop]
+            scores.append(self._score(inputs[start:stop], targets_batch))
 
         return np.concatenate(scores)
     
@@ -121,6 +121,9 @@ class AverageDrop(BaseMetric):
         )
         targets = None if ctx.y_test is None else np.asarray(ctx.y_test.loc[ctx.observations]).reshape(-1)
 
+        if len(inputs) == 0:
+            raise MetricSkipped(f"{self.NAME} skipped: no observations were selected.")
+
         batch_size = p.get("batch_size", 64) or len(inputs)
 
         if batch_size <= 0:
@@ -138,22 +141,19 @@ class AverageDrop(BaseMetric):
                 "The number of explanations must match the number of inputs: "
                 f"{len(explanations)} vs {len(inputs)}."
             )
-
-        if len(inputs) == 0:
-            return []
         
         scores = []
 
         for start in range(0, len(inputs), batch_size):
             stop = start + batch_size
 
-            target_batch = None if targets is None else targets[start:stop]
+            targets_batch = None if targets is None else targets[start:stop]
             inputs_batch = inputs[start:stop]
             explanations_batch = explanations[start:stop]
 
-            base = self._score_batched(inputs_batch, target_batch, len(inputs_batch))
+            base = self._score_batched(inputs_batch, targets_batch, len(inputs_batch))
             perturbed_inputs = self._perturb_with_mask(inputs_batch, explanations_batch)
-            after = self._score_batched(perturbed_inputs, target_batch, len(inputs_batch))
+            after = self._score_batched(perturbed_inputs, targets_batch, len(inputs_batch))
 
             batch_scores = np.maximum(base - after, 0.0) / (base + _EPS)
 

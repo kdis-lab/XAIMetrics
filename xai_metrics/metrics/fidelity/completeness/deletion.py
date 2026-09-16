@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from xai_metrics.base import BaseMetric, register_metric, MetricContext
+from xai_metrics.base import BaseMetric, register_metric, MetricContext, MetricSkipped
 
 from typing import Mapping, Any, Tuple, List
 
@@ -66,6 +66,9 @@ class Deletion(BaseMetric):
             dtype=np.float32
         )
         targets = None if ctx.y_test is None else np.asarray(ctx.y_test.loc[ctx.observations]).reshape(-1)
+
+        if len(inputs) == 0:
+            raise MetricSkipped(f"{self.NAME} skipped: no observations were selected.")
 
         explanations = np.asarray(ctx.attributions, dtype=np.float32)
         if len(explanations) != len(inputs):
@@ -137,9 +140,9 @@ class Deletion(BaseMetric):
             
             for start in range(0, len(batch_inputs), batch_size):
                 stop = start + batch_size
-                target_batch = None if targets is None else targets[start:stop]
+                targets_batch = None if targets is None else targets[start:stop]
     
-                scores.append(self._score(batch_inputs[start:stop], target_batch))
+                scores.append(self._score(batch_inputs[start:stop], targets_batch))
     
             predictions = np.concatenate(scores)
 

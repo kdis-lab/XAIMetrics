@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from scipy.stats import spearmanr
 
-from xai_metrics.base import BaseMetric, register_metric, MetricContext
+from xai_metrics.base import BaseMetric, register_metric, MetricContext, MetricSkipped
 
 from typing import Any, Mapping, Tuple, List
 
@@ -92,6 +92,9 @@ class MuFidelity(BaseMetric):
             dtype=np.float32
         )
         targets = None if ctx.y_test is None else np.asarray(ctx.y_test.loc[ctx.observations]).reshape(-1)
+
+        if len(inputs) == 0:
+            raise MetricSkipped(f"{self.NAME} skipped: no observations were selected.")
 
         nb_samples = int(p.get("nb_samples", p.get("n_masks", 200)))
         batch_size = p.get("batch_size", 64) or (len(inputs) * nb_samples)

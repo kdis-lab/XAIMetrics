@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from xai_metrics.base import BaseMetric, register_metric, MetricContext
+from xai_metrics.base import BaseMetric, register_metric, MetricContext, MetricSkipped
 
 from typing import Mapping, Any, Tuple, List
 
@@ -66,8 +66,8 @@ class AverageGain(BaseMetric):
 
         for start in range(0, len(inputs), batch_size):
             stop = start + batch_size
-            target_batch = None if targets is None else targets[start:stop]
-            scores.append(self._score(inputs[start:stop], target_batch))
+            targets_batch = None if targets is None else targets[start:stop]
+            scores.append(self._score(inputs[start:stop], targets_batch))
 
         return np.concatenate(scores)
     
@@ -121,6 +121,9 @@ class AverageGain(BaseMetric):
         )
         targets = None if ctx.y_test is None else np.asarray(ctx.y_test.loc[ctx.observations]).reshape(-1)
 
+        if len(inputs) == 0:
+            raise MetricSkipped(f"{self.NAME} skipped: no observations were selected.")
+
         batch_size = p.get("batch_size", 64) or len(inputs)
 
         if batch_size <= 0:
@@ -138,9 +141,6 @@ class AverageGain(BaseMetric):
                 "The number of explanations must match the number of inputs: "
                 f"{len(explanations)} vs {len(inputs)}."
             )
-
-        if len(inputs) == 0:
-            return []
         
         scores = []
 
@@ -154,6 +154,12 @@ class AverageGain(BaseMetric):
             base = self._score_batched(inputs_batch, targets_batch, len(inputs_batch))
             perturbed_inputs = self._perturb_with_mask(inputs_batch, explanations_batch)
             after = self._score_batched(perturbed_inputs, targets_batch, len(inputs_batch))
+
+            if np.any(base < 0.0) or np.any(base > 1.0):
+                raise MetricSkipped(
+                    "AverageGain skipped: it requires scores in [0, 1]. "
+                    "Use activation='softmax', activation='sigmoid', or provide an operator that returns probabilities."
+                )
 
             batch_scores = np.maximum(after - base, 0.0) / (1.0 - base + _EPS)
 

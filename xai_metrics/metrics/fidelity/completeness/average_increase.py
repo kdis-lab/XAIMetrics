@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 
-from xai_metrics.base import BaseMetric, register_metric, MetricContext
+from xai_metrics.base import BaseMetric, register_metric, MetricContext, MetricSkipped
 
 from typing import Mapping, Any, Tuple, List
 
@@ -66,8 +66,8 @@ class AverageIncrease(BaseMetric):
 
         for start in range(0, len(inputs), batch_size):
             stop = start + batch_size
-            target_batch = None if targets is None else targets[start:stop]
-            scores.append(self._score(inputs[start:stop], target_batch))
+            targets_batch = None if targets is None else targets[start:stop]
+            scores.append(self._score(inputs[start:stop], targets_batch))
 
         return np.concatenate(scores)
     
@@ -121,6 +121,9 @@ class AverageIncrease(BaseMetric):
         )
         targets = None if ctx.y_test is None else np.asarray(ctx.y_test.loc[ctx.observations]).reshape(-1)
 
+        if len(inputs) == 0:
+            raise MetricSkipped(f"{self.NAME} skipped: no observations were selected.")
+
         batch_size = p.get("batch_size", 64) or len(inputs)
 
         if batch_size <= 0:
@@ -138,9 +141,6 @@ class AverageIncrease(BaseMetric):
                 "The number of explanations must match the number of inputs: "
                 f"{len(explanations)} vs {len(inputs)}."
             )
-
-        if len(inputs) == 0:
-            return []
         
         scores = []
 

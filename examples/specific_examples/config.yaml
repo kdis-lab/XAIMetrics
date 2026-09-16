@@ -158,6 +158,19 @@ metrics:
       batch_size: 64
       activation: null
 
+  - name: RandomLogit
+    params:
+      batch_size: 64
+      random_state: 42
+      num_classes: 2
+
+  - name: ModelRandomization
+    params:
+      batch_size: 64
+      fraction: 0.25
+      reverse: true
+      random_state: 42
+
 explainers:
   - name: LIME
     params:
