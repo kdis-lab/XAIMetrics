@@ -155,7 +155,7 @@ class AverageGain(BaseMetric):
             perturbed_inputs = self._perturb_with_mask(inputs_batch, explanations_batch)
             after = self._score_batched(perturbed_inputs, targets_batch, len(inputs_batch))
 
-            batch_scores = np.maximum(after - base, 0.0) / (1.0 - base - _EPS)
+            batch_scores = np.maximum(after - base, 0.0) / (1.0 - base + _EPS)
 
             scores.append(batch_scores)
 
