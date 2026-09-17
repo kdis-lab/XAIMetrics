@@ -3,8 +3,10 @@ from .local_lipschitz_estimate import LocalLipschitzEstimate
 from .max_sensitivity import MaxSensitivity
 from .relative_input_stability import RelativeInputStability
 from .relative_output_stability import RelativeOutputStability
+from .average_stability import AverageStability
 
 __all__ = ["LocalLipschitzEstimate",
            "MaxSensitivity",
            "RelativeInputStability",
-           "RelativeOutputStability"]
+           "RelativeOutputStability",
+           "AverageStability"]

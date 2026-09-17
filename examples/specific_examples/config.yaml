@@ -171,6 +171,13 @@ metrics:
       reverse: true
       random_state: 42
 
+  - name: AverageStability
+    params:
+      radius: 0.1
+      nb_samples: 20
+      distance: l2
+      random_state: 42
+
 explainers:
   - name: LIME
     params:
