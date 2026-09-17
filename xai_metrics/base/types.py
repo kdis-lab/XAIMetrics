@@ -4,3 +4,5 @@ import numpy as np
 import torch.nn as nn
 
 type ExplainFunc = Callable[[nn.Module, Any, Any | None], np.ndarray]
+
+type TrainingFunc = Callable[[np.ndarray, np.ndarray, np.ndarray, np.ndarray], Any]

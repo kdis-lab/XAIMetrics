@@ -4,7 +4,7 @@ import torch
 from scipy.stats import spearmanr
 
 from xai_metrics.base import BaseMetric, MetricContext, register_metric, MetricSkipped
-from xai_metrics.base.types import ExplainFunc
+from xai_metrics.base.types import ExplainFunc, TrainingFunc
 
 from typing import Mapping, Any, Callable, Tuple, List
 
@@ -15,7 +15,7 @@ class MeGe(BaseMetric):
     def __init__(
         self,
         context: MetricContext,
-        training_func: Callable,
+        training_func: TrainingFunc,
         explain_func: ExplainFunc,
         params: Mapping[str, Any] | None = None
     ):
