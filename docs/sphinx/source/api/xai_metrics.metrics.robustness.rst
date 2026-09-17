@@ -7,8 +7,10 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   xai_metrics.metrics.robustness.average_stability
    xai_metrics.metrics.robustness.local_lipschitz_estimate
    xai_metrics.metrics.robustness.max_sensitivity
+   xai_metrics.metrics.robustness.mege
    xai_metrics.metrics.robustness.relative_input_stability
    xai_metrics.metrics.robustness.relative_output_stability
 

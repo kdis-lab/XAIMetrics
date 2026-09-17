@@ -8,6 +8,8 @@ Submodules
    :maxdepth: 4
 
    xai_metrics.metrics.sensitivity.avg_sensitivity
+   xai_metrics.metrics.sensitivity.model_randomization
+   xai_metrics.metrics.sensitivity.random_logit
 
 Module contents
 ---------------

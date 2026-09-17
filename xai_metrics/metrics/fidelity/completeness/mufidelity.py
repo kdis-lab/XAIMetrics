@@ -9,13 +9,170 @@ from typing import Any, Mapping, Tuple, List
 
 @register_metric
 class MuFidelity(BaseMetric):
+    """
+    MuFidelity correlation metric.
+
+    This metric evaluates whether the importance assigned by an explanation to
+    randomly selected subsets of features is consistent with the effect that
+    perturbing those features has on the model output.
+
+    For each observation, multiple random feature subsets are generated. The
+    selected features are replaced by a baseline value and the model score is
+    recomputed. For every perturbation, two quantities are compared:
+
+    .. math::
+        prediction_drop = g(f, x_i, y_i) - g(f, x_i^S, y_i)
+
+    .. math::
+        attribution_sum = sum(phi_i,j for j in S)
+
+    where ``f`` is the model, ``g`` is the scoring operator, ``x_i^S`` is the
+    input after replacing the features in subset ``S`` by the baseline and
+    ``phi_i,j`` is the attribution assigned to feature ``j``.
+
+    The metric computes the Spearman rank correlation between the prediction
+    drops and the corresponding attribution sums across the generated
+    perturbations.
+
+    A high positive correlation indicates that subsets receiving larger
+    attribution values tend to cause larger decreases in the model score when
+    perturbed. Higher values are therefore better and indicate stronger
+    agreement between the explanation and the model behaviour.
+
+    Random subsets are generated using Bernoulli masks. For tabular data,
+    features are sampled independently. For time-series and image data, masks
+    can be generated on a lower-resolution grid and expanded using
+    nearest-neighbour interpolation, allowing groups of nearby features to be
+    perturbed together.
+
+    The implementation is based on the fidelity correlation metric proposed by
+    Bhatt et al. (2020) and follows the implementation provided by Xplique, with
+    support for tabular data, time series, images, PyTorch models, models
+    exposing ``predict`` or ``predict_proba``, and custom scoring operators.
+
+    Bhatt, U., Weller, A., & Moura, J. M. F. (2020).
+    Evaluating and Aggregating Feature-based Model Explanations.
+    Proceedings of the Twenty-Ninth International Joint Conference on
+    Artificial Intelligence (IJCAI).
+    """
     NAME = "MuFidelity"
 
     def __init__(self, context: MetricContext, params: Mapping[str, Any] | None = None):
+        """
+        Parameters
+        ----------
+        context : MetricContext
+            Shared metric evaluation context. It must contain the model,
+            ``X_test``, selected observations and attribution values. ``y_test``
+            may be ``None`` when the model score can be determined without
+            explicit targets.
+        params : Mapping[str, Any] or None, optional
+            Metric-specific parameters. Supported keys are:
+
+            - ``nb_samples`` : int, optional
+              Number of random perturbation masks generated for each observation.
+              The default value is ``200``.
+
+            - ``n_masks`` : int, optional
+              Alias for ``nb_samples``. It is used only when ``nb_samples`` is
+              not provided.
+
+            - ``batch_size`` : int or None, optional
+              Maximum number of perturbed observations processed at once. If
+              ``None``, all perturbations for the selected observations may be
+              processed together. The default value is ``64``.
+
+            - ``grid_size`` : int or None, optional
+              Resolution used to generate coarse perturbation masks. If ``None``
+              or zero-like, the size of the first feature dimension is used.
+              For time series, masks are generated over
+              ``(grid_size, n_features)`` and expanded over the temporal
+              dimension. For images, masks are generated over
+              ``(grid_size, grid_size)`` and expanded over the spatial
+              dimensions.
+
+            - ``subset_percent`` : float, optional
+              Probability that each generated mask element is replaced by the
+              baseline. The default value is ``0.2``.
+
+            - ``subset_probability`` : float, optional
+              Alias for ``subset_percent``. It is used only when
+              ``subset_percent`` is not provided.
+
+            - ``baseline_mode`` : float, array-like or callable, optional
+              Baseline used to replace perturbed features. If callable, it
+              receives the repeated inputs associated with the generated
+              perturbations. The default value is ``0.0``.
+
+            - ``operator`` : callable or None, optional
+              Custom scoring function ``g(model, inputs, targets)`` used to
+              obtain one scalar score per observation. If ``None``, the metric
+              performs inference directly using the model and selects the
+              corresponding target score. The default value is ``None``.
+
+            - ``activation`` : {None, "sigmoid", "softmax"}, optional
+              Activation function applied to model predictions before selecting
+              the score. ``None`` leaves predictions unchanged. The default
+              value is ``None``.
+
+            - ``random_state`` : int, np.random.Generator or None, optional
+              Random seed or NumPy random generator used to create perturbation
+              masks. Providing a fixed value makes mask generation reproducible.
+              The default value is ``None``.
+
+            If ``None``, an empty dictionary is used.
+
+        Notes
+        -----
+        When no custom ``operator`` is provided, model inference is performed
+        using, in order, a PyTorch ``torch.nn.Module``, ``predict_proba``,
+        ``predict`` or direct model invocation.
+
+        For two-dimensional model outputs, targets are interpreted as class
+        indices. If no targets are provided, the maximum model output for each
+        observation is used.
+
+        The effective processing batch size is divided between observations and
+        perturbations so that several perturbations of several observations can
+        be evaluated together without exceeding the configured ``batch_size``.
+
+        The metric returns one correlation value per observation rather than
+        automatically averaging the correlations across the dataset.
+        """
         super().__init__(context, params)
 
 
     def _score(self, inputs: np.ndarray, targets: np.ndarray | None) -> np.ndarray:
+        """
+        Compute one scalar model score per observation.
+
+        If a custom ``operator`` is configured, it is used directly. Otherwise,
+        the method performs model inference and optionally applies the configured
+        activation function.
+
+        For two-dimensional predictions ``(N, C)``, the score corresponding to
+        each target class is selected. If ``targets`` is ``None``, the maximum
+        prediction over the class dimension is returned.
+
+        Parameters
+        ----------
+        inputs : np.ndarray
+            Batch of input observations.
+        targets : np.ndarray or None
+            Target class indices associated with the observations. If ``None``,
+            the maximum model output is used for two-dimensional predictions.
+
+        Returns
+        -------
+        np.ndarray
+            One scalar score per observation, with shape ``(N,)``.
+
+        Raises
+        ------
+        ValueError
+            If the default scoring procedure receives model predictions with a
+            shape other than ``(N,)`` or ``(N, C)``.
+        """
         if self.operator is not None:
             result = self.operator(self.context.model, inputs, targets)
             return np.asarray(result, dtype=np.float32).reshape(-1)
@@ -60,7 +217,51 @@ class MuFidelity(BaseMetric):
 
 
     def _perturb_samples(self, inputs: np.ndarray, count: int) -> tuple[np.ndarray, np.ndarray]:
-        """Create Xplique-compatible Bernoulli masks and apply the baseline."""
+        """
+        Generate random perturbation masks and apply the configured baseline.
+
+        The method generates ``count`` Bernoulli masks and applies each mask to
+        every input observation. Mask values equal to ``1`` preserve the original
+        feature value, while values equal to ``0`` replace the corresponding
+        feature by the configured baseline.
+
+        The mask generation strategy depends on the input dimensionality:
+
+        - For tabular inputs ``(N, F)``, features are sampled independently.
+        - For time-series inputs ``(N, T, F)``, masks are generated on a coarse
+          ``(grid_size, F)`` grid and expanded over the temporal dimension using
+          nearest-neighbour indexing.
+        - For image inputs, masks are generated on a coarse
+          ``(grid_size, grid_size)`` spatial grid, expanded to the input spatial
+          dimensions and shared across channels.
+
+        Parameters
+        ----------
+        inputs : np.ndarray
+            Batch of input observations.
+        count : int
+            Number of random perturbation masks generated for each observation.
+
+        Returns
+        -------
+        perturbed_inputs : np.ndarray
+            Perturbed observations. The first two dimensions corresponding to
+            observations and perturbations are flattened, giving
+            ``len(inputs) * count`` samples.
+        masks : np.ndarray
+            Binary masks applied to the observations. The first dimension indexes
+            the original observations and the second dimension indexes the
+            generated perturbations.
+
+        Notes
+        -----
+        Each mask element is preserved when a uniform random value is greater
+        than ``subset_percent``. Consequently, each element is replaced by the
+        baseline with probability approximately equal to ``subset_percent``.
+
+        The perturbed observations are computed as
+        ``inputs * mask + baseline * (1 - mask)``.
+        """
         if inputs.ndim == 2:
             masks = self.rng.uniform(size=(count, inputs.shape[1])) > self.subset_percent
         elif inputs.ndim == 3:
@@ -84,6 +285,64 @@ class MuFidelity(BaseMetric):
 
 
     def run(self):
+        """
+        Compute the MuFidelity correlation metric.
+
+        The method selects the observations defined in the metric context and
+        first computes their original model scores. For each observation,
+        multiple random subsets of features are then perturbed by replacing them
+        with a configured baseline value.
+
+        For every generated perturbation, the method computes:
+
+        - the decrease in model score relative to the original observation; and
+        - the sum of attribution values associated with the perturbed features.
+
+        For each observation, MuFidelity is the Spearman rank correlation between
+        these two quantities across all generated perturbations.
+
+        A high positive correlation indicates that perturbing features assigned
+        greater importance by the explanation tends to produce larger decreases
+        in the model score. Higher values are therefore better.
+
+        Returns
+        -------
+        List[float]
+            MuFidelity correlation for each evaluated observation. Values are
+            Spearman correlation coefficients and therefore normally lie in
+            ``[-1, 1]``. Higher positive values indicate stronger fidelity.
+
+            If either sequence involved in the correlation is constant and the
+            Spearman coefficient is undefined, the score for that observation is
+            set to ``0.0``.
+
+        Raises
+        ------
+        MetricSkipped
+            If no observations are selected.
+        ValueError
+            If ``batch_size`` is not positive, if ``activation`` is not one of
+            ``None``, ``"sigmoid"`` or ``"softmax"``, or if the number of
+            explanations differs from the number of selected observations.
+
+        Notes
+        -----
+        ``nb_samples`` controls the number of random subsets used to estimate the
+        correlation. Larger values generally provide a more stable estimate at
+        the cost of additional model evaluations.
+
+        ``subset_percent`` controls the probability that a feature or coarse mask
+        element is replaced by the baseline in each perturbation.
+
+        When ``grid_size`` is smaller than the corresponding input dimension,
+        groups of neighbouring features are perturbed together. This can be
+        useful for medium- or high-dimensional inputs, particularly images and
+        time series.
+
+        The returned values are computed independently for each observation.
+        Unlike the original Xplique ``evaluate`` method, they are not
+        automatically averaged into a single dataset-level fidelity score.
+        """
         ctx = self.context
         p = self.params
 
@@ -97,13 +356,22 @@ class MuFidelity(BaseMetric):
             raise MetricSkipped(f"{self.NAME} skipped: no observations were selected.")
 
         nb_samples = int(p.get("nb_samples", p.get("n_masks", 200)))
+        if nb_samples <= 0:
+            raise ValueError("nb_samples must be positive.")
+
         batch_size = p.get("batch_size", 64) or (len(inputs) * nb_samples)
 
         if batch_size <= 0:
             raise ValueError("batch_size must be positive or None.")
         
         self.grid_size = p.get("grid_size", None) or inputs.shape[1]
+        if self.grid_size <= 0:
+            raise ValueError("grid_size must be positive or None.")
+        
         self.subset_percent = float(p.get("subset_percent", p.get("subset_probability", 0.2)))
+        if not 0.0 <= self.subset_percent <= 1.0:
+            raise ValueError("subset_percent must be in [0, 1].")
+        
         self.operator = p.get("operator")
         self.activation = p.get("activation")
 

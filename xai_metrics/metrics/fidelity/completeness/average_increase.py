@@ -11,57 +11,204 @@ _EPS = 1e-8
 
 @register_metric
 class AverageIncrease(BaseMetric):
+    """
+    Average Increase in Confidence fidelity metric.
+
+    This metric evaluates whether the model score increases when the original
+    input is masked according to the importance values provided by the
+    explanation. Features with larger absolute attribution values are preserved
+    to a greater extent, while features with smaller attribution values are
+    attenuated.
+
+    For each observation ``i``, the metric is computed as:
+
+    .. math::
+        base_i = g(f, x_i, y_i)
+
+    .. math::
+        after_i = g(f, x_i * M_i, y_i)
+
+    .. math::
+        AIC_i = 1[after_i > base_i]
+
+    where ``f`` is the model, ``g`` is the scoring operator, ``M_i`` is a
+    normalised mask derived from the attribution values and ``1[.]`` is the
+    indicator function.
+
+    Attribution values are first converted to absolute values and independently
+    min-max normalised to the interval [0, 1] for each observation. The resulting
+    mask is then broadcast to the input shape when necessary and multiplied
+    element-wise by the original input.
+
+    The metric returns one binary value per observation. A value of ``1``
+    indicates that retaining the features considered important by the
+    explanation increases the model score, while a value of ``0`` indicates
+    that the score remains unchanged or decreases.
+
+    Higher values are better when the results are aggregated, since the mean of
+    the binary indicators represents the proportion of observations for which
+    explanation-based masking increases the model score.
+
+    Average Increase is closely related to Average Drop and Average Gain, but
+    only considers whether an increase occurs, independently of its magnitude.
+
+    The metric is generally most meaningful when applied to confidence or
+    probability-like model scores. If the model produces logits,
+    ``activation="softmax"`` or ``activation="sigmoid"`` can be used before
+    computing the comparison.
+
+    The implementation is based on the Average Increase in Confidence metric
+    introduced by Chattopadhay et al. (2018) and follows the implementation
+    provided by Xplique, with support for PyTorch models, models exposing
+    ``predict`` or ``predict_proba``, and custom scoring operators.
+
+    Chattopadhay, A., Sarkar, A., Howlader, P., & Balasubramanian, V. N. (2018).
+    Grad-CAM++: Generalized Gradient-Based Visual Explanations for Deep
+    Convolutional Networks. In 2018 IEEE Winter Conference on Applications of
+    Computer Vision (WACV), pp. 839-847.
+    """
     NAME = "AverageIncrease"
 
     def __init__(self, context: MetricContext, params: Mapping[str, Any] | None = None):
+        """
+        Parameters
+        ----------
+        context : MetricContext
+            Shared metric evaluation context. It must contain the model, ``X_test``,
+            selected observations and attribution values. ``y_test`` may be ``None``
+            when the model score can be determined without explicit targets.
+        params : Mapping[str, Any] or None, optional
+            Metric-specific parameters. Supported keys are:
+
+            - ``batch_size`` : int or None, optional
+              Maximum number of observations processed at once. If ``None``, all
+              selected observations are processed together. The default value is
+              ``64``.
+
+            - ``operator`` : callable or None, optional
+              Custom scoring function ``g(model, inputs, targets)`` used to obtain
+              one scalar score per observation. If ``None``, the metric performs
+              inference directly using the model and selects the corresponding
+              target score. The default value is ``None``.
+
+            - ``activation`` : {None, "sigmoid", "softmax"}, optional
+              Activation function applied to model predictions before selecting the
+              score. ``None`` leaves predictions unchanged. Probability-like scores
+              are generally preferred for interpreting Average Increase. The default
+              value is ``None``.
+
+            If ``None``, an empty dictionary is used.
+
+        Notes
+        -----
+        When no custom ``operator`` is provided, model inference is performed using,
+        in order, a PyTorch ``torch.nn.Module``, ``predict_proba``, ``predict`` or
+        direct model invocation.
+
+        For two-dimensional model outputs, targets are interpreted as class indices.
+        If no targets are provided, the maximum model output for each observation is
+        used.
+
+        For image explanations with shape ``(N, H, W, C)``, attribution values are
+        averaged over the last dimension before constructing the mask. For
+        time-series explanations with shape ``(N, T)``, the resulting mask is
+        broadcast over the feature dimension of inputs shaped ``(N, T, F)``.
+        """
         super().__init__(context, params)
 
 
     def _score(self, inputs: np.ndarray, targets: np.ndarray | None) -> np.ndarray:
-            if self.operator is not None:
-                result = self.operator(self.context.model, inputs, targets)
-                return np.asarray(result, dtype=np.float32).reshape(-1)
-    
-            # get prediction
-            if isinstance(self.context.model, torch.nn.Module):
-                model_device = self.context.device
-                if model_device is None:
-                    try:
-                        model_device = str(next(self.context.model.parameters()).device)
-                    except StopIteration:
-                        model_device = "cpu"
-                self.context.model.eval()
-                with torch.no_grad():
-                    output = self.context.model(torch.as_tensor(inputs, dtype=torch.float32, device=model_device))
-                if isinstance(output, (Tuple, List)):
-                    output = output[0]
-                prediction = output.detach().cpu().numpy()
-            elif hasattr(self.context.model, "predict_proba"):
-                prediction = np.asarray(self.context.model.predict_proba(inputs)) # pyright: ignore[reportCallIssue]
-            elif hasattr(self.context.model, "predict"):
-                prediction = np.asarray(self.context.model.predict(inputs)) # pyright: ignore[reportCallIssue]
-            else:
-                prediction = np.asarray(self.context.model(inputs))
-    
-            if self.activation == 'sigmoid':
-                prediction = 1.0 / (1.0 + np.exp(-prediction))
-            elif self.activation == 'softmax':
-                shifted = prediction - np.max(prediction, axis=-1, keepdims=True)
-                exp_prediction = np.exp(shifted)
-                prediction = exp_prediction / np.sum(exp_prediction, axis=-1, keepdims=True)
-    
-            if prediction.ndim == 1:
-                return prediction.astype(np.float32)
-            if prediction.ndim != 2:
-                raise ValueError("The default AverageIncrease operator requires predictions shaped (N, C).")
-            if targets is None:
-                return np.asarray(np.max(prediction, axis=-1), dtype=np.float32)
-            if targets.ndim == 1:
-                return np.asarray(prediction[np.arange(len(prediction)), targets.astype(int)], dtype=np.float32)
-            return np.asarray(np.sum(prediction * targets, axis=-1, dtype=np.float32), dtype=np.float32)
+        """
+        Compute one scalar model score per observation.
+
+        If a custom ``operator`` is configured, it is used directly. Otherwise,
+        the method performs model inference and optionally applies the configured
+        activation function.
+
+        For two-dimensional predictions ``(N, C)``, the score corresponding to
+        each target class is selected. If ``targets`` is ``None``, the maximum
+        prediction over the class dimension is returned.
+
+        Parameters
+        ----------
+        inputs : np.ndarray
+            Batch of input observations.
+        targets : np.ndarray or None
+            Target class indices associated with the observations. If ``None``,
+            the maximum model output is used for two-dimensional predictions.
+
+        Returns
+        -------
+        np.ndarray
+            One scalar score per observation, with shape ``(N,)``.
+
+        Raises
+        ------
+        ValueError
+            If the default scoring procedure receives model predictions with a
+            shape other than ``(N,)`` or ``(N, C)``.
+        """
+        if self.operator is not None:
+            result = self.operator(self.context.model, inputs, targets)
+            return np.asarray(result, dtype=np.float32).reshape(-1)
+
+        # get prediction
+        if isinstance(self.context.model, torch.nn.Module):
+            model_device = self.context.device
+            if model_device is None:
+                try:
+                    model_device = str(next(self.context.model.parameters()).device)
+                except StopIteration:
+                    model_device = "cpu"
+            self.context.model.eval()
+            with torch.no_grad():
+                output = self.context.model(torch.as_tensor(inputs, dtype=torch.float32, device=model_device))
+            if isinstance(output, (Tuple, List)):
+                output = output[0]
+            prediction = output.detach().cpu().numpy()
+        elif hasattr(self.context.model, "predict_proba"):
+            prediction = np.asarray(self.context.model.predict_proba(inputs)) # pyright: ignore[reportCallIssue]
+        elif hasattr(self.context.model, "predict"):
+            prediction = np.asarray(self.context.model.predict(inputs)) # pyright: ignore[reportCallIssue]
+        else:
+            prediction = np.asarray(self.context.model(inputs))
+
+        if self.activation == 'sigmoid':
+            prediction = 1.0 / (1.0 + np.exp(-prediction))
+        elif self.activation == 'softmax':
+            shifted = prediction - np.max(prediction, axis=-1, keepdims=True)
+            exp_prediction = np.exp(shifted)
+            prediction = exp_prediction / np.sum(exp_prediction, axis=-1, keepdims=True)
+
+        if prediction.ndim == 1:
+            return prediction.astype(np.float32)
+        if prediction.ndim != 2:
+            raise ValueError("The default AverageIncrease operator requires predictions shaped (N, C).")
+        if targets is None:
+            return np.asarray(np.max(prediction, axis=-1), dtype=np.float32)
+        if targets.ndim == 1:
+            return np.asarray(prediction[np.arange(len(prediction)), targets.astype(int)], dtype=np.float32)
+        return np.asarray(np.sum(prediction * targets, axis=-1, dtype=np.float32), dtype=np.float32)
     
 
     def _score_batched(self, inputs: np.ndarray, targets: np.ndarray | None, batch_size: int) -> np.ndarray:
+        """
+        Compute model scores in batches.
+
+        Parameters
+        ----------
+        inputs : np.ndarray
+            Input observations.
+        targets : np.ndarray or None
+            Target class indices, or ``None`` when targets are not required.
+        batch_size : int
+            Number of observations processed in each batch.
+
+        Returns
+        -------
+        np.ndarray
+            Concatenated scalar scores for all observations.
+        """
         scores = []
 
         for start in range(0, len(inputs), batch_size):
@@ -74,6 +221,37 @@ class AverageIncrease(BaseMetric):
 
     @staticmethod
     def _perturb_with_mask(inputs: np.ndarray, explanations: np.ndarray) -> np.ndarray:
+        """
+        Mask inputs according to their attribution values.
+
+        The mask is constructed from the absolute attribution values. For each
+        observation, attribution values are min-max normalised to the interval
+        [0, 1]. Image explanations with four dimensions are averaged over their
+        last dimension before normalisation.
+
+        When necessary, the mask is expanded and broadcast to match the input
+        shape. The perturbed input is then obtained by element-wise
+        multiplication between the original input and the normalised mask.
+
+        Parameters
+        ----------
+        inputs : np.ndarray
+            Input observations.
+        explanations : np.ndarray
+            Attribution values associated with the input observations.
+
+        Returns
+        -------
+        np.ndarray
+            Masked inputs with the same shape as ``inputs``.
+
+        Raises
+        ------
+        ValueError
+            If the number of explanations differs from the number of inputs, if
+            explanations contain no feature axis, or if the explanation shape
+            cannot be broadcast to the input shape.
+        """
         inputs = np.asarray(inputs, dtype=np.float32)
         explanations = np.asarray(explanations, dtype=np.float32)
 
@@ -112,6 +290,56 @@ class AverageIncrease(BaseMetric):
 
 
     def run(self):
+        """
+        Compute the Average Increase metric.
+
+        The method selects the observations defined in the metric context,
+        computes their original model scores and creates perturbed inputs by
+        multiplying each observation by a normalised attribution mask. Model
+        scores are then recomputed using the perturbed inputs.
+
+        For each observation, Average Increase is computed as
+        ``1[perturbed_score > base_score]``.
+
+        where ``base_score`` is the model score for the original input,
+        ``perturbed_score`` is the score obtained after retaining the input
+        according to the explanation mask, and ``1[.]`` denotes the indicator
+        function.
+
+        Consequently, each observation receives a score of ``1`` when
+        explanation-based masking increases the model score and ``0`` otherwise.
+
+        Returns
+        -------
+        List[float]
+            Binary Average Increase indicator for each evaluated observation.
+            Values are ``1.0`` when the explanation-based mask increases the
+            model score and ``0.0`` when the score remains unchanged or
+            decreases. Higher values are better.
+
+        Raises
+        ------
+        MetricSkipped
+            If no observations are selected.
+        ValueError
+            If ``batch_size`` is not positive, if ``activation`` is not one of
+            ``None``, ``"sigmoid"`` or ``"softmax"``, if the number of
+            explanations differs from the number of selected observations, or
+            if explanation and input shapes are incompatible.
+
+        Notes
+        -----
+        The returned values are per-observation binary indicators. When
+        aggregated using their mean, the result represents the proportion of
+        evaluated observations for which retaining the features identified as
+        important by the explanation increases the model score.
+
+        Although the comparison can be applied directly to arbitrary scalar
+        model outputs, Average Increase is generally interpreted in terms of
+        model confidence. Probability-like outputs are therefore recommended.
+        When the model returns logits, ``activation="softmax"`` or
+        ``activation="sigmoid"`` can be used before computing the metric.
+        """
         ctx = self.context
         p = self.params
 
