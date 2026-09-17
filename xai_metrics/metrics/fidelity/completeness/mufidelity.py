@@ -53,10 +53,10 @@ class MuFidelity(BaseMetric):
         if prediction.ndim != 2:
             raise ValueError("The default MuFidelity operator requires predictions shaped (N, C).")
         if targets is None:
-            return np.max(prediction, axis=-1).astype(np.float32)
+            return np.asarray(np.max(prediction, axis=-1), dtype=np.float32)
         if targets.ndim == 1:
-            return prediction[np.arange(len(prediction)), targets.astype(int)].astype(np.float32)
-        return np.sum(prediction * targets, axis=-1, dtype=np.float32)
+            return np.asarray(prediction[np.arange(len(prediction)), targets.astype(int)], dtype=np.float32)
+        return np.asarray(np.sum(prediction * targets, axis=-1, dtype=np.float32), dtype=np.float32)
 
 
     def _perturb_samples(self, inputs: np.ndarray, count: int) -> tuple[np.ndarray, np.ndarray]:
@@ -155,7 +155,7 @@ class MuFidelity(BaseMetric):
             predictions = np.concatenate(prediction_drops, axis=1)
             attributes = np.concatenate(attribution_sums, axis=1)
             for prediction, attribute in zip(predictions, attributes):
-                correlation = spearmanr(prediction, attribute).statistic
+                correlation = spearmanr(prediction, attribute).statistic # pyright: ignore[reportAttributeAccessIssue]
                 correlations.append(0.0 if np.isnan(correlation) else float(correlation))
 
         return correlations

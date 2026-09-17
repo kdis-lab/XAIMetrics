@@ -17,7 +17,7 @@ class RandomLogit(BaseMetric):
         self,
         context: MetricContext,
         explain_func: ExplainFunc,
-        params: Mapping[str, Any] = None,
+        params: Mapping[str, Any] | None = None,
     ):
         super().__init__(context, params)
 
@@ -159,7 +159,7 @@ class RandomLogit(BaseMetric):
             alternative_classes = np.where(sampled_classes >= targets_batch, sampled_classes + 1, sampled_classes)
 
             if one_hot_targets:
-                alternative_classes = np.eye(number_classes, dtype=np.float32)[alternative_classes]
+                alternative_targets = np.eye(number_classes, dtype=np.float32)[alternative_classes]
             else:
                 alternative_targets = alternative_classes
 

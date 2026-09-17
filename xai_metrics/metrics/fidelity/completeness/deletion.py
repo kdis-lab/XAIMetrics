@@ -10,7 +10,7 @@ from typing import Mapping, Any, Tuple, List
 class Deletion(BaseMetric):
     NAME = "Deletion"
 
-    def __init__(self, context: MetricContext, params: Mapping[str, Any] = None):
+    def __init__(self, context: MetricContext, params: Mapping[str, Any] | None = None):
         super().__init__(context, params)
 
     
@@ -52,10 +52,10 @@ class Deletion(BaseMetric):
             if prediction.ndim != 2:
                 raise ValueError("The default Deletion operator requires predictions shaped (N, C).")
             if targets is None:
-                return np.max(prediction, axis=-1).astype(np.float32)
+                return np.asarray(np.max(prediction, axis=-1), dtype=np.float32)
             if targets.ndim == 1:
-                return prediction[np.arange(len(prediction)), targets.astype(int)].astype(np.float32)
-            return np.sum(prediction * targets, axis=-1, dtype=np.float32)
+                return np.asarray(prediction[np.arange(len(prediction)), targets.astype(int)], dtype=np.float32)
+            return np.asarray(np.sum(prediction * targets, axis=-1, dtype=np.float32), dtype=np.float32)
 
     def run(self) -> float:
         ctx = self.context

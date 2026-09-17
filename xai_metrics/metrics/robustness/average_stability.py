@@ -4,7 +4,8 @@ import numpy as np
 from xai_metrics.base import BaseMetric, MetricContext, MetricSkipped, register_metric
 from xai_metrics.base.types import ExplainFunc
 
-from typing import Mapping, Any
+from collections.abc import Callable
+from typing import Mapping, Any, cast
 
 @register_metric
 class AverageStability(BaseMetric):
@@ -14,7 +15,7 @@ class AverageStability(BaseMetric):
         self,
         context: MetricContext,
         explain_func: ExplainFunc,
-        params: Mapping[str, Any] = None
+        params: Mapping[str, Any] | None = None
     ):
         super().__init__(context, params)
 
@@ -52,7 +53,12 @@ class AverageStability(BaseMetric):
         if nb_samples <= 0:
             raise ValueError("nb_samples must be positive.")
 
-        if distance not in ('l1', 'l2') and not callable(distance):
+        if isinstance(distance, str):
+            if distance not in ('l1', 'l2'):
+                raise ValueError("distance must be 'l1', 'l2', or a callable.")
+        elif callable(distance):
+            distance = cast(Callable[[np.ndarray, np.ndarray], float], distance)
+        else:
             raise ValueError("distance must be 'l1', 'l2', or a callable.")
 
         rng = random_state if isinstance(random_state, np.random.Generator) else np.random.default_rng(random_state)

@@ -7,7 +7,7 @@ from scipy.stats import spearmanr
 from xai_metrics.base import BaseMetric, MetricContext, register_metric, MetricSkipped
 from xai_metrics.base.types import ExplainFunc
 
-from typing import Mapping, Any, Tuple, List
+from typing import Mapping, Any
 
 _EPS = 1e-8
 
@@ -19,7 +19,7 @@ class ModelRandomization(BaseMetric):
         self,
         context: MetricContext,
         explain_func: ExplainFunc,
-        params: Mapping[str, Any] = None,
+        params: Mapping[str, Any] | None = None,
     ):
         super().__init__(context, params)
 
@@ -44,7 +44,7 @@ class ModelRandomization(BaseMetric):
         original = original.reshape(-1)
         randomized = randomized.reshape(-1)
 
-        correlation = spearmanr(original, randomized).statistic
+        correlation = spearmanr(original, randomized).statistic # pyright: ignore[reportAttributeAccessIssue]
 
         return 0.0 if np.isnan(correlation) else float(correlation)
 
