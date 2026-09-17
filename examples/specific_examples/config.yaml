@@ -178,6 +178,10 @@ metrics:
       distance: l2
       random_state: 42
 
+  - name: MeGe
+    params:
+      k_splits: 3
+
 explainers:
   - name: LIME
     params:

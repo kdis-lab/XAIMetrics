@@ -4,9 +4,11 @@ from .max_sensitivity import MaxSensitivity
 from .relative_input_stability import RelativeInputStability
 from .relative_output_stability import RelativeOutputStability
 from .average_stability import AverageStability
+from .mege import MeGe
 
 __all__ = ["LocalLipschitzEstimate",
            "MaxSensitivity",
            "RelativeInputStability",
            "RelativeOutputStability",
-           "AverageStability"]
+           "AverageStability",
+           "MeGe"]

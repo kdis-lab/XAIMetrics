@@ -130,7 +130,7 @@ class MeGe(BaseMetric):
         split_len = len(inputs) // k_splits
 
         x_splits = inputs.reshape(k_splits, split_len, *inputs.shape[1:])
-        y_splits = inputs.reshape(k_splits, split_len, *targets.shape[1:])
+        y_splits = targets.reshape(k_splits, split_len, *targets.shape[1:])
 
         models = []
 
@@ -178,7 +178,7 @@ class MeGe(BaseMetric):
                     target = target_classes[observation_index]
 
                     # At least one model must predict the true class
-                    if first_prediction != target_classes and second_prediction != target:
+                    if first_prediction != target and second_prediction != target:
                         continue
 
                     if first_prediction != second_prediction:
