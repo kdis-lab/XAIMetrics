@@ -116,6 +116,26 @@ def explain_func():
     return explain
 
 
+@pytest.fixture
+def mege_context():
+    inputs = np.array(
+        [
+            [0.0, 1.0, 2.0],
+            [1.0, 2.0, 3.0],
+            [0.0, 3.0, 4.0],
+            [1.0, 4.0, 5.0],
+        ]
+    )
+
+    return MetricContext(
+        model=None,
+        X_test=pd.DataFrame(inputs, index=[10, 20, 30, 40]),
+        y_test=pd.Series([0, 1, 0, 1], index=[10, 20, 30, 40]),
+        observations=[10, 20, 30, 40],
+        attributions=inputs.copy()
+    )
+
+
 def fake_quantus_metric(result):
     calls = {}
 

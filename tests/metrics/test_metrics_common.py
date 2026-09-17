@@ -1,4 +1,5 @@
 # tests/metrics_tests/test_metrics_common.py
+from dataclasses import replace
 import pytest
 import numpy as np
 
@@ -22,8 +23,10 @@ import xai_metrics.metrics.faithfulness.sensitivity_n as sensitivity_n_module
 import xai_metrics.metrics.faithfulness.sufficiency as sufficiency_module
 
 from xai_metrics.metrics.robustness import (
-    MaxSensitivity,
+    AverageStability,
     LocalLipschitzEstimate,
+    MaxSensitivity,
+    MeGe,
     RelativeInputStability,
     RelativeOutputStability
 )
@@ -32,10 +35,22 @@ import xai_metrics.metrics.robustness.local_lipschitz_estimate as lipschitz_modu
 import xai_metrics.metrics.robustness.relative_input_stability as ris_module
 import xai_metrics.metrics.robustness.relative_output_stability as ros_module
 
-from xai_metrics.metrics.sensitivity import AvgSensitivity
+from xai_metrics.metrics.sensitivity import (
+    AvgSensitivity,
+    RandomLogit,
+    ModelRandomization
+)
 import xai_metrics.metrics.sensitivity.avg_sensitivity as avg_sensitivity_module
 
-from xai_metrics.metrics.fidelity.completeness import Completeness
+from xai_metrics.metrics.fidelity.completeness import (
+    AverageDrop,
+    AverageGain,
+    AverageIncrease,
+    Completeness,
+    Deletion,
+    Insertion,
+    MuFidelity
+)
 import xai_metrics.metrics.fidelity.completeness.completeness_metric as completeness_module
 
 from xai_metrics.metrics.fidelity.soundness import NonSensitivity
@@ -184,3 +199,134 @@ def test_safe_spearman_returns_zero_for_constant_inputs(context):
     )
 
     assert result == 0.0
+
+
+@pytest.mark.parametrize(
+    "metric_factory",
+    [
+        pytest.param(
+            lambda ctx, explain: MuFidelity(ctx, {"nb_samples": 2}),
+            id="mufidelity",
+        ),
+        pytest.param(
+            lambda ctx, explain: Deletion(ctx, {"steps": 2}),
+            id="deletion",
+        ),
+        pytest.param(
+            lambda ctx, explain: Insertion(ctx, {"steps": 2}),
+            id="insertion",
+        ),
+        pytest.param(
+            lambda ctx, explain: AverageDrop(ctx),
+            id="average_drop",
+        ),
+        pytest.param(
+            lambda ctx, explain: AverageIncrease(ctx),
+            id="average_increase",
+        ),
+        pytest.param(
+            lambda ctx, explain: AverageGain(ctx),
+            id="average_gain",
+        ),
+        pytest.param(
+            lambda ctx, explain: RandomLogit(
+                ctx,
+                explain,
+                {"num_classes": 2},
+            ),
+            id="random_logit",
+        ),
+        pytest.param(
+            lambda ctx, explain: ModelRandomization(ctx, explain),
+            id="model_randomization",
+        ),
+        pytest.param(
+            lambda ctx, explain: AverageStability(ctx, explain),
+            id="average_stability",
+        ),
+        pytest.param(
+            lambda ctx, explain: MeGe(
+                ctx,
+                lambda X_train, y_train, X_holdout, y_holdout: ctx.model,
+                explain,
+            ),
+            id="mege",
+        ),
+    ],
+)
+def test_new_metrics_skip_when_no_observations(
+    context,
+    explain_func,
+    metric_factory
+):
+    empty_context = replace(
+        context,
+        observations=[],
+        attributions=np.empty((0, 3), dtype=np.float32)
+    )
+
+    metric = metric_factory(empty_context, explain_func)
+
+    with pytest.raises(MetricSkipped, match="no observations were selected"):
+        metric.run()
+
+
+@pytest.mark.parametrize(
+    "metric_factory",
+    [
+        pytest.param(
+            lambda ctx, explain: MuFidelity(ctx, {"nb_samples": 2}),
+            id="mufidelity",
+        ),
+        pytest.param(
+            lambda ctx, explain: Deletion(ctx, {"steps": 2}),
+            id="deletion",
+        ),
+        pytest.param(
+            lambda ctx, explain: Insertion(ctx, {"steps": 2}),
+            id="insertion",
+        ),
+        pytest.param(
+            lambda ctx, explain: AverageDrop(ctx),
+            id="average_drop",
+        ),
+        pytest.param(
+            lambda ctx, explain: AverageIncrease(ctx),
+            id="average_increase",
+        ),
+        pytest.param(
+            lambda ctx, explain: AverageGain(ctx),
+            id="average_gain",
+        ),
+        pytest.param(
+            lambda ctx, explain: RandomLogit(
+                ctx,
+                explain,
+                {"num_classes": 2},
+            ),
+            id="random_logit",
+        ),
+        pytest.param(
+            lambda ctx, explain: ModelRandomization(ctx, explain),
+            id="model_randomization",
+        ),
+        pytest.param(
+            lambda ctx, explain: AverageStability(ctx, explain),
+            id="average_stability",
+        ),
+    ],
+)
+def test_new_metrics_reject_misaligned_attributions(
+    context,
+    explain_func,
+    metric_factory
+):
+    invalid_context = replace(
+        context,
+        attributions=context.attributions[:1]
+    )
+
+    metric = metric_factory(invalid_context, explain_func)
+
+    with pytest.raises(ValueError, match="explanations must match"):
+        metric.run()

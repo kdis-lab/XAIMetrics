@@ -142,7 +142,7 @@ class MeGe(BaseMetric):
             ]
 
             X_train = x_splits[train_splits].reshape(-1, *inputs.shape[1:])
-            y_train = x_splits[train_splits].reshape(-1, *targets.shape[1:])
+            y_train = y_splits[train_splits].reshape(-1, *targets.shape[1:])
 
             model = self.training_func(X_train, y_train, x_splits[split_index], y_splits[split_index])
             models.append(model)
