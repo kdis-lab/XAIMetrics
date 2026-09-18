@@ -20,22 +20,28 @@ class AverageDrop(BaseMetric):
     to a greater extent, while features with smaller attribution values are
     attenuated.
 
-    For each observation :math::``i``, the metric is computed as:
+    For each observation :math:`i`, the metric is computed as:
 
     .. math::
-        base_i = g(f, x_i, y_i)
 
-    .. math::
-        after_i = g(f, x_i * M_i, y_i)
+        \begin{aligned}
+        \mathrm{base}_i &=
+        g(f, \mathbf{x}_i, y_i), \\
+        \mathrm{after}_i &= 
+        g(f, \mathbf{x}_i \odot M_i, y_i), \\
+        \operatorname{AD}_i &= 
+        \frac{
+            \max(base_i - after_i, 0)
+        }{
+            \mathrm{base}_i + \varepsilon
+        }
+        \end{aligned}
 
-    .. math::
-        AD_i = max(base_i - after_i, 0) / (base_i + eps)
-
-    where :math::``f`` is the model, :math::``g`` is the scoring operator and :math::``M_i`` is a
-    normalised mask derived from the attribution values.
+    where :math:`f` is the model, :math:`g` is the scoring operator and :math:`M_i`
+    is a normalised mask derived from the attribution values.
 
     Attribution values are first converted to absolute values and independently
-    min-max normalised to the interval [0, 1] for each observation. The resulting
+    min-max normalised to the interval :math:`[0, 1]` for each observation. The resulting
     mask is then broadcast to the input shape when necessary and multiplied
     element-wise by the original input.
 
@@ -47,8 +53,8 @@ class AverageDrop(BaseMetric):
 
     The implementation is based on the Average Drop metric introduced in
     Chattopadhay et al. (2018) and follows the implementation provided by
-    Xplique, with support for PyTorch models, models exposing :math::``predict`` or
-    :math::``predict_proba``, and custom scoring operators.
+    Xplique, with support for PyTorch models, models exposing ``predict`` or
+    ``predict_proba``, and custom scoring operators.
     
     Chattopadhay, A., Sarkar, A., Howlader, P., & Balasubramanian, V. N. (2018).
     Grad-CAM++: Generalized Gradient-Based Visual Explanations for Deep
@@ -286,11 +292,18 @@ class AverageDrop(BaseMetric):
         scores are then recomputed using the perturbed inputs.
 
         For each observation, Average Drop is computed as:
-            .. math::
-            max(base_score - perturbed_score, 0) / (base_score + eps).
 
-        where ``base_score`` is the model score for the original input and
-        ``perturbed_score`` is the score obtained after retaining the input
+        .. math::
+
+            \operatorname{AD}_i =
+            \frac{
+                \max(\mathrm{base}_i - \mathrm{after}_i, 0)
+            }{
+                \mathrm{base}_i + \varepsilon
+            }
+
+        where :math:`\mathrm{base}_i` is the model score for the original input and
+        :math:`\mathrm{after}_i` is the score obtained after retaining the input
         according to the explanation mask.
 
         The ReLU operation in the numerator prevents increases in the model

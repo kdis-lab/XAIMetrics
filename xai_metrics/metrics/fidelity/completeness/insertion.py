@@ -8,7 +8,7 @@ from typing import Mapping, Any, Tuple, List
 
 @register_metric
 class Insertion(BaseMetric):
-    """
+    r"""
     Insertion fidelity metric.
 
     This metric evaluates whether the features identified as important by an
@@ -26,25 +26,38 @@ class Insertion(BaseMetric):
     should produce a rapid increase in the model score and therefore a large area
     under the insertion curve. Higher values are better.
 
-    For each observation ``i``, the procedure can be described as:
+    For each observation :math:`i`, the procedure can be described as:
 
     .. math::
-        x_i^(0) = b_i
+
+        \begin{aligned}
+        \mathbf{x}_i^{(0)} &= 
+        \mathbf{b}_i, \\
+        \mathbf{x}_i^{(k)} &= 
+        \operatorname{insert}(\mathbf{b}_i, \mathbf{x}_i, M_i, k), \\
+        score_i^{(k)} &= 
+        g(f, \mathbf{x}_i^{(k)}, y_i)
+        \end{aligned}
+
+    where :math:`f` is the model, :math:`g` is the scoring operator,
+    :math:`\mathbf{b}_i` is the baseline input, :math:`M_i` defines the feature
+    ranking induced by the explanation and :math:`k` is the number of restored
+    features.
+    
+    If the insertion curve contains :math:`T + 1` points, the reported score is
+    its normalized trapezoidal area:
 
     .. math::
-        x_i^(k) = insert(b_i, x_i, M_i, k)
 
-    .. math::
-        score_i^(k) = g(f, x_i^(k), y_i)
+        \operatorname{Insertion}_i =
+        \frac{1}{T}
+        \sum_{t=0}^{T+1}
+        \frac{
+            s_i^{(t)} + s_i^{(t+1)}
+        }{2}
 
-    where ``f`` is the model, ``g`` is the scoring operator, ``b_i`` is the
-    baseline input, ``M_i`` defines the feature ranking induced by the
-    explanation and ``k`` is the number of restored features.
-
-    The final score for each observation is computed as the average trapezoidal
-    value of the model scores along the insertion trajectory. A larger value
-    indicates that inserting the features considered important by the explanation
-    increases the model score more rapidly.
+    A higer value indicates that inserting features considered important by the
+    explanation causes the model score to increase more rapidly.
 
     The implementation is based on the Insertion metric introduced by Petsiuk
     et al. (2018) and follows the implementation provided by Xplique, with
@@ -199,7 +212,7 @@ class Insertion(BaseMetric):
         return np.asarray(np.sum(prediction * targets, axis=-1, dtype=np.float32), dtype=np.float32)
 
     def run(self):
-        """
+        r"""
         Compute the Insertion metric.
 
         The method selects the observations defined in the metric context and
@@ -213,10 +226,20 @@ class Insertion(BaseMetric):
         step, the selected number of features is replaced by their corresponding
         values from the original input and the model score is recomputed.
 
-        The sequence of model scores obtained at the different insertion levels
-        forms an insertion curve for each observation. The final score is
-        computed by averaging the trapezoidal values between consecutive points
-        of this curve.
+        The sequence of scores forms an insertion curve for each observation. The
+        final score is the normalized trapezoidal area of that curve:
+
+        .. math::
+
+            \operatorname{Insertion}_i =
+            \frac{1}{T}
+            \sum_{t=0}^{T-1}
+            \frac{
+                s_i^{(t)} + s_i^{(t+1)}
+            }{2}
+
+        where :math:`s_i^{(t)}` is the model score after restoring :math:`t`
+        features and :math:`T` os the number of curve intervals.
 
         Higher scores are better. A large value indicates that restoring features
         identified as important by the explanation rapidly increases the model

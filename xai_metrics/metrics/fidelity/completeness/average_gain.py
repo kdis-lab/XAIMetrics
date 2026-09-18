@@ -11,7 +11,7 @@ _EPS = 1e-8
 
 @register_metric
 class AverageGain(BaseMetric):
-    """
+    r"""
     Average Gain fidelity metric.
 
     This metric evaluates how much the model score increases when the original
@@ -20,24 +20,30 @@ class AverageGain(BaseMetric):
     to a greater extent, while features with smaller attribution values are
     attenuated.
 
-    For each observation ``i``, the metric is computed as:
+    For each observation :math:`i`, the metric is computed as:
 
     .. math::
-        base_i = g(f, x_i, y_i)
 
-    .. math::
-        after_i = g(f, x_i * M_i, y_i)
+        \begin{aligned}
+        \mathrm{base}_i &= 
+        g(f, \mathbf{x}_i, y_i), \\
+        \mathrm{after}_i &= 
+        g(f, \mathbf{x}_i \odot M_i, y_i), \\
+        \operatorname{AG}_i &= 
+        \frac{
+            \max(\mathrm{after}_i - \mathrm{base}_i, 0)
+        }{
+            1 - \mathrm{base}_i + \varepsilon
+        }
+        \end{aligned}
 
-    .. math::
-        AG_i = max(after_i - base_i, 0) / (1 - base_i + eps)
-
-    where ``f`` is the model, ``g`` is the scoring operator and ``M_i`` is a
-    normalised mask derived from the attribution values.
+    where :math:`f` is the model, :math:`g` is the scoring operator and :math:`M_i`
+    is a normalised mask derived from the attribution values.
 
     Attribution values are first converted to absolute values and independently
-    min-max normalised to the interval [0, 1] for each observation. The resulting
-    mask is then broadcast to the input shape when necessary and multiplied
-    element-wise by the original input.
+    min-max normalised to the interval :math:`[0, 1]` for each observation. The
+    resulting mask is then broadcast to the input shape when necessary and
+    multiplied element-wise by the original input.
 
     The metric returns one Average Gain value per observation. Higher values are
     better: a large score indicates that retaining the features considered
@@ -50,10 +56,10 @@ class AverageGain(BaseMetric):
     Average Gain measures the relative increase with respect to the remaining
     score range up to one.
 
-    The metric is intended for model scores in the interval [0, 1]. If the model
-    produces logits, ``activation="softmax"`` or ``activation="sigmoid"`` should
-    be used, or a custom operator returning probability-like scores should be
-    provided.
+    The metric is intended for model scores in the interval :math:`[0, 1]`. If
+    the model produces logits, ``activation="softmax"`` or ``activation="sigmoid"``
+    should be used, or a custom operator returning probability-like scores should
+    be provided.
 
     The implementation is based on the Average Gain metric described by
     Zhang et al. (2024) and follows the implementation provided by Xplique,
@@ -288,7 +294,7 @@ class AverageGain(BaseMetric):
 
 
     def run(self):
-        """
+        r"""
         Compute the Average Gain metric.
 
         The method selects the observations defined in the metric context,
@@ -296,11 +302,19 @@ class AverageGain(BaseMetric):
         multiplying each observation by a normalised attribution mask. Model
         scores are then recomputed using the perturbed inputs.
 
-        For each observation, Average Gain is computed as
-        ``max(perturbed_score - base_score, 0) / (1 - base_score + eps)``.
+        For each observation, Average Gain is computed as:
 
-        where ``base_score`` is the model score for the original input and
-        ``perturbed_score`` is the score obtained after retaining the input
+        .. math::
+
+            \operatorname{AG}_i =
+            \frac{
+                \max(\mathrm{after}_i - \mathrm{base}_i, 0)
+            }{
+                1 - \mathrm{base}_i + \varepsilon
+            }
+
+        where :math:`\mathrm{base}_i` is the model score for the original input and
+        :math:`\mathrm{after}_i` is the score obtained after retaining the input
         according to the explanation mask.
 
         The numerator measures the positive increase in model score produced by

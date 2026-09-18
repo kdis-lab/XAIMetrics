@@ -9,30 +9,51 @@ from typing import Any, Mapping, Tuple, List
 
 @register_metric
 class MuFidelity(BaseMetric):
-    """
+    r"""
     MuFidelity correlation metric.
 
     This metric evaluates whether the importance assigned by an explanation to
     randomly selected subsets of features is consistent with the effect that
     perturbing those features has on the model output.
 
-    For each observation, multiple random feature subsets are generated. The
-    selected features are replaced by a baseline value and the model score is
-    recomputed. For every perturbation, two quantities are compared:
+    For each observation :math:`i`, the metric generates :math:`R` random masks.
+    A mask value of one preserves a feature, while a value of zero replaces it
+    with a baseline value. For every perturbation :math:`r`, the perturbed
+    input is:
 
     .. math::
-        prediction_drop = g(f, x_i, y_i) - g(f, x_i^S, y_i)
+
+        \tilde{\mathbf{x}}_i^{(r)} =
+        \mathbf{x}_i \odot \mathbf{m}_i^{(r)} +
+        \mathbf{b}_i \odot \left(1 - \mathbf{m}_i^{(r)} \right)
+
+    The prediction drop and the attribution sum associated with the perturbed
+    features are:
 
     .. math::
-        attribution_sum = sum(phi_i,j for j in S)
 
-    where ``f`` is the model, ``g`` is the scoring operator, ``x_i^S`` is the
-    input after replacing the features in subset ``S`` by the baseline and
-    ``phi_i,j`` is the attribution assigned to feature ``j``.
+        \begin{aligned}
+        \Delta_i^{(R)} &=
+        g(f, \mathbf{x}_i, y_i) - g(f, \tilde{\mathbf{x}}_i^{(r)}, y_i), \\
+        A_i^{(r)} &=
+        \sum_j
+        \phi_{i,j}
+        \left(1 - m_{i,j}^{(r)} \right)
+        \end{aligned}
 
-    The metric computes the Spearman rank correlation between the prediction
-    drops and the corresponding attribution sums across the generated
-    perturbations.
+    The final MuFidelity score for observation :math:`i` is the Spearman rank
+    correlation between the prediction drops and attribution sums:
+
+    .. math::
+
+        \operatorname{MuFidelity}_i =
+        \rho_{\mathrm{Spearman}}
+        \left(\{\Delta_i^{(r)}\}_{r=1}^{R}, \{A_i^{(r)}\}_{r=1}^{R} \right)
+
+    where :math:`f` is the model, :math:`g` is the scoring operator,
+    :math:`\mathbf{x}_i` is the original input, :math:`\mathbf{b}_i` if the
+    baseline input, :math:`\phi_{i,j}` is the attribution of the feature :math:`j`
+    and :math:`\mathbf{m}_i^{(r)}` is the sampled mask.
 
     A high positive correlation indicates that subsets receiving larger
     attribution values tend to cause larger decreases in the model score when
@@ -217,7 +238,7 @@ class MuFidelity(BaseMetric):
 
 
     def _perturb_samples(self, inputs: np.ndarray, count: int) -> tuple[np.ndarray, np.ndarray]:
-        """
+        r"""
         Generate random perturbation masks and apply the configured baseline.
 
         The method generates ``count`` Bernoulli masks and applies each mask to
@@ -225,15 +246,17 @@ class MuFidelity(BaseMetric):
         feature value, while values equal to ``0`` replace the corresponding
         feature by the configured baseline.
 
-        The mask generation strategy depends on the input dimensionality:
+        The perturbed observations are computed as:
 
-        - For tabular inputs ``(N, F)``, features are sampled independently.
-        - For time-series inputs ``(N, T, F)``, masks are generated on a coarse
-          ``(grid_size, F)`` grid and expanded over the temporal dimension using
-          nearest-neighbour indexing.
-        - For image inputs, masks are generated on a coarse
-          ``(grid_size, grid_size)`` spatial grid, expanded to the input spatial
-          dimensions and shared across channels.
+        .. math::
+
+            \tilde{\mathbf{x}} =
+            \mathbf{x} \odot \mathbf{m} + 
+            \mathbf{b} \odot 
+            \left(1 - \mathbf{m} \right)
+
+        where :math:`\mathbf{x}` is the original input, :math:`\mathbf{m}` is
+        the sampled binary mask and :math:`\mathbf{b}` is the baseline.
 
         Parameters
         ----------
@@ -244,14 +267,9 @@ class MuFidelity(BaseMetric):
 
         Returns
         -------
-        perturbed_inputs : np.ndarray
-            Perturbed observations. The first two dimensions corresponding to
-            observations and perturbations are flattened, giving
-            ``len(inputs) * count`` samples.
-        masks : np.ndarray
-            Binary masks applied to the observations. The first dimension indexes
-            the original observations and the second dimension indexes the
-            generated perturbations.
+        Tuple[np.ndarray, np.ndarray]
+            A tuple containing the flattened perturbed observations and their
+            corresponding masks.
 
         Notes
         -----
@@ -285,7 +303,7 @@ class MuFidelity(BaseMetric):
 
 
     def run(self):
-        """
+        r"""
         Compute the MuFidelity correlation metric.
 
         The method selects the observations defined in the metric context and
@@ -293,13 +311,27 @@ class MuFidelity(BaseMetric):
         multiple random subsets of features are then perturbed by replacing them
         with a configured baseline value.
 
-        For every generated perturbation, the method computes:
+        For every perturbation, MuFidelity compares the model prediction drop
+        with the sum of attributions assigned to the perturbed features:
 
-        - the decrease in model score relative to the original observation; and
-        - the sum of attribution values associated with the perturbed features.
+        .. math::
 
-        For each observation, MuFidelity is the Spearman rank correlation between
-        these two quantities across all generated perturbations.
+            \begin{aligned}
+            \Delta_i^{(r)} &=
+            g(f, \mathbf{x}_i, y_i) + g(f, \tilde{\mathbf{x}}_i* {(r)}, y_i), \\
+            A_i^{(r)} &=
+            \sum_j
+            \phi_{i,j}
+            \left(1 - m_{i,j}^{(r)}\right)
+            \end{aligned}
+
+        The reported score is:
+
+        .. math::
+
+            \operatorname{MuFidelity}_i =
+            \rho_{\mathrm{Spearman}}
+            \left(\{\Delta_i^{(r)}\}_{r=1}^{R}, \{A_i^{(r)}\}_{r=1}^{R} \right)
 
         A high positive correlation indicates that perturbing features assigned
         greater importance by the explanation tends to produce larger decreases

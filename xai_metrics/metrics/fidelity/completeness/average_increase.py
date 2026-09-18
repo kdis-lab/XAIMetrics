@@ -11,7 +11,7 @@ _EPS = 1e-8
 
 @register_metric
 class AverageIncrease(BaseMetric):
-    """
+    r"""
     Average Increase in Confidence fidelity metric.
 
     This metric evaluates whether the model score increases when the original
@@ -20,25 +20,28 @@ class AverageIncrease(BaseMetric):
     to a greater extent, while features with smaller attribution values are
     attenuated.
 
-    For each observation ``i``, the metric is computed as:
+    For each observation :math:`i`, the metric is computed as:
 
     .. math::
-        base_i = g(f, x_i, y_i)
 
-    .. math::
-        after_i = g(f, x_i * M_i, y_i)
+        \begin{aligned}
+        \mathrm{base}_i &= 
+        g(f, \mathbf{x}_i, y_i), \\
+        \mathrm{after}_i &= 
+        g(f, \mathbf{x}_i \odot M_i, y_i), \\
+        \operatorname{AIC}_i &= 
+        \mathbb{1}
+        \left[\mathrm{after}_i > \mathrm{base}_i \right]
+        \end{aligned}
 
-    .. math::
-        AIC_i = 1[after_i > base_i]
-
-    where ``f`` is the model, ``g`` is the scoring operator, ``M_i`` is a
-    normalised mask derived from the attribution values and ``1[.]`` is the
-    indicator function.
+    where :math:`f` is the model, :math:`g` is the scoring operator,
+    :math:`M_i` is a normalised mask derived from the attribution values and
+    :math:`\mathbb{1}[\cdot]` denotes the indicator function.
 
     Attribution values are first converted to absolute values and independently
-    min-max normalised to the interval [0, 1] for each observation. The resulting
-    mask is then broadcast to the input shape when necessary and multiplied
-    element-wise by the original input.
+    min-max normalised to the interval :math:`[0, 1]` for each observation. The
+    resulting mask is then broadcast to the input shape when necessary and
+    multiplied element-wise by the original input.
 
     The metric returns one binary value per observation. A value of ``1``
     indicates that retaining the features considered important by the
@@ -290,7 +293,7 @@ class AverageIncrease(BaseMetric):
 
 
     def run(self):
-        """
+        r"""
         Compute the Average Increase metric.
 
         The method selects the observations defined in the metric context,
@@ -298,13 +301,17 @@ class AverageIncrease(BaseMetric):
         multiplying each observation by a normalised attribution mask. Model
         scores are then recomputed using the perturbed inputs.
 
-        For each observation, Average Increase is computed as
-        ``1[perturbed_score > base_score]``.
+        For each observation, Average Increase is computed as:
 
-        where ``base_score`` is the model score for the original input,
-        ``perturbed_score`` is the score obtained after retaining the input
-        according to the explanation mask, and ``1[.]`` denotes the indicator
-        function.
+        .. math::
+
+            \operatorname{AIC}_i = 
+            \mathbb{1}
+            \left[\mathrm{after}_i > \mathrm{base}_i \right]
+
+        where :math:`\mathrm{base}_i` is the model score for the original input,
+        :math:`\mathrm{after}_i` is the score obtained after applying the
+        explanation-based mask.
 
         Consequently, each observation receives a score of ``1`` when
         explanation-based masking increases the model score and ``0`` otherwise.

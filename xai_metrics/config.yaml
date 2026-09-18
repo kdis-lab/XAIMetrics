@@ -113,11 +113,56 @@ metrics:
 
   - name: MuFidelity
     params:
-      n_masks: 200
-      subset_probability: 0.5
-      baseline_mode: mean
-      abs: false
-      normalise: false
+      nb_samples: 500
+      subset_percent: 0.2
+      baseline_mode: 0.0
+      batch_size: 64
+      activation: null
+      random_state: 42
+
+  - name: Deletion
+    params:
+      baseline_mode: 0.0
+      steps: -1
+      max_percentage_perturbed: 1.0
+      batch_size: 64
+      activation: null
+
+  - name: Insertion
+    params:
+      baseline_mode: 0.0
+      steps: -1
+      max_percentage_perturbed: 1.0
+      batch_size: 64
+      activation: null
+
+  - name: AverageDrop
+    params:
+      batch_size: 64
+      activation: null
+
+  - name: AverageIncrease
+    params:
+      batch_size: 64
+      activation: null
+
+  - name: AverageGain
+    params:
+      batch_size: 64
+      activation: null
+
+  - name: RandomLogit
+    params:
+      batch_size: 64
+      num_classes: 2
+      random_state: 42
+
+  - name: AverageStability
+    params:
+      radius: 0.05
+      nb_samples: 100
+      distance: l2
+      symmetric_noise: true
       random_state: 42
 
 

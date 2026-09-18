@@ -8,7 +8,7 @@ from typing import Mapping, Any, Tuple, List
 
 @register_metric
 class Deletion(BaseMetric):
-    """
+    r"""
     Deletion fidelity metric.
 
     This metric evaluates whether the features identified as important by an
@@ -26,25 +26,37 @@ class Deletion(BaseMetric):
     should produce a rapid decrease in the model score and therefore a small area
     under the deletion curve. Lower values are better.
 
-    For each observation ``i``, the procedure can be described as:
+    For each observation :math:`i`, the procedure can be described as:
 
     .. math::
-        x_i^(0) = x_i
+
+        \begin{aligned}
+        \mathbf{x}_i^{(0)} &= 
+        \mathbf{x}_i, \\
+        \mathbf{x}_i^{(k)} &= 
+        \operatorname{delete}(\mathbf{x}_i, M_i, k), \\
+        s_i^{(k)} &= 
+        g(f, \mathbf{x}_i^{(k)}, y_i)
+        \end{aligned}
+
+    where :math:`f` is the model, :math:`g` is the scoring operator,
+    :math:`M_i` defines the feature ranking induced by the explanation and
+    :math:`k` is the number of perturbed features.
+
+    If the deletion curve contains :math:`T + 1` point, the reported score is
+    its normalized trapezoidal area:
 
     .. math::
-        x_i^(k) = delete(x_i, M_i, k)
 
-    .. math::
-        score_i^(k) = g(f, x_i^(k), y_i)
+        \operatorname{Deletion}_i = 
+        \frac{1}{T}
+        \sum_{t=0}^{T-1}
+        \frac{
+            s_i^{(t)} + s_i^{(t+1)}
+        }{2}
 
-    where ``f`` is the model, ``g`` is the scoring operator, ``M_i`` defines the
-    feature ranking induced by the explanation and ``k`` is the number of
-    perturbed features.
-
-    The final score for each observation is computed as the average trapezoidal
-    value of the model scores along the deletion trajectory. A smaller value
-    indicates that deleting features considered important by the explanation
-    causes the model score to decrease more rapidly.
+    A lower value indicates that deleting features considered importante by the
+    explanation causes the model score to decrease more rapidly.
 
     The implementation is based on the Deletion metric introduced by Petsiuk
     et al. (2018) and follows the implementation provided by Xplique, with
@@ -197,7 +209,7 @@ class Deletion(BaseMetric):
         return np.asarray(np.sum(prediction * targets, axis=-1, dtype=np.float32), dtype=np.float32)
 
     def run(self):
-        """
+        r"""
         Compute the Deletion metric.
 
         The method selects the observations defined in the metric context and
@@ -209,10 +221,20 @@ class Deletion(BaseMetric):
         For each deletion step, the selected number of features is replaced by
         the corresponding baseline values and the model score is recomputed.
 
-        The sequence of model scores obtained at the different perturbation levels
-        forms a deletion curve for each observation. The final score is computed
-        by averaging the trapezoidal values between consecutive points of this
-        curve.
+        The sequence of scores forms a deletion curve for each observation. The
+        final score is the normalized trapezoidal area of that curve:
+
+        .. math::
+
+            \operatorname{Deletion}_i = 
+            \frac{1}{T}
+            \sum_{t=0}^{T-1}
+            \frac{
+                s_i^{(t)} + s_i{(t+1)}
+            }{2}
+
+        where :math:`s_i^{(t)}` is the model score after deleting :math:`t`
+        features and :math:`T` is the number of curve intervals.
 
         Lower scores are better. A small value indicates that removing features
         identified as important by the explanation rapidly decreases the model
