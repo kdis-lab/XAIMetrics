@@ -11,7 +11,7 @@ _EPS = 1e-8
 
 @register_metric
 class RandomLogit(BaseMetric):
-    """
+    r"""
     Random Logit sensitivity metric.
 
     This metric evaluates whether an explanation depends on the target class for
@@ -19,24 +19,28 @@ class RandomLogit(BaseMetric):
     true target class is compared with an explanation generated for a randomly
     selected alternative class.
 
-    For each observation ``i`` with target class ``y_i``, an alternative class
-    ``y_i'`` is sampled uniformly from all available classes except ``y_i``:
+    For each observation :math:`i` with target class :math:`y_i`, an alternative class
+    :math:`\widetilde{y}_i` is sampled uniformly from all available classes:
 
-        y_i' ~ Uniform({0, ..., C - 1} \\ {y_i})
+    .. math::
 
-    The explanation is then recomputed for the same input using the alternative
-    target:
+        \widetilde{y}_i
+        \sim
+        \operatorname{Uniform} \left(\{0, \ldots, C - 1\} \setminus \{y_i\} \right)
 
-        phi_i = phi(f, x_i, y_i)
+    The Random Logit score is the global Structural Similarity Index between the
+    original and alternative-target explanations:
 
-        phi_i' = phi(f, x_i, y_i')
+    .. math::
 
-    where ``f`` is the model and ``phi`` is the explanation function.
+        \operatorname{RL}_i =
+        \operatorname{SSIM} \left(\phi(f, x_i, y_i), \phi(f, x_i, \widetilde{y}_i) \right)
 
-    Similarity between the original and alternative-target explanations is
-    measured using the Structural Similarity Index (SSIM):
-
-        RL_i = SSIM(phi_i, phi_i')
+    where :math:`f` is the model and :math:`\phi` is the explanation function.
+    
+    Lower values indicate that the explanation changes when the target class
+    changes. This suggests greater class specificity. High similarity indicates
+    that explanations remain similar across target classes.
 
     The metric returns one similarity value per observation. Lower values
     indicate greater sensitivity to the target class, meaning that the
@@ -196,7 +200,7 @@ class RandomLogit(BaseMetric):
 
     @staticmethod
     def _ssim(first: np.ndarray, second: np.ndarray) -> float:
-        """
+        r"""
         Compute a global SSIM similarity between two explanations.
 
         Both explanations are converted to one-dimensional arrays before the
@@ -205,13 +209,19 @@ class RandomLogit(BaseMetric):
 
         The similarity is computed as:
 
-            ((2 * mu_x * mu_y + C1) * (2 * cov_xy + C2))
-            ------------------------------------------------
-            ((mu_x^2 + mu_y^2 + C1) *
-             (var_x + var_y + C2))
+        .. math::
 
-        where ``mu`` denotes the mean, ``var`` the population variance and
-        ``cov`` the population covariance.
+        \operatorname{SSIM} \left(e, \widetilde{e} \right) =
+        \frac{
+            \left(2 \mu_e \mu_{\widetilde{e}} + C_1 \right)
+            \left(2 \operatorname{cov} \left(e, \widetilde{e} \right) + C_2 \right)
+        }{
+            \left(\mu_e^2 + \mu_{\widetilde{e}}^2 + C_1 \right)
+            \left(\sigma_e^2 + \sigma_{\widetilde{e}}^2 + C_2 \right)
+        }
+
+        where :math:`\mu` denotes the mean, :math:`\sigma^2` the population variance
+        and :math:`\operatorname{cov}` the population covariance.
 
         Parameters
         ----------
@@ -273,21 +283,24 @@ class RandomLogit(BaseMetric):
 
 
     def run(self):
-        """
+        r"""
         Compute the Random Logit metric.
 
-        The method selects the observations defined in the metric context and
-        determines the true target class associated with each observation. For
-        every observation, a different class is sampled uniformly from the set
-        of all available classes.
+        For every selected observation, the method samples an alternative target class
+        that differs from its true target. With :math:`C` output classes, every
+        eligible alternative class has probability :math:`1 / (C - 1)`.
 
-        The explanation function is then evaluated for the same inputs using the
-        sampled alternative targets. Each resulting explanation is compared with
-        its corresponding original explanation using global SSIM.
+        The explanation function is evaluated using these alternative targets. The
+        stored original explanation and the alternative-target explanation are then
+        compared using global SSIM:
 
-        Alternative classes are sampled so that they are always different from
-        the original target class. Given ``C`` classes, each alternative class
-        has probability ``1 / (C - 1)`` of being selected.
+        .. math::
+
+            \operatorname{RL}_i =
+            \operatorname{SSIM}
+            \left(\phi(f, x_i, y_i), \phi(f, x_i, \widetilde{y}_i) \right)
+
+        where :math:`\widetilde{y}_i \ne y_i`.
 
         Lower similarity values indicate that the explanation changes when the
         target class changes and therefore suggest greater target sensitivity or

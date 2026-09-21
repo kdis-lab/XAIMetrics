@@ -19,9 +19,9 @@ class MeGe(BaseMetric):
     behaviour should also be similar.
 
     The selected observations are divided into ``k_splits`` equally sized
-    subsets. For each split, a new model is trained using all remaining subsets,
-    while the excluded subset is provided to the training function as validation
-    or test data.
+    subsets. For each split, a new model is trained using all remaining subsets.
+    The excluded subset is passed to ``training_func`` as its validation or
+    hold-out data.
 
     Each trained model is then used to predict and explain every selected
     observation. Explanations produced by pairs of models are compared only when
@@ -33,18 +33,28 @@ class MeGe(BaseMetric):
     - at least one of the two models predicts the true class; and
     - both models predict the same class.
 
-    For each valid comparison, explanation similarity is measured using the
-    Spearman-based distance:
+    For each valid comparison :math:`e_a` and :math:`e_b`, explanation similarity
+    is measured using the Spearman-based distance:
 
     .. math::
-        d(e_i, e_j) = sqrt(1 - abs(rho(e_i, e_j)))
 
-    where :math::``rho`` is the Spearman rank correlation between the two explanations.
+        d(e_a, e_b) = \sqrt{1 - \left|\rho_{\mathrm{Spearman}}(e_a, e_b)\right|}
 
-    For each observation, the MeGe score is computed as:
+    where :math:`\rho_{\mathrm{Spearman}}` is the Spearman rank correlation
+    between the two explanations. Perfect positive and negative rank correlations
+    therefore both produce a distance of zero.
+
+    For each observation :math:`i`, let :math:`\mathcal{D}_i` be the set of valid
+    parwise explanation distances. Its MeGe scores is:
 
     .. math::
-        MeGe_i = 1 / (1 + mean(D_i))
+
+        \operatorname{MeGe}_i = 
+        \frac{1}{
+            1 + 
+            \frac{1}{|\mathcal{D}_i|}
+            \sum_{d \in \mathcal{D}_i} d
+        }
 
     where ``D_i`` is the set of valid explanation distances associated with that
     observation.
@@ -211,7 +221,7 @@ class MeGe(BaseMetric):
 
     @staticmethod
     def _spearman_distance(first: np.ndarray, second: np.ndarray) -> float:
-        """
+        r"""
         Compute the Spearman-based distance between two explanations.
 
         Explanations with more than two dimensions are averaged over their last
@@ -220,10 +230,10 @@ class MeGe(BaseMetric):
 
         The distance is defined as:
 
-            d = sqrt(1 - |rho|)
+        .. math::
 
-        where ``rho`` is the Spearman rank correlation between the two
-        explanations.
+            d(e_a, e_b) =
+            \sqrt{1 - \left|\rho_{\mathrm{Spearman}}(e_a, e_b)\right|}
 
         Parameters
         ----------
@@ -267,7 +277,7 @@ class MeGe(BaseMetric):
 
 
     def run(self):
-        """
+        r"""
         Compute the MeGe representativity metric.
 
         The selected observations are first divided into ``k_splits`` equally
@@ -287,15 +297,22 @@ class MeGe(BaseMetric):
         - at least one model predicts the true class; and
         - both models predict the same class.
 
-        For every valid comparison, a Spearman-based explanation distance is
-        computed as ``sqrt(1 - abs(rho))``.
+        For each valid pair, the explanation distance is:
 
-        The final score for each observation is:
+        .. math::
 
-            1 / (1 + mean_distance)
+            d(e_a, e_b) =
+            \sqrt{1 - \left|\rho_{\mathrm{Spearman}}(e_a, e_b)\right|}
 
-        where ``mean_distance`` is the mean of all valid pairwise explanation
-        distances obtained for that observation.
+        Let :math:`\mathcal{D}_i` be the valid distances collected for observation
+        :math:`i`. The final per-observation score is:
+
+        .. math::
+
+            \operatorname{MeGe}_i =
+            \frac{1}{
+                1 + \frac{1}{|\mathcal{D}_i|} \sum_{d \in \mathcal{D}_i} d
+            }
 
         Returns
         -------

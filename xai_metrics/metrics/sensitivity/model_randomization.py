@@ -11,7 +11,7 @@ from typing import Mapping, Any
 
 @register_metric
 class ModelRandomization(BaseMetric):
-    """
+    r"""
     Model Randomization sensitivity metric.
 
     This metric evaluates whether an explanation depends on the parameters
@@ -19,33 +19,31 @@ class ModelRandomization(BaseMetric):
     of its parameterised layers is randomized, and explanations are recomputed
     using the randomized model.
 
-    For each observation ``i``, the metric compares the original explanation
+    For each observation :math:`i`, the metric compares the original explanation
     with the explanation produced by the randomized model:
 
-        MR_i = rho(phi(f, x_i), phi(f_random, x_i))
+    .. math::
 
-    where ``f`` is the original model, ``f_random`` is the randomized model,
-    ``phi`` is the explanation function and ``rho`` is the Spearman rank
-    correlation.
+        \operatorname{MR}_i =
+        \rho_{\mathrm{Spearman}}
+        \left(\phi(f, x_i, y_i), \phi(\widetilde{f}, x_i, y_i) \right)
 
-    Explanations that remain highly correlated after model parameters have been
-    randomized may indicate that the explanation method is insufficiently
-    dependent on the learned model. Conversely, a low correlation indicates
-    greater sensitivity to the model parameters.
+    where :math:`f` is the original model, :math:`\widetilde{f}` is its randomized
+    copy and :math:`\phi` is the explanation function.
+
+    A low correlation indicates that the explanation changes when learned model
+    parameters are replaced, which is the expected behaviour for an explanation
+    method that depends on the model. A high positive correlation indicates that
+    the attribution ranking remains similar despite parameter randomization.
 
     The metric returns one Spearman correlation value per observation. Values
     normally lie in ``[-1, 1]``. Values close to ``1`` indicate very similar
     attribution rankings, values close to ``0`` indicate weak rank association,
     and negative values indicate reversed attribution rankings.
 
-    Model parameters are randomized progressively over a configurable fraction
-    of parameterised layers. By default, layers are processed in reverse module
-    order and the last 25 percent of parameterised layers are randomized.
-    Parameter values are independently sampled from a uniform distribution over
-    ``[0, 1]``.
-
-    The original model stored in the metric context is never modified. A deep
-    copy is created before randomization.
+    The original model stored in the metric context is never modified. Randomization
+    if applied exclusively to a deep copy. Parameter values in selected layers
+    are independetly sampled from a uniform distribution over :math:`[0, 1]`.
 
     The implementation is based on the Model Randomization sanity check proposed
     by Adebayo et al. (2018) and follows the implementation provided by Xplique,
@@ -182,23 +180,27 @@ class ModelRandomization(BaseMetric):
 
 
     def run(self):
-        """
+        r"""
         Compute the Model Randomization metric.
 
         The method first creates a deep copy of the PyTorch model contained in
         the metric context. Parameterised layers are collected and optionally
         traversed in reverse order. A configurable fraction of these layers is
         then randomized by replacing their parameter values with samples drawn
-        independently from a uniform distribution over ``[0, 1]``.
+        independently from a uniform distribution over :math:`[0, 1]`.
 
         The explanation function is evaluated using the randomized model for all
-        selected observations. Each randomized explanation is then compared with
-        its corresponding original explanation using Spearman rank correlation.
+        selected observations. For each observation :math:`i`, its stored original
+        explanation is compared with the randomized explanation:
 
-        Explanations that strongly depend on the learned model parameters are
-        expected to change after randomization and therefore produce low
-        correlations. High positive correlations indicate that the attribution
-        ranking remains similar despite model randomization.
+        .. math::
+
+            \operatorname{MR}_i =
+            \rho_{\mathrm{Spearman}}
+            \left(\phi(f, x_i, y_i) \phi(\widetilde{f}, x_i, y_i) \right)
+
+        where :math:`f` is the original model and :math:`\widetilde{f}` is its
+        randomized copy.
 
         Returns
         -------
@@ -224,24 +226,26 @@ class ModelRandomization(BaseMetric):
 
         Notes
         -----
-        ``fraction`` controls the proportion of parameterised layers that are
-        randomized. The actual number is computed using integer truncation:
+        The number of randomized layers is calculated as:
 
-            int(number_of_parameterised_layers * fraction)
+        .. math::
 
-        Consequently, small positive fractions may result in zero randomized
-        layers when the model contains only a few parameterised layers.
+            \left\lfloor
+                \operatorname{number\_of\_layers}
+                \times
+                \operatorname{fraction}
+            \right\rfloor
+
+        Therefore, a small positive ``fraction`` can select zero layers for a small
+        model.
 
         When ``reverse=True``, the order of the collected layers is reversed
         before selecting the layers to randomize. This approximates progressive
         randomization beginning from the output side of sequential models.
 
-        The original model is never modified because randomization is performed
-        on a deep copy.
-
-        Unlike the original Xplique ``evaluate`` method, this implementation
-        returns one correlation value per observation rather than automatically
-        averaging them into a single dataset-level score.
+        The original model is not modified because all parameter changes are applied
+        to a deep copy. This implementation returns one score per observation rather
+        than a single dataset-level aggregate.
         """
         ctx = self.context
         p = self.params
