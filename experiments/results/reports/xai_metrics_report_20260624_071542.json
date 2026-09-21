@@ -2907,6 +2907,61 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "AutoEncoder",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5752017682506925,
+      "MAPLE": 0.4173781875676165,
+      "SHAP": 0.5448377813611712,
+      "BreakDown": 0.5490970391602743
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.2256859853154137,
+      "MAPLE": 0.06377665237301872,
+      "SHAP": 0.21091264628228687,
+      "BreakDown": 0.22276456157366434
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.2619047619047619,
+      "MAPLE": 0.21428571428571427,
+      "SHAP": 0.2619047619047619,
+      "BreakDown": 0.2619047619047619
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.24333537717588202,
+      "MAPLE": 0.46505892037538754,
+      "SHAP": 0.017064679754299244,
+      "BreakDown": 0.02046315529317196
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -2960,6 +3015,22 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "AutoEncoder",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.4336271217004174,
+      "MAPLE": 0.44522004909813395,
+      "SHAP": 0.43739526756107805,
+      "BreakDown": 0.46073813567913724
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -2983,6 +3054,22 @@
       "MAPLE": 0.2141420823833646,
       "SHAP": -0.17829726159158477,
       "BreakDown": -0.14964122698033724
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.46916127011534714,
+      "MAPLE": 0.35201485894975204,
+      "SHAP": 0.41636380306666804,
+      "BreakDown": 0.39092259273997376
     },
     {
       "dataset_name": "MetroPT3",
@@ -3062,6 +3149,23 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "AutoEncoder",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.0733874327132478,
+      "MAPLE": 0.0002501182984430007,
+      "SHAP": -0.13688336784650526,
+      "BreakDown": -0.12535937016707496
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -3074,6 +3178,20 @@
       "MAPLE": 2.119047619047619,
       "SHAP": 3.5238095238095237,
       "BreakDown": 1.8571428571428572
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "AutoEncoder",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.9725061513012805,
+      "MAPLE": 0.9996001604670962,
+      "SHAP": 0.7735693237356297,
+      "BreakDown": 0.8132130902531662
     },
     {
       "dataset_name": "MetroPT3",
@@ -3149,6 +3267,61 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "ECOD",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.7161104899077189,
+      "MAPLE": 0.7121215150469825,
+      "SHAP": 0.4393101880947749,
+      "BreakDown": 0.5665634671847025
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.22239690593310765,
+      "MAPLE": 0.20572575217201597,
+      "SHAP": 0.2123851595623862,
+      "BreakDown": 0.21563094641481126
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.2619047619047619,
+      "MAPLE": 0.2619047619047619,
+      "SHAP": 0.30952380952380953,
+      "BreakDown": 0.2619047619047619
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.26115137453057935,
+      "MAPLE": 0.8848630893104046,
+      "SHAP": 0.04510997340925747,
+      "BreakDown": 0.10671368069059793
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -3202,6 +3375,22 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "ECOD",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.42429332652439683,
+      "MAPLE": 0.39448003703783757,
+      "SHAP": 0.38939277899584596,
+      "BreakDown": 0.4042374971532332
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -3225,6 +3414,22 @@
       "MAPLE": 0.05544964977078715,
       "SHAP": 0.1425411291225699,
       "BreakDown": 0.04928922725478128
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.43057951094649205,
+      "MAPLE": 0.44184231072043384,
+      "SHAP": 0.45523913959200624,
+      "BreakDown": 0.4424336330647791
     },
     {
       "dataset_name": "MetroPT3",
@@ -3304,6 +3509,23 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "ECOD",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.1751660712521789,
+      "MAPLE": 0.00018172165101792848,
+      "SHAP": -0.4094941020756076,
+      "BreakDown": -0.37093080950693896
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -3316,6 +3538,20 @@
       "MAPLE": 1.0238095238095237,
       "SHAP": 1.7142857142857142,
       "BreakDown": 0.047619047619047616
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "ECOD",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.863261569922629,
+      "MAPLE": 0.9997038757651346,
+      "SHAP": 0.9579051603751308,
+      "BreakDown": 0.8115323955473139
     },
     {
       "dataset_name": "MetroPT3",
@@ -3391,6 +3627,61 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "HBOS",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.6164598592690059,
+      "MAPLE": 0.7367959916591644,
+      "SHAP": 0.7380952281611306,
+      "BreakDown": 0.7380952281611306
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.2508980787935711,
+      "MAPLE": 0.2619047533898127,
+      "SHAP": 0.2619047533898127,
+      "BreakDown": 0.2619047533898127
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.2619047619047619,
+      "MAPLE": 0.2619047619047619,
+      "SHAP": 0.2619047619047619,
+      "BreakDown": 0.2619047619047619
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.0482309927587353,
+      "MAPLE": 0.8018777944183619,
+      "SHAP": 0.3401420694837968,
+      "BreakDown": 0.45811523442467045
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -3444,6 +3735,22 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "HBOS",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5689054428998913,
+      "MAPLE": 0.5852898189797997,
+      "SHAP": 0.570762023524869,
+      "BreakDown": 0.5732780536902802
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -3467,6 +3774,22 @@
       "MAPLE": 0.04388745079662304,
       "SHAP": 0.014083432930592669,
       "BreakDown": 0.013116458728576705
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.4781951533187003,
+      "MAPLE": 0.4613787417632661,
+      "SHAP": 0.4751353059052712,
+      "BreakDown": 0.472563254948528
     },
     {
       "dataset_name": "MetroPT3",
@@ -3546,6 +3869,23 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "HBOS",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.06832377938230587,
+      "MAPLE": 0.0029018094944001723,
+      "SHAP": -0.14064328686231503,
+      "BreakDown": -0.152395919985516
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -3558,6 +3898,20 @@
       "MAPLE": 3.7857142857142856,
       "SHAP": 4.976190476190476,
       "BreakDown": 3.3333333333333335
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "HBOS",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.32341716701412515,
+      "MAPLE": 0.9999393300513245,
+      "SHAP": 0.9166651142187571,
+      "BreakDown": 0.8920664098333825
     },
     {
       "dataset_name": "MetroPT3",
@@ -3633,6 +3987,61 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "IForest",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.6442674916414988,
+      "MAPLE": 0.6029198874852487,
+      "SHAP": 0.62538485512847,
+      "BreakDown": 0.6381594013600123
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.20022357006867728,
+      "MAPLE": 0.16908617069323859,
+      "SHAP": 0.19166468154816402,
+      "BreakDown": 0.19679427359785354
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.2619047619047619,
+      "MAPLE": 0.23809523809523808,
+      "SHAP": 0.2619047619047619,
+      "BreakDown": 0.2619047619047619
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.3270429555124914,
+      "MAPLE": 1.0989817111125395,
+      "SHAP": 0.14094529426501443,
+      "BreakDown": 0.14094342731648968
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -3686,6 +4095,22 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "IForest",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.40166487234112414,
+      "MAPLE": 0.38177253940098343,
+      "SHAP": 0.38684264412593283,
+      "BreakDown": 0.3972049954125569
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -3709,6 +4134,22 @@
       "MAPLE": 0.2631487167394949,
       "SHAP": -0.28972426092272335,
       "BreakDown": -0.27101439887694023
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3544743573811416,
+      "MAPLE": 0.39094559902746584,
+      "SHAP": 0.3520003908757298,
+      "BreakDown": 0.35391111622697546
     },
     {
       "dataset_name": "MetroPT3",
@@ -3788,6 +4229,23 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "IForest",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.07520502176980826,
+      "MAPLE": 0.017237082446214958,
+      "SHAP": -0.24749187661198832,
+      "BreakDown": -0.18303727878966325
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -3800,6 +4258,20 @@
       "MAPLE": 1.119047619047619,
       "SHAP": 3.119047619047619,
       "BreakDown": 1.4523809523809523
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "IForest",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.7519666518583525,
+      "MAPLE": 0.9999231207635165,
+      "SHAP": 0.9581648501141808,
+      "BreakDown": 0.9767976735391383
     },
     {
       "dataset_name": "MetroPT3",
@@ -3875,6 +4347,61 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "MCD",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.1647693725515289,
+      "MAPLE": 0.165419564136728,
+      "SHAP": 0.1583383144301035,
+      "BreakDown": 0.1274649723136571
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3587715477960306,
+      "MAPLE": 0.3751136751702147,
+      "SHAP": 0.37045676130072114,
+      "BreakDown": 0.35009444806622103
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5,
+      "MAPLE": 0.5,
+      "SHAP": 0.5,
+      "BreakDown": 0.5
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.033604986656476585,
+      "MAPLE": 0.16185705787088245,
+      "SHAP": 0.0012983526800999135,
+      "BreakDown": 0.0012984697148515677
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -3928,6 +4455,22 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "MCD",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.738032966473917,
+      "MAPLE": 0.7380668518092846,
+      "SHAP": 0.7380369249670808,
+      "BreakDown": 0.7380350418530971
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -3951,6 +4494,22 @@
       "MAPLE": 0.23809320819352978,
       "SHAP": -0.42967429845182653,
       "BreakDown": -0.433406327357237
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.7369103715701654,
+      "MAPLE": 0.7368905609342956,
+      "SHAP": 0.7369523269521666,
+      "BreakDown": 0.7369478895952438
     },
     {
       "dataset_name": "MetroPT3",
@@ -4030,6 +4589,23 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "MCD",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": 0.0008282524259483476,
+      "MAPLE": 0.015802485364718018,
+      "SHAP": -0.01776629332240918,
+      "BreakDown": -0.023755357641817146
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -4042,6 +4618,20 @@
       "MAPLE": 3.6666666666666665,
       "SHAP": 6.380952380952381,
       "BreakDown": 6.785714285714286
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "MCD",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.23517574690232662,
+      "MAPLE": 0.5473147828454378,
+      "SHAP": 0.02797485942646953,
+      "BreakDown": 0.016816886764829803
     },
     {
       "dataset_name": "MetroPT3",
@@ -4117,6 +4707,61 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "VAE",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5168360315618061,
+      "MAPLE": 0.3087465807440735,
+      "SHAP": 0.4853577883470626,
+      "BreakDown": 0.4885672245706831
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.19348004602250599,
+      "MAPLE": 0.08059832524685633,
+      "SHAP": 0.17811236636979239,
+      "BreakDown": 0.1841589098884946
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.2619047619047619,
+      "MAPLE": 0.2619047619047619,
+      "SHAP": 0.2619047619047619,
+      "BreakDown": 0.2619047619047619
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.22326263019848347,
+      "MAPLE": 0.41729795905229233,
+      "SHAP": 0.011332529661567172,
+      "BreakDown": 0.01157556347558663
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -4170,6 +4815,22 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "VAE",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.4985202618475471,
+      "MAPLE": 0.4656684607888261,
+      "SHAP": 0.5109733368846632,
+      "BreakDown": 0.5127818827118192
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -4193,6 +4854,22 @@
       "MAPLE": 0.15347575509486283,
       "SHAP": -0.31520850999678457,
       "BreakDown": -0.23094809187886034
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.44612882270344667,
+      "MAPLE": 0.4746997107352529,
+      "SHAP": 0.42915777487769013,
+      "BreakDown": 0.4324063042977026
     },
     {
       "dataset_name": "MetroPT3",
@@ -4272,6 +4949,23 @@
     {
       "dataset_name": "MetroPT3",
       "model_name": "VAE",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.055012023977421984,
+      "MAPLE": -0.12074245171661158,
+      "SHAP": -0.1633043149105873,
+      "BreakDown": -0.19816634332811484
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -4284,6 +4978,20 @@
       "MAPLE": 1.0714285714285714,
       "SHAP": 1.6904761904761905,
       "BreakDown": 0.023809523809523808
+    },
+    {
+      "dataset_name": "MetroPT3",
+      "model_name": "VAE",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.9618606619186455,
+      "MAPLE": 0.4739681655169827,
+      "SHAP": 0.8136409382458971,
+      "BreakDown": 0.7213064234459096
     },
     {
       "dataset_name": "MetroPT3",
