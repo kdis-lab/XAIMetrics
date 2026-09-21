@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'XAI_metrics'
+project = 'XAIMetrics'
 copyright = '2026, Maria Teresa Alba Rueda'
 author = 'Maria Teresa Alba Rueda'
 
@@ -32,14 +32,20 @@ autodoc_mock_imports = ["quantus", "xplique"]
 napoleon_use_ivar = True
 
 templates_path = ['_templates']
-exclude_patterns = ["api/modules.rst", "api/xai_metrics.rst"]
+# La referencia se escribe en una única página, ``index.rst``. Los ficheros
+# generados por sphinx-apidoc se conservan como fuente, pero no se publican.
+exclude_patterns = ["api/**"]
 
 
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
+html_theme_options = {
+    "sidebar_hide_name": False,
+    "navigation_with_keys": True
+}
 html_static_path = ['_static']
 
 
