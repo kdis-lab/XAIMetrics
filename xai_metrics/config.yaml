@@ -165,6 +165,17 @@ metrics:
       symmetric_noise: true
       random_state: 42
 
+  - name: ModelRandomization
+    params:
+      batch_size: 32
+      fraction: 1.0
+      reverse: true
+      random_state: 42
+
+  - name: MeGe
+    params:
+      k_splits: 3
+
 
 explainers:
   - name: LIME

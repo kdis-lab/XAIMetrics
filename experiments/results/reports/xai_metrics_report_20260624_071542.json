@@ -2653,6 +2653,61 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "IForest",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3555851527622768,
+      "MAPLE": 0.41245523691177366,
+      "SHAP": 0.3911984579903739,
+      "BreakDown": 0.43892275180135454
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3328513202922685,
+      "MAPLE": 0.43453942792756217,
+      "SHAP": 0.4105892981801714,
+      "BreakDown": 0.4313201938356672
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5,
+      "MAPLE": 0.5,
+      "SHAP": 0.5,
+      "BreakDown": 0.5
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.04371376825135667,
+      "MAPLE": 0.33679602749609955,
+      "SHAP": 0.04376296428484576,
+      "BreakDown": 0.10205537799991934
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -2706,6 +2761,22 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "IForest",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5076620784108242,
+      "MAPLE": 0.5140464618170102,
+      "SHAP": 0.5251039077694128,
+      "BreakDown": 0.5271658784561383
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -2729,6 +2800,22 @@
       "MAPLE": -0.13015805912961037,
       "SHAP": -0.029104107979502754,
       "BreakDown": -0.02062656374268326
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5218709442765115,
+      "MAPLE": 0.5224959788457325,
+      "SHAP": 0.5214240026455943,
+      "BreakDown": 0.5084848585574204
     },
     {
       "dataset_name": "ARAMIS20",
@@ -2808,6 +2895,23 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "IForest",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.1862326778571954,
+      "MAPLE": -0.1653515838074512,
+      "SHAP": -0.2566535595814729,
+      "BreakDown": -0.10534554236188819
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -2820,6 +2924,20 @@
       "MAPLE": 1.0,
       "SHAP": 1.0,
       "BreakDown": 1.0
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "IForest",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.9150789256985377,
+      "MAPLE": 0.9999165294624461,
+      "SHAP": 0.9633744573596529,
+      "BreakDown": 0.9987756924835762
     },
     {
       "dataset_name": "ARAMIS20",
@@ -2895,6 +3013,61 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "MCD",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.07090749882232299,
+      "MAPLE": 0.042564744828268886,
+      "SHAP": 0.10267599106633238,
+      "BreakDown": 0.07711432780904164
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.116500578155475,
+      "MAPLE": 0.06139534443084683,
+      "SHAP": 0.08273165656386741,
+      "BreakDown": 0.06748033918140989
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.4857142857142857,
+      "MAPLE": 0.4714285714285714,
+      "SHAP": 0.38571428571428573,
+      "BreakDown": 0.44285714285714284
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.0106088443600872,
+      "MAPLE": 0.08232640763150993,
+      "SHAP": 0.013792343994024642,
+      "BreakDown": 0.0210501415192266
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -2948,6 +3121,22 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "MCD",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.520179619835761,
+      "MAPLE": 0.5106901570134846,
+      "SHAP": 0.5067751744172859,
+      "BreakDown": 0.5103475723466693
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -2971,6 +3160,22 @@
       "MAPLE": 0.04618442113196276,
       "SHAP": -0.03211815033125083,
       "BreakDown": 0.019576776343990413
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5917029749155424,
+      "MAPLE": 0.5749555279144409,
+      "SHAP": 0.5782315978538054,
+      "BreakDown": 0.5721006219145219
     },
     {
       "dataset_name": "ARAMIS20",
@@ -3050,6 +3255,23 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "MCD",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.006638402332351258,
+      "MAPLE": 0.07732883501268914,
+      "SHAP": -0.03654146617341091,
+      "BreakDown": -0.0017588089181933529
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -3062,6 +3284,20 @@
       "MAPLE": 1.042857142857143,
       "SHAP": 1.042857142857143,
       "BreakDown": 1.0285714285714285
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "MCD",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.49379910148369266,
+      "MAPLE": 0.9071998830587129,
+      "SHAP": 0.41358542079070687,
+      "BreakDown": 0.46174226949547315
     },
     {
       "dataset_name": "ARAMIS20",
@@ -3137,6 +3373,61 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "VAE",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3190254454101835,
+      "MAPLE": 0.38134597114154273,
+      "SHAP": 0.3501932870064463,
+      "BreakDown": 0.3726485258766583
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.36613019151347026,
+      "MAPLE": 0.39959960718240056,
+      "SHAP": 0.4114962079695293,
+      "BreakDown": 0.4123694573129926
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5,
+      "MAPLE": 0.5,
+      "SHAP": 0.5,
+      "BreakDown": 0.5
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.03555435997001561,
+      "MAPLE": 0.2054956814981997,
+      "SHAP": 0.038373285981859746,
+      "BreakDown": 0.10179177031799086
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -3190,6 +3481,22 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "VAE",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5157434133660732,
+      "MAPLE": 0.5014942513930858,
+      "SHAP": 0.505506747767177,
+      "BreakDown": 0.5386705524117059
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -3213,6 +3520,22 @@
       "MAPLE": -0.07176264358235732,
       "SHAP": 0.030029607768517666,
       "BreakDown": 0.042247563513943605
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.54927874941911,
+      "MAPLE": 0.5665591593185554,
+      "SHAP": 0.5358027786966794,
+      "BreakDown": 0.547231184200821
     },
     {
       "dataset_name": "ARAMIS20",
@@ -3292,6 +3615,23 @@
     {
       "dataset_name": "ARAMIS20",
       "model_name": "VAE",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.08753015821044706,
+      "MAPLE": 0.009367007821073853,
+      "SHAP": -0.20027425735792093,
+      "BreakDown": -0.029436655762692627
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -3304,6 +3644,20 @@
       "MAPLE": 0.17142857142857143,
       "SHAP": 0.2,
       "BreakDown": 0.15714285714285714
+    },
+    {
+      "dataset_name": "ARAMIS20",
+      "model_name": "VAE",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.8242219664540826,
+      "MAPLE": 0.7802063268223495,
+      "SHAP": 0.7584723783952435,
+      "BreakDown": 0.9883656834925407
     },
     {
       "dataset_name": "ARAMIS20",
