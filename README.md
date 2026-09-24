@@ -199,19 +199,22 @@ Input files must meet the following requirements:
   <thead>
     <tr>
       <th>Category</th>
+      <th>Subcategory</th>
       <th>Metric</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td rowspan="2">Complexity</td>
+      <td rowspan="2"><a href="xai_metrics\metrics\complexity">Complexity</a></td>
+      <td rowspan="2">——</td>
       <td><a href="xai_metrics/metrics/complexity/complexity_metric.py">Complexity</a></td>
     </tr>
     <tr>
       <td><a href="xai_metrics/metrics/complexity/sparseness.py">Sparseness</a></td>
     </tr>
     <tr>
-      <td rowspan="10">Faithfulness</td>
+      <td rowspan="8"><a href="xai_metrics\metrics\faithfulness">Faithfulness</a></td>
+      <td rowspan="8">——</td>
       <td><a href="xai_metrics/metrics/faithfulness/consistency.py">Consistency</a></td>
     </tr>
     <tr><td><a href="xai_metrics/metrics/faithfulness/faithfulness.py">Faithfulness</a></td></tr>
@@ -221,35 +224,38 @@ Input files must meet the following requirements:
     <tr><td><a href="xai_metrics/metrics/faithfulness/monotonicity_metric.py">MonotonicityMetric</a></td></tr>
     <tr><td><a href="xai_metrics/metrics/faithfulness/sensitivity_n.py">SensitivityN</a></td></tr>
     <tr><td><a href="xai_metrics/metrics/faithfulness/sufficiency.py">Sufficiency</a></td></tr>
-    <tr><td><a href="xai_metrics/metrics/fidelity/completeness/completeness_metric.py">Completeness</a></td></tr>
-    <tr><td><a href="xai_metrics/metrics/fidelity/soundness/non_sensitivity.py">NonSensitivity</a></td></tr>
-
     <tr>
-      <td rowspan="6">Fidelity</td>
-      <td><a href="xai_metrics/metrics/fidelity/completeness/mufidelity.py">MuFidelity</a></td>
+      <td rowspan="8"><a href="xai_metrics\metrics\fidelity">Fidelity</a></td>
+      <td rowspan="7"><a href="xai_metrics\metrics\fidelity\completeness">Completeness</a></td>
+      <td><a href="xai_metrics/metrics/fidelity/completeness/average_drop.py">AverageDrop</a></td>
     </tr>
+    <tr><td><a href="xai_metrics/metrics/fidelity/completeness/average_gain.py">AverageGain</a></td></tr>
+    <tr><td><a href="xai_metrics/metrics/fidelity/completeness/average_increase.py">AverageIncrease</a></td></tr>
+    <tr><td><a href="xai_metrics/metrics/fidelity/completeness/completeness_metric.py">Completeness</a></td></tr>
     <tr><td><a href="xai_metrics/metrics/fidelity/completeness/deletion.py">Deletion</a></td></tr>
     <tr><td><a href="xai_metrics/metrics/fidelity/completeness/insertion.py">Insertion</a></td></tr>
-    <tr><td><a href="xai_metrics/metrics/fidelity/completeness/average_drop.py">AverageDrop</a></td></tr>
-    <tr><td><a href="xai_metrics/metrics/fidelity/completeness/average_increase.py">AverageIncrease</a></td></tr>
-    <tr><td><a href="xai_metrics/metrics/fidelity/completeness/average_gain.py">AverageGain</a></td></tr>
-
+    <tr><td><a href="xai_metrics/metrics/fidelity/completeness/mufidelity.py">MuFidelity</a></td></tr>
     <tr>
-      <td rowspan="7">Robustness</td>
-      <td><a href="xai_metrics/metrics/robustness/local_lipschitz_estimate.py">LocalLipschitzEstimate</a></td>
+      <td><a href="xai_metrics\metrics\fidelity\soundness">Soundness</a></td>
+      <td><a href="xai_metrics/metrics/fidelity/soundness/non_sensitivity.py">NonSensitivity</a></td>
     </tr>
+    <tr>
+      <td rowspan="6"><a href="xai_metrics\metrics\robustness">Robustness</a></td>
+      <td rowspan="6">——</td>
+      <td><a href="xai_metrics/metrics/robustness/average_stability.py">AverageStability</a></td>
+    </tr>
+    <tr><td><a href="xai_metrics/metrics/robustness/local_lipschitz_estimate.py">LocalLipschitzEstimate</a></td></tr>
     <tr><td><a href="xai_metrics/metrics/robustness/max_sensitivity.py">MaxSensitivity</a></td></tr>
+    <tr><td><a href="xai_metrics/metrics/robustness/mege.py">MeGe</a></td></tr>
     <tr><td><a href="xai_metrics/metrics/robustness/relative_input_stability.py">RelativeInputStability</a></td></tr>
     <tr><td><a href="xai_metrics/metrics/robustness/relative_output_stability.py">RelativeOutputStability</a></td></tr>
-    <tr><td><a href="xai_metrics/metrics/sensitivity/avg_sensitivity.py">AvgSensitivity</a></td></tr>
-    <tr><td><a href="xai_metrics/metrics/robustness/average_stability.py">AverageStability</a></td></tr>
-    <tr><td><a href="xai_metrics/metrics/robustness/mege.py">MeGe</a></td></tr>
-
     <tr>
-      <td rowspan="2">Sensitivity</td>
-      <td><a href="xai_metrics/metrics/sensitivity/random_logit.py">RandomLogit</a></td>
+      <td rowspan="3"><a href="xai_metrics\metrics\sensitivity">Sensitivity</a></td>
+      <td rowspan="3">——</td>
+      <td><a href="xai_metrics/metrics/sensitivity/avg_sensitivity.py">AvgSensitivity</a></td>
     </tr>
     <tr><td><a href="xai_metrics/metrics/sensitivity/model_randomization.py">ModelRandomization</a></td></tr>
+    <tr><td><a href="xai_metrics/metrics/sensitivity/random_logit.py">RandomLogit</a></td></tr>
   </tbody>
 </table>
 
