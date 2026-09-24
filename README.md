@@ -206,7 +206,7 @@ Input files must meet the following requirements:
   <tbody>
     <tr>
       <td rowspan="2"><a href="xai_metrics\metrics\complexity">Complexity</a></td>
-      <td rowspan="2">——</td>
+      <td rowspan="2">---</td>
       <td><a href="xai_metrics/metrics/complexity/complexity_metric.py">Complexity</a></td>
     </tr>
     <tr>
@@ -214,7 +214,7 @@ Input files must meet the following requirements:
     </tr>
     <tr>
       <td rowspan="8"><a href="xai_metrics\metrics\faithfulness">Faithfulness</a></td>
-      <td rowspan="8">——</td>
+      <td rowspan="8">---</td>
       <td><a href="xai_metrics/metrics/faithfulness/consistency.py">Consistency</a></td>
     </tr>
     <tr><td><a href="xai_metrics/metrics/faithfulness/faithfulness.py">Faithfulness</a></td></tr>
@@ -241,7 +241,7 @@ Input files must meet the following requirements:
     </tr>
     <tr>
       <td rowspan="6"><a href="xai_metrics\metrics\robustness">Robustness</a></td>
-      <td rowspan="6">——</td>
+      <td rowspan="6">---</td>
       <td><a href="xai_metrics/metrics/robustness/average_stability.py">AverageStability</a></td>
     </tr>
     <tr><td><a href="xai_metrics/metrics/robustness/local_lipschitz_estimate.py">LocalLipschitzEstimate</a></td></tr>
@@ -251,7 +251,7 @@ Input files must meet the following requirements:
     <tr><td><a href="xai_metrics/metrics/robustness/relative_output_stability.py">RelativeOutputStability</a></td></tr>
     <tr>
       <td rowspan="3"><a href="xai_metrics\metrics\sensitivity">Sensitivity</a></td>
-      <td rowspan="3">——</td>
+      <td rowspan="3">---</td>
       <td><a href="xai_metrics/metrics/sensitivity/avg_sensitivity.py">AvgSensitivity</a></td>
     </tr>
     <tr><td><a href="xai_metrics/metrics/sensitivity/model_randomization.py">ModelRandomization</a></td></tr>
