@@ -1,36 +1,47 @@
 # XAI-metrics
 
-Librería para evaluar explicaciones de modelos de machine learning mediante
-métricas de explicabilidad. El paquete permite comparar métodos XAI atributivos
-como LIME, SHAP o BreakDown sobre un mismo modelo y conjunto de datos, generando resultados individuales y reportes agregados en formato CSV y JSON.
+A Python library for evaluationa ttribution-based explainability methods in
+machine learning models. It supports the evaluation and comparison of local XAI
+methods such as LIME and SHAP, producing both aggregated and observation-level
+metric reports.
 
-## Características principales
+The package is designed for explanation methods where each attributio value
+represents the importance of an input feature for a specific observation.
 
-- Ejecución centralizada de métricas XAI mediante `run_evaluation`.
-- Configuración declarativa mediante archivos YAML.
-- Descubrimiento automático de combinaciones de datasets, modelos y métodos XAI.
-- Soporte para métricas de complejidad, fidelidad, robustez, sensibilidad y
-  faithfulness.
-- Generación de reportes por dataset, modelo y método de explicación.
-- Registro automático de métricas implementadas en el paquete.
+## Features
 
-## Instalación
+- Centralized metric execution through `run_evaluation`.
+- Attribution generation through `run_explanation`.
+- Declarative YAML-based configuration.
+- Automatic discovery of registered metrics and explainers.
+- Aggregated and observation-level reprots in CSV and JSON formats.
+- Support for PyTorch models and models exposing interfaces such as `predict`
+  or `predict_proba`, depending on the metric.
+- Complexity, fidelity, faithfulness, robustness, and sensitivity metrics.
 
-Clona el repositorio e instala el paquete en modo editable:
+## Requirements
+
+- Python `>=3.13`
+- Dependencies declared in `pyproject.toml`
+
+## Installation
+
+Clone the repository and install the project in editable mode:
 
 ```bash
 git clone https://github.com/mayumar/XAI_metrics.git
 cd XAI_metrics
-pip install -e .
+uv sync
 ```
 
-El proyecto requiere Python `>=3.10`.
+Alternatively, using `pip`:
+```bash
+pip install -e
+```
 
-## Uso rápido
+## Quick start
 
-La forma principal de usar la librería es llamar a `run_evaluation` indicando un
-archivo de configuración. El siguiente ejemplo carga la configuración, construye
-los contextos de evaluación, ejecuta las métricas y guarda los reportes:
+The main function for evaluating existing explanations is `run_evaluation`.
 
 ```python
 from xai_metrics.runner import run_evaluation
@@ -41,40 +52,69 @@ results = run_evaluation(
 )
 ```
 
-El objeto `results` contiene:
+The returned dictionary contains:
 
-- `contexts`: resultados individuales para cada combinación evaluada.
-- `reports`: tablas agregadas por dataset y modelo.
-- `report_paths`: rutas de los reportes CSV y JSON generados.
+- `contexts`: detailed output for every evaluated contxt.
+- `reports`: aggregated tables grouped by dataset and model.
+- `observation_reports`: metric results for individual observations.
+- `report_paths`: paths of the generated CSV and JSON files.
 
-Si tus modelos necesitan un cargador personalizado o algunas métricas requieren
-funciones de explicación en tiempo de ejecución, puedes pasarlas como argumentos:
+Specific metrics can be selected:
 
 ```python
-from xai_metrics.runner import run_evaluation
-from utils import load_model
-from xai_methods.lime import make_lime_explain_func
-from xai_methods.shap import make_shap_local_explain_func
-from xai_methods.break_down import make_breakdown_explain_func
-
-explain_funcs = {
-    "lime": make_lime_explain_func(X_train_norm),
-    "shap": make_shap_local_explain_func(X_train_norm),
-    "breakdown": make_breakdown_explain_func(X_train_norm),
-}
-
 results = run_evaluation(
     config="xai_metrics/config.yaml",
-    model_loader=load_model,
-    explain_funcs=explain_funcs,
+    selected_metrics=[
+        "Complexity",
+        "Sparseness",
+        "MuFidelity",
+        "Deletion",
+        "Insertion",
+    ],
     report_output_dir="results/reports",
 )
 ```
 
-## Configuración
+## Using a manually created context
 
-La evaluación se define en un archivo YAML con dos bloques principales:
-`context` y `metrics`.
+A `MetricContext` can be created directly when data should not be leaded from
+the paths declared in the configuraiton file:
+
+```python
+import numpy as np
+
+from xai_metrics.base import MetricContext
+from xai_metrics.runner import run_evaluation
+
+context = MetricContext(
+    model=model,
+    X_test=X_test,
+    y_test=y_test,
+    observations=[10, 20, 30],
+    attributions=np.asarray(attributions),
+    device="cpu",
+)
+
+results = run_evaluation(
+    context=context,
+    metadata={
+        "dataset_name": "MetroPT3",
+        "model_name": "IForest",
+        "xai_method_name": "LIME",
+    },
+    selected_metrics=["Complexity", "Sparseness"],
+    config="xai_metrics/config.yaml",
+)
+```
+
+`observations` must contain indices available in `X_test`and `y_test`.
+Additionally, `attributions` must contain one row for every selected
+observation, in the same order.
+
+## Configuration
+
+The YAML configuration file mainly contains `context`, `metrics` and
+optionally `explainers` sections.
 
 ```yaml
 context:
@@ -105,32 +145,23 @@ metrics:
       perturb_std: 0.1
 ```
 
-Con `datasets_dir`, `models_dir` y `attributions_dir`, la librería busca
-automáticamente los contextos disponibles. Cada contexto combina:
-
-- un dataset,
-- un modelo entrenado,
-- un conjunto de test,
-- sus etiquetas,
-- un archivo de atribuciones generado por un método XAI.
-
-También se puede configurar un único contexto indicando rutas directas:
+A single context can also be configured using explicit file paths:
 
 ```yaml
 context:
-  dataset_name: "hydraulic"
+  dataset_name: "MetroPT3"
   model_name: "IForest"
   xai_method_name: "LIME"
   device: "cpu"
-  model_path: "prueba/results/models/hydraulic/IForest/hydraulic_IForest_seed_0.pkl"
-  X_test_path: "prueba/data/hydraulic/X_test_train_norm.csv"
-  y_test_path: "prueba/data/hydraulic/y_test_train.csv"
-  attributions_path: "prueba/results/attributions/hydraulic/IForest/LIME/hydraulic_IForest_lime_attributions.csv"
+  model_path: "prueba/results/models/MetroPT3/IForest/MetroPT3_IForest_seed_0.pkl"
+  X_test_path: "prueba/data/MetroPT3/X_test_train_norm.csv"
+  y_test_path: "prueba/data/MetroPT3/y_test_train.csv"
+  attributions_path: "prueba/results/attributions/MetroPT3/IForest/LIME/MetroPT3_IForest_lime_attributions.csv"
 ```
 
-## Estructura esperada de los datos
+## Expected data structure
 
-Para el descubrimiento automático, se espera una organización como la siguiente:
+For automatic context discovery, the following structure is recommended:
 
 ```text
 prueba/
@@ -151,81 +182,141 @@ prueba/
                 └── attributions.csv
 ```
 
-Los archivos de entrada deben cumplir estas condiciones:
+Input files must meet the following requirements:
 
-- `X_test`: CSV con las observaciones en filas y las variables en columnas.
-- `y_test`: CSV con las etiquetas, indexado igual que `X_test`.
-- `attributions`: CSV donde cada fila corresponde a una observación explicada y
-  cada columna a una variable.
-- El índice de las atribuciones debe existir en el índice de `X_test`.
-- El modelo cargado debe ser compatible con las métricas ejecutadas. Por defecto,
-  la librería puede cargar modelos `.pkl`, `.pickle`, `.joblib`, `.jl`, `.pt` y
-  `.pth`.
+- `X_test`: CSV file with observations as rows and features as columns.
+- `y_test`: target labelsaligned by index with `X_test`.
+- `attributions`: one row per explained observation and one column per input
+  feature.
+- Attribution indices must exist in the `X_test` index.
+- The number of attribution rows must match the number of evaluated observations.
+- The model must be compatible with the selected metrics. By default, the library
+  con load `.pkl`, `.pickle`, `.joblib`, `.jl`, `.pt` and `.pth` models.
 
-## Métricas disponibles
+## Avariable metrics
 
-La librería incluye, entre otras, las siguientes métricas:
+| Category | Metric |
+|---|---|
+| [Complexity](xai_metrics\metrics\complexity) | [Complexity](xai_metrics/metrics/complexity/complexity_metric.py) |
+| [Complexity](xai_metrics\metrics\complexity) | [Sparseness](xai_metrics/metrics/complexity/sparseness.py) |
+| [Faithfulness](xai_metrics\metrics\faithfulness) | [Consistency](xai_metrics/metrics/faithfulness/consistency.py) |
+| [Faithfulness](xai_metrics\metrics\faithfulness) | [FaithfulnessEstimate](xai_metrics/metrics/faithfulness/faithfulness_estimate.py) |
+| [Faithfulness](xai_metrics\metrics\faithfulness) | [Faithfulness](xai_metrics/metrics/faithfulness/faithfulness.py) |
+| [Faithfulness](xai_metrics\metrics\faithfulness) | [MonotonicityCorrelation](xai_metrics/metrics/faithfulness/monotonicity_correlation.py) |
+| [Faithfulness](xai_metrics\metrics\faithfulness) | [MonotonicityMetric](xai_metrics/metrics/faithfulness/monotonicity_metric.py) |
+| [Faithfulness](xai_metrics\metrics\faithfulness) | [Monotonicity](xai_metrics/metrics/faithfulness/monotonicity.py) |
+| [Faithfulness](xai_metrics\metrics\faithfulness) | [SensitivityN](xai_metrics/metrics/faithfulness/sensitivity_n.py) |
+| [Faithfulness](xai_metrics\metrics\faithfulness) | [Sufficiency](xai_metrics/metrics/faithfulness/sufficiency.py) |
+| [Fidelity/Completeness](xai_metrics\metrics\fidelity\completeness) | [AverageDrop](xai_metrics/metrics/fidelity/completeness/average_drop.py) |
+| [Fidelity/Completeness](xai_metrics\metrics\fidelity\completeness) | [AverageGain](xai_metrics/metrics/fidelity/completeness/average_gain.py) |
+| [Fidelity/Completeness](xai_metrics\metrics\fidelity\completeness) | [AverageIncrease](xai_metrics/metrics/fidelity/completeness/average_increase.py) |
+| [Fidelity/Completeness](xai_metrics\metrics\fidelity\completeness) | [Completeness](xai_metrics/metrics/fidelity/completeness/completeness_metric.py) |
+| [Fidelity/Completeness](xai_metrics\metrics\fidelity\completeness) | [Deletion](xai_metrics/metrics/fidelity/completeness/deletion.py) |
+| [Fidelity/Completeness](xai_metrics\metrics\fidelity\completeness) | [Insertion](xai_metrics/metrics/fidelity/completeness/insertion.py) |
+| [Fidelity/Completeness](xai_metrics\metrics\fidelity\completeness) | [MuFidelity](xai_metrics/metrics/fidelity/completeness/mufidelity.py) |
+| [Fidelity/Soundness](xai_metrics\metrics\fidelity\soundness) | [NonSensitivity](xai_metrics/metrics/fidelity/soundness/non_sensitivity.py) |
+| [Robustness](xai_metrics\metrics\robustness) | [AverageStability](xai_metrics/metrics/robustness/average_stability.py) |
+| [Robustness](xai_metrics\metrics\robustness) | [LocalLipschitzEstimate](xai_metrics/metrics/robustness/local_lipschitz_estimate.py) |
+| [Robustness](xai_metrics\metrics\robustness) | [MaxSensitivity](xai_metrics/metrics/robustness/max_sensitivity.py) |
+| [Robustness](xai_metrics\metrics\robustness) | [MeGe](xai_metrics/metrics/robustness/mege.py) |
+| [Robustness](xai_metrics\metrics\robustness) | [RelativeInputStability](xai_metrics/metrics/robustness/relative_input_stability.py) |
+| [Robustness](xai_metrics\metrics\robustness) | [RelativeOutputStability](xai_metrics/metrics/robustness/relative_output_stability.py) |
+| [Sensitivity](xai_metrics\metrics\sensitivity) | [AvgSensitivity](xai_metrics/metrics/sensitivity/avg_sensitivity.py) |
+| [Sensitivity](xai_metrics\metrics\sensitivity) | [ModelRandomization](xai_metrics/metrics/sensitivity/model_randomization.py) |
+| [Sensitivity](xai_metrics\metrics\sensitivity) | [RandomLogit](xai_metrics/metrics/sensitivity/random_logit.py) |
 
-- `Complexity`
-- `Sparseness`
-- `Consistency`
-- `Faithfulness`
-- `FaithfulnessEstimate`
-- `Monotonicity`
-- `MonotonicityCorrelation`
-- `MonotonicityMetric`
-- `SensitivityN`
-- `Sufficiency`
-- `Completeness`
-- `NonSensitivity`
-- `LocalLipschitzEstimate`
-- `MaxSensitivity`
-- `RelativeInputStability`
-- `RelativeOutputStability`
-- `AvgSensitivity`
+## Metrics with additional requirements
 
-Las métricas se registran automáticamente mediante el decorador
-`@register_metric`. Para ejecutar solo algunas métricas, usa `selected_metrics`:
+Some metrics require additional information besides precomputed attributions.
+
+| Metric | Additional requirement |
+|---|---|
+| `MuFidelity`, `Deletion`, `Insertion`, `AverageDrop`, `AverageIncrease`, `AverageGain` | A model that can produce one score per observation. |
+| `RandomLogit` | Classification targets and an explanation function. |
+| `ModelRandomization` | A PyTorch `torch.nn.Module` model and an explanation function. |
+| `AverageStability` | An explanation function to generate attributions for perturbed inputs. |
+| `MeGe` | A training function and an explanation function. The number of selected observations must be divisible by `k_splits`. |
+
+Explanation functions can be provided at runtime through `explain_funcs`:
 
 ```python
 results = run_evaluation(
     config="xai_metrics/config.yaml",
-    selected_metrics=["Complexity", "Sparseness", "Faithfulness"],
+    explain_funcs={
+        "lime": lime_explain_func,
+        "shap": shap_explain_func,
+    },
 )
 ```
 
-## Salida
+An explanation function should follow this interface:
 
-Cuando `report_output_dir` no es `None`, la librería guarda un CSV y un JSON por
-cada combinación de dataset y modelo:
-
-```text
-results/reports/
-├── hydraulic_ECOD_xai_metrics_report.csv
-└── hydraulic_ECOD_xai_metrics_report.json
+```python
+def explain_func(model, inputs, targets=None):
+    """Return one attribution array per input observation."""
+    return attributions
 ```
 
-Un reporte CSV tiene una estructura como esta:
+`MeGe` additionally requires a training function:
 
-```text
-metric,BreakDown,LIME,SHAP
-Completeness,,0.0,0.0
-Complexity,1.7844,1.7611,1.7762
-Consistency,,1.0,1.0
-Faithfulness,0.6270,-0.8129,-0.1154
-LocalLipschitzEstimate,,24.6297,4.8229
-Monotonicity,,1.0,1.0
-Sparseness,0.0558,0.0770,0.0832
-Sufficiency,,0.75,1.0
+```python
+def training_func(X_train, y_train, X_holdout, y_holdout):
+    model = build_model()
+    model.fit(X_train, y_train)
+    return model
 ```
 
-Las filas corresponden a métricas y las columnas a métodos XAI. Esto permite
-comparar de forma directa la calidad de distintas explicaciones para un mismo
-modelo.
+It can be supplied when running the evaluation:
 
-## Crear una métrica nueva
+```python
+results = run_evaluation(
+    config="xai_metrics/config.yaml",
+    selected_metrics=["MeGe"],
+    explain_funcs={"lime": lime_explain_func},
+    training_func=training_func,
+)
+```
 
-Una métrica debe heredar de `BaseMetric`, definir un nombre y registrar la clase:
+## Generating explanations
+
+The library can also generate attributions with the registered explainers:
+
+```python
+from xai_metrics.runner import run_explanation
+
+results = run_explanation(
+    config="xai_metrics/config.yaml",
+    selected_explainers=["LIME", "SHAP"],
+    attribution_output_dir="results/attributions",
+)
+```
+
+## Results and reports
+
+When `report_output_dir` is provided, XAIMetrics creates aggregated reports and
+observation-level reports.
+
+```text
+results/
+└── reports/
+    ├── MetroPT3_IForest_xai_metrics_report.csv
+    ├── MetroPT3_IForest_xai_metrics_report.json
+    └── observations/
+        ├── Complexity/
+        ├── Sparseness/
+        ├── Faithfulness/
+        ├── LocalLipschitzEstimate/
+        └── ...
+```
+
+Aggregated reports facilitate the comparison of multiple XAI methods for the
+same dataset and model. Observation-level reports retain the value returned by
+each metric for each evaluated explanation.
+
+## Adding a metric
+
+A metric must inherit from `BaseMetric`, define a `NAME`, be registered with
+`@register_metric`, and implement `run`.
 
 ```python
 from xai_metrics.base import BaseMetric, register_metric
@@ -240,8 +331,8 @@ class MyMetric(BaseMetric):
         return float(attributions.mean())
 ```
 
-Después de añadirla dentro del paquete `xai_metrics.metrics`, el sistema de
-autodescubrimiento podrá registrarla y se podrá usar en el `config.yaml`:
+The metric must be added under `xai_metrics.metrics` so automatic discovery
+can locate it. It can then be configured as follows:
 
 ```yaml
 metrics:
@@ -249,22 +340,38 @@ metrics:
     params: {}
 ```
 
-## Ejecutar tests
+## Tests
+
+Run the complete test suite from the repository root:
 
 ```bash
-pytest
+uv run pytest
 ```
 
-## Documentación
-
-El repositorio incluye configuración de Sphinx en `docs/`. Para generar la
-documentación HTML:
+Run only metric tests:
 
 ```bash
-cd docs
-make html
+uv run pytest tests/metrics
 ```
 
-## Licencia
+## Documentation
 
-Este proyecto se distribuye bajo licencia MIT.
+Documentation is generated with Sphinx.
+
+From the repository root:
+
+```bash
+uv run sphinx-apidoc -f -e -o docs/sphinx/source/api xai_metrics
+cd docs/spinx
+uv run make html
+```
+
+The generated HTML documentation is avaible at:
+
+```text
+docs/sphinx/build/html/index.html
+```
+
+## License
+
+This project is distributed under the MIT License.
