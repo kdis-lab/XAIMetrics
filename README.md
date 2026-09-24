@@ -210,7 +210,6 @@ Input files must meet the following requirements:
     <tr>
       <td><a href="xai_metrics/metrics/complexity/sparseness.py">Sparseness</a></td>
     </tr>
-
     <tr>
       <td rowspan="10">Faithfulness</td>
       <td><a href="xai_metrics/metrics/faithfulness/consistency.py">Consistency</a></td>
