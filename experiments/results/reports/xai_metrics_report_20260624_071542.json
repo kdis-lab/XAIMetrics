@@ -363,6 +363,61 @@
     {
       "dataset_name": "AHU21",
       "model_name": "ECOD",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.11894007826756153,
+      "MAPLE": 0.11757558769812541,
+      "SHAP": 0.0818268692719617,
+      "BreakDown": 0.0786463789026519
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.08957275257312826,
+      "MAPLE": 0.06398628048731812,
+      "SHAP": 0.09757796269176262,
+      "BreakDown": 0.10343116180405819
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.4142857142857143,
+      "MAPLE": 0.2571428571428571,
+      "SHAP": 0.4714285714285714,
+      "BreakDown": 0.5
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.23372275867246625,
+      "MAPLE": 0.975497952143329,
+      "SHAP": 0.2354382980614901,
+      "BreakDown": 0.2463489574151379
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -416,6 +471,22 @@
     {
       "dataset_name": "AHU21",
       "model_name": "ECOD",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5312005437785335,
+      "MAPLE": 0.558342525347316,
+      "SHAP": 0.5096919147720357,
+      "BreakDown": 0.5098268831602666
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -439,6 +510,22 @@
       "MAPLE": 0.004963555528924143,
       "SHAP": 0.03084070045247808,
       "BreakDown": 0.026607379430563082
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5441445827734571,
+      "MAPLE": 0.5168116118289343,
+      "SHAP": 0.5647401511669159,
+      "BreakDown": 0.5647615678984076
     },
     {
       "dataset_name": "AHU21",
@@ -518,6 +605,23 @@
     {
       "dataset_name": "AHU21",
       "model_name": "ECOD",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": 0.01955388543041638,
+      "MAPLE": -0.005128821883197676,
+      "SHAP": 0.005396492031826082,
+      "BreakDown": 0.0072759098204116905
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -530,6 +634,20 @@
       "MAPLE": 4.6571428571428575,
       "SHAP": 5.7,
       "BreakDown": 5.7
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "ECOD",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.9486332743714336,
+      "MAPLE": 0.99996963708697,
+      "SHAP": 0.8816056755116374,
+      "BreakDown": 0.8679551933008813
     },
     {
       "dataset_name": "AHU21",
@@ -605,6 +723,61 @@
     {
       "dataset_name": "AHU21",
       "model_name": "HBOS",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.1425351202188592,
+      "MAPLE": 0.29933768619583656,
+      "SHAP": 0.18822467039738383,
+      "BreakDown": 0.17817252017557622
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3454171594764505,
+      "MAPLE": 0.14884551500103305,
+      "SHAP": 0.3050337816987719,
+      "BreakDown": 0.3059968424694879
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.6,
+      "MAPLE": 0.4,
+      "SHAP": 0.45714285714285713,
+      "BreakDown": 0.45714285714285713
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.276570042721661,
+      "MAPLE": 0.4366088659006969,
+      "SHAP": 0.013100606499599866,
+      "BreakDown": 0.01291660145177905
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -658,6 +831,22 @@
     {
       "dataset_name": "AHU21",
       "model_name": "HBOS",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5468962406849159,
+      "MAPLE": 0.5761409250471521,
+      "SHAP": 0.5329247700723531,
+      "BreakDown": 0.5324077069289794
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -681,6 +870,22 @@
       "MAPLE": -0.025296410701621395,
       "SHAP": -0.020679936553781756,
       "BreakDown": -0.01320305178581378
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5712553658154834,
+      "MAPLE": 0.5420114971384281,
+      "SHAP": 0.5852268332756367,
+      "BreakDown": 0.5857438961059607
     },
     {
       "dataset_name": "AHU21",
@@ -760,6 +965,23 @@
     {
       "dataset_name": "AHU21",
       "model_name": "HBOS",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": 0.08897976533213196,
+      "MAPLE": 0.005150521407417818,
+      "SHAP": 0.06946501195186827,
+      "BreakDown": 0.07754902691141867
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -772,6 +994,20 @@
       "MAPLE": 7.0285714285714285,
       "SHAP": 6.714285714285714,
       "BreakDown": 7.714285714285714
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "HBOS",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.9696542794455874,
+      "MAPLE": 0.9997368060708866,
+      "SHAP": 0.8324979918727324,
+      "BreakDown": 0.8440557779108485
     },
     {
       "dataset_name": "AHU21",
@@ -847,6 +1083,61 @@
     {
       "dataset_name": "AHU21",
       "model_name": "IForest",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3053268040397337,
+      "MAPLE": 0.26859683612627644,
+      "SHAP": 0.2745839087292552,
+      "BreakDown": 0.24581181380365577
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.40124254833374706,
+      "MAPLE": 0.17118030339479445,
+      "SHAP": 0.34861236086913516,
+      "BreakDown": 0.28799567235899826
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.4857142857142857,
+      "MAPLE": 0.37142857142857144,
+      "SHAP": 0.4714285714285714,
+      "BreakDown": 0.4857142857142857
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.481402508234073,
+      "MAPLE": 1.0374582852134315,
+      "SHAP": 0.07128108177786428,
+      "BreakDown": 0.12012010257571402
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -900,6 +1191,22 @@
     {
       "dataset_name": "AHU21",
       "model_name": "IForest",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5087820233072803,
+      "MAPLE": 0.5290865455159308,
+      "SHAP": 0.4727044114451699,
+      "BreakDown": 0.5203778893287692
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -923,6 +1230,22 @@
       "MAPLE": 0.008410167815620009,
       "SHAP": -0.0013765852405864302,
       "BreakDown": -0.004241590464059204
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5555423739843632,
+      "MAPLE": 0.5384115648275913,
+      "SHAP": 0.5891092415578651,
+      "BreakDown": 0.5748445647476904
     },
     {
       "dataset_name": "AHU21",
@@ -1002,6 +1325,23 @@
     {
       "dataset_name": "AHU21",
       "model_name": "IForest",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.05251302506766838,
+      "MAPLE": 0.02452250518555101,
+      "SHAP": 0.06572033775376822,
+      "BreakDown": 0.04250178080073726
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -1014,6 +1354,20 @@
       "MAPLE": 7.214285714285714,
       "SHAP": 5.585714285714285,
       "BreakDown": 5.571428571428571
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "IForest",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.9363778459667818,
+      "MAPLE": 0.9994717630939584,
+      "SHAP": 0.7545068235481631,
+      "BreakDown": 0.9644508190018188
     },
     {
       "dataset_name": "AHU21",
@@ -1089,6 +1443,61 @@
     {
       "dataset_name": "AHU21",
       "model_name": "MCD",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3838002635432141,
+      "MAPLE": 0.26355843838344817,
+      "SHAP": 0.3520137700318758,
+      "BreakDown": 0.3511140852659862
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.3416154990105757,
+      "MAPLE": 0.2883886561700625,
+      "SHAP": 0.2963876412117055,
+      "BreakDown": 0.31494653022715025
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5,
+      "MAPLE": 0.5,
+      "SHAP": 0.4857142857142857,
+      "BreakDown": 0.5
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.6526977337065285,
+      "MAPLE": 0.5407994641528399,
+      "SHAP": 0.007306752249286678,
+      "BreakDown": 0.03677631167381228
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -1142,6 +1551,22 @@
     {
       "dataset_name": "AHU21",
       "model_name": "MCD",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5136258239238249,
+      "MAPLE": 0.5134735734937825,
+      "SHAP": 0.5138100384796962,
+      "BreakDown": 0.5138456871486557
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -1165,6 +1590,22 @@
       "MAPLE": 0.09733729985901222,
       "SHAP": 0.008678401946587384,
       "BreakDown": -0.0014465084882529472
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5114662627510653,
+      "MAPLE": 0.5125762524323576,
+      "SHAP": 0.5113084535306087,
+      "BreakDown": 0.5113433660800237
     },
     {
       "dataset_name": "AHU21",
@@ -1244,6 +1685,23 @@
     {
       "dataset_name": "AHU21",
       "model_name": "MCD",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.0020897800056011878,
+      "MAPLE": 0.012764250869936739,
+      "SHAP": 0.023303229039328962,
+      "BreakDown": -0.0036289028190338627
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -1256,6 +1714,20 @@
       "MAPLE": 4.714285714285714,
       "SHAP": 6.057142857142857,
       "BreakDown": 6.6
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "MCD",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.9963312543755082,
+      "MAPLE": 0.775339635376974,
+      "SHAP": 0.15616435102918091,
+      "BreakDown": 0.2209082824384645
     },
     {
       "dataset_name": "AHU21",
@@ -1331,6 +1803,61 @@
     {
       "dataset_name": "AHU21",
       "model_name": "VAE",
+      "metric": "AverageDrop",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.03047940974522914,
+      "MAPLE": 0.14192487063119189,
+      "SHAP": 0.03083847245600607,
+      "BreakDown": 0.03417047005412834
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "AverageGain",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.0997094191477767,
+      "MAPLE": 0.11775615555899484,
+      "SHAP": 0.08606452105034675,
+      "BreakDown": 0.07506546692124434
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "AverageIncrease",
+      "metric_params": {
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.7,
+      "MAPLE": 0.44285714285714284,
+      "SHAP": 0.6428571428571429,
+      "BreakDown": 0.5857142857142857
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "AverageStability",
+      "metric_params": {
+        "radius": 0.05,
+        "nb_samples": 100,
+        "distance": "l2",
+        "symmetric_noise": true,
+        "random_state": 42
+      },
+      "LIME": 0.16395442102683175,
+      "MAPLE": 0.28247045618671524,
+      "SHAP": 0.015133912209388135,
+      "BreakDown": 0.019523595674562133
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
       "metric": "AvgSensitivity",
       "metric_params": {
         "nr_samples": 100,
@@ -1384,6 +1911,22 @@
     {
       "dataset_name": "AHU21",
       "model_name": "VAE",
+      "metric": "Deletion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5228980787974946,
+      "MAPLE": 0.530046807179431,
+      "SHAP": 0.5200238710660643,
+      "BreakDown": 0.5251230507149915
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
       "metric": "Faithfulness",
       "metric_params": {
         "base_strategy": "mean"
@@ -1407,6 +1950,22 @@
       "MAPLE": -0.015621393180842309,
       "SHAP": -0.02904995276853754,
       "BreakDown": -0.040176338098643155
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "Insertion",
+      "metric_params": {
+        "baseline_mode": 0.0,
+        "steps": -1,
+        "max_percentage_perturbed": 1.0,
+        "batch_size": 64,
+        "activation": null
+      },
+      "LIME": 0.5345714438205756,
+      "MAPLE": 0.520826235285201,
+      "SHAP": 0.5351155810152032,
+      "BreakDown": 0.533600241481131
     },
     {
       "dataset_name": "AHU21",
@@ -1486,6 +2045,23 @@
     {
       "dataset_name": "AHU21",
       "model_name": "VAE",
+      "metric": "MuFidelity",
+      "metric_params": {
+        "nb_samples": 500,
+        "subset_percent": 0.2,
+        "baseline_mode": 0.0,
+        "batch_size": 64,
+        "activation": null,
+        "random_state": 42
+      },
+      "LIME": -0.06523133438867397,
+      "MAPLE": -0.028756922810811787,
+      "SHAP": -0.02715569235751201,
+      "BreakDown": 0.03231913541228522
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
       "metric": "NonSensitivity",
       "metric_params": {
         "eps": "1e-5",
@@ -1498,6 +2074,20 @@
       "MAPLE": 4.228571428571429,
       "SHAP": 4.642857142857143,
       "BreakDown": 4.242857142857143
+    },
+    {
+      "dataset_name": "AHU21",
+      "model_name": "VAE",
+      "metric": "RandomLogit",
+      "metric_params": {
+        "batch_size": 64,
+        "num_classes": 2,
+        "random_state": 42
+      },
+      "LIME": 0.8163739494296463,
+      "MAPLE": 0.981577272976021,
+      "SHAP": 0.47136733100409883,
+      "BreakDown": 0.6672127938083806
     },
     {
       "dataset_name": "AHU21",
