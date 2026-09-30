@@ -69,6 +69,18 @@ metrics:
       abs: false
       normalise: true
 
+  - name: Completeness
+    params:
+      abs: false
+      normalise: false
+      perturb_baseline: mean
+
+  - name: Completeness
+    params:
+      abs: false
+      normalise: false
+      perturb_baseline: black
+
   - name: NonSensitivity
     params:
       eps: 1e-5
