@@ -1,4 +1,6 @@
 # tests/metrics_tests/test_complexity_metrics.py
+import numpy as np
+
 from conftest import fake_quantus_metric, assert_common_quantus_inputs
 
 from xai_metrics.metrics.complexity import Complexity, Sparseness
@@ -18,6 +20,18 @@ def test_complexity_forwards_inputs_parameters_and_output(monkeypatch, context):
     assert context.model.training is True
 
 
+def test_complexity_expected_values(exp_val_context):
+    result = Complexity(exp_val_context, {"normalise": False}).run()
+
+    np.testing.assert_allclose(
+        actual=result,
+        desired=[1.0084936619, 1.0740157366, 1.0443890095],
+        rtol=0.0,
+        atol=1e-6,
+        equal_nan=True
+    )
+
+
 def test_sparseness_forwards_inputs_parameters_and_output(monkeypatch, context):
     expected = [0.75, 0.40]
     fake, calls = fake_quantus_metric(expected)
@@ -29,3 +43,15 @@ def test_sparseness_forwards_inputs_parameters_and_output(monkeypatch, context):
     assert calls['init'] == {"normalise": False}
     assert_common_quantus_inputs(calls, context)
     assert context.model.training is True
+
+
+def test_sparseness_expected_values(exp_val_context):
+    result = Sparseness(exp_val_context, {"normalise": False}).run()
+
+    np.testing.assert_allclose(
+        actual=result,
+        desired=[0.2222221189, 0.1182795153, 0.1748633116],
+        rtol=0.0,
+        atol=1e-6,
+        equal_nan=True
+    )

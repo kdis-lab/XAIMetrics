@@ -1,5 +1,6 @@
 # tests/conftest.py
 import pytest
+import torch
 import torch.nn as nn
 import pandas as pd
 import numpy as np
@@ -214,3 +215,60 @@ def xai_context():
 @pytest.fixture
 def classification_model():
     return DummyClassificationModel()
+
+
+class SmallLinearModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.linear = nn.Linear(3, 2)
+
+        with torch.no_grad():
+            self.linear.weight.copy_(
+                torch.tensor(
+                    [
+                        [0.25, 0.15, 0.10],
+                        [0.10, 0.20, 0.30]
+                    ]
+                )
+            )
+            self.linear.bias.copy_(torch.tensor([0.05, 0.10]))
+
+    def forward(self, inputs):
+        return self.linear(inputs)
+
+    def predict_proba(self, inputs):
+        inputs = np.array(inputs, dtype=np.float32, copy=True)
+
+        with torch.no_grad():
+            logits = self(
+                torch.as_tensor(inputs, dtype=torch.float32)
+            ).numpy()
+
+        logits -= logits.max(axis=1, keepdims=True)
+        probabilities = np.exp(logits)
+        return probabilities / probabilities.sum(axis=1, keepdims=True)
+
+
+@pytest.fixture
+def exp_val_context():
+    return MetricContext(
+        model=SmallLinearModel(),
+        X_test=pd.DataFrame(
+            [
+                [0.40, 0.70, 0.90],
+                [0.60, 0.50, 0.80],
+                [0.70, 0.90, 0.40],
+            ],
+            columns=['a', 'b', 'c']
+        ),
+        y_test=pd.Series([1, 1, 0]),
+        observations=[0, 1, 2],
+        attributions=np.array(
+            [
+                [0.10, 0.22, 0.31],
+                [0.16, 0.19, 0.27],
+                [0.21, 0.28, 0.12],
+            ],
+            dtype=np.float32,
+        )
+    )
