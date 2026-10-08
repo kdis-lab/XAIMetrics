@@ -1,10 +1,6 @@
 # tests/test_runner.py
-from typing import Any
-
 import numpy as np
-
 import pytest
-from torch.nn import Module
 
 import xai_metrics.runner.runner as runner_module
 from xai_metrics.base import BaseMetric, MetricSkipped, BaseExplainer, ExplainerSkipped

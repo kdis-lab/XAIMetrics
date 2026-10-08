@@ -129,7 +129,7 @@ def mege_context():
     )
 
     return MetricContext(
-        model=None,
+        model=None, # pyright: ignore[reportArgumentType]
         X_test=pd.DataFrame(inputs, index=[10, 20, 30, 40]),
         y_test=pd.Series([0, 1, 0, 1], index=[10, 20, 30, 40]),
         observations=[10, 20, 30, 40],

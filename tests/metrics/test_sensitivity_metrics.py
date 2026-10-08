@@ -29,7 +29,7 @@ def test_avg_sensitivity_forwards_explainer_device_and_output(
             "normalise": False,
             "lower_bound": 0.01,
             "upper_bound": 0.05
-        }
+        } # pyright: ignore[reportCallIssue]
     ).run()
 
     assert result == expected
@@ -65,7 +65,7 @@ def test_model_randomization_does_not_modify_original_model(context, explain_fun
             "fraction": 1.0,
             "reverse": True,
             "random_state": 42
-        }
+        } # pyright: ignore[reportCallIssue]
     ).run()
 
     assert len(result) == len(context.observations)
@@ -89,7 +89,7 @@ def test_random_logit_uses_a_different_class_per_observation(context, explain_fu
             "num_classes": 2,
             "batch_size": 2,
             "random_state": 42
-        }
+        } # pyright: ignore[reportCallIssue]
     ).run()
 
     np.testing.assert_array_equal(received_targets[0], [0, 1])

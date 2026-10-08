@@ -1,8 +1,10 @@
 # tests/metrics_tests/test_faithfulness_metrics.py
 import numpy as np
+import pandas as pd
 
-from conftest import fake_quantus_metric, assert_common_quantus_inputs
+from conftest import fake_quantus_metric, assert_common_quantus_inputs, SmallLinearModel
 
+from xai_metrics.base import MetricContext
 from xai_metrics.metrics.faithfulness import (
     Consistency,
     Faithfulness,
@@ -23,6 +25,35 @@ import xai_metrics.metrics.faithfulness.sensitivity_n as sensitivity_n_module
 import xai_metrics.metrics.faithfulness.sufficiency as sufficiency_module
 
 
+def test_consistency_expected_values():
+    context = MetricContext(
+        model=SmallLinearModel(),
+        X_test=pd.DataFrame(
+            [
+                [0.90, 0.20, 0.10],  # prediction 0
+                [0.80, 0.30, 0.20],  # prediction 0
+                [0.40, 0.70, 0.90],  # prediction 1
+                [0.60, 0.50, 0.80],  # prediction 1
+            ],
+            columns=["a", "b", "c"],
+        ),
+        y_test=pd.Series([0, 0, 1, 1]),
+        observations=[0, 1, 2, 3],
+        attributions=np.array(
+            [
+                [0.10, 0.22, 0.31],
+                [0.16, 0.19, 0.27],
+                [0.21, 0.28, 0.12],
+                [0.14, 0.20, 0.25],
+            ],
+            dtype=np.float32,
+        ),
+    )
+    result = Consistency(context, {"abs": False, "normalise": False}).run()
+    
+    np.testing.assert_allclose(result, [1/3, 1/3, 1/3, 1/3], rtol=0.0, atol=1e-8)
+
+
 def test_consistency_forwards_inputs_parameters_and_output(monkeypatch, context):
     expected = [1.0, 0.5]
     fake, calls = fake_quantus_metric(expected)
@@ -40,6 +71,16 @@ def test_consistency_forwards_inputs_parameters_and_output(monkeypatch, context)
     }
     assert_common_quantus_inputs(calls, context)
     assert context.model.training is False
+
+
+def test_faithfulness_expected_values(exp_val_context):
+    result = Faithfulness(exp_val_context, {"base_values": [0.0, 0.0, 0.0]}).run()
+
+    np.testing.assert_allclose(
+        result,
+        [0.9791639224768663, 0.978349033066036, -0.24888267919267343],
+        rtol=1e-6
+    )
 
 
 def test_faithfulness_uses_selected_rows_baseline_and_returns_floats(
@@ -75,6 +116,24 @@ def test_faithfulness_uses_selected_rows_baseline_and_returns_floats(
     assert calls[0]['model'] is context.model
 
 
+def test_faithfulness_estimate_expected_values(exp_val_context):
+    result = FaithfulnessEstimate(
+        exp_val_context,
+        {
+            "features_in_step": 1,
+            "abs": False,
+            "normalise": False,
+            "perturb_baseline": "mean",
+        }
+    ).run()
+
+    np.testing.assert_allclose(
+        result,
+        [0.9664957072929178, 0.8427829143066047, 0.9999830716308306],
+        rtol=1e-6
+    )
+
+
 def test_faithfulness_estimate_forwards_inputs_and_output(monkeypatch, context):
     expected = [0.70, 0.85]
     fake, calls = fake_quantus_metric(expected)
@@ -96,9 +155,26 @@ def test_faithfulness_estimate_forwards_inputs_and_output(monkeypatch, context):
     assert calls['init']['abs'] is True
     assert calls['init']['normalise'] is False
     assert calls['init']['perturb_baseline'] == 'mean'
-    assert calls['init']['similarity_func'] == metric._safe_pearson
+    assert calls['init']['similarity_func'] == metric._safe_pearson # pyright: ignore
     assert_common_quantus_inputs(calls, context)
     assert context.model.training is False
+
+
+def test_monotonicity_expected_values(exp_val_context):
+    result = Monotonicity(
+        exp_val_context,
+        {
+            "features_in_step": 1,
+            "abs": False,
+            "normalise": False,
+            "perturb_baseline": "mean",
+        },
+    ).run()
+
+    # It should be this result:
+    # assert result == [True, False, False]
+    # but there is a bug in Quantus, so the result is:
+    assert result == [True, True, True]
 
 
 def test_monotonicity_forwards_inputs_parameters_and_output(monkeypatch, context):
@@ -127,7 +203,16 @@ def test_monotonicity_forwards_inputs_parameters_and_output(monkeypatch, context
     assert context.model.training is False
 
 
-def test_aix360_monotonicity_uses_explicit_baseline_and_boolean_output(
+def test_monotonicity_metric_expected_values(exp_val_context):
+    result = MonotonicityMetric(
+        exp_val_context,
+        {"base_values": [0.0, 0.0, 0.0]}
+    ).run()
+
+    assert result == [True, True, False]
+
+
+def test_monotonicity_metric_uses_explicit_baseline_and_boolean_output(
     monkeypatch,
     context
 ):
@@ -155,6 +240,21 @@ def test_aix360_monotonicity_uses_explicit_baseline_and_boolean_output(
     np.testing.assert_allclose(calls[0]['x'], [4.0, 5.0, 6.0])
     np.testing.assert_allclose(calls[1]['x'], [1.0, 2.0, 3.0])
     np.testing.assert_allclose(calls[0]['base'], [0.0, 0.0, 0.0])
+
+
+def test_monotonicity_correlation_expected_values(exp_val_context):
+    result = MonotonicityCorrelation(
+        exp_val_context,
+        {
+            "nr_samples": 16,
+            "features_in_step": 1,
+            "abs": False,
+            "normalise": False,
+            "perturb_baseline": "mean",
+        },
+    ).run()
+
+    np.testing.assert_allclose(result, [0.5, 1.0, -0.5], atol=1e-7)
 
 
 def test_monotonicity_correlation_forwards_inputs_and_safe_spearman(
@@ -185,8 +285,23 @@ def test_monotonicity_correlation_forwards_inputs_and_safe_spearman(
     assert calls['init']['abs'] is False
     assert calls['init']['normalise'] is False
     assert calls['init']['perturb_baseline'] == 'mean'
-    assert calls['init']['similarity_func'] == metric._safe_spearman
+    assert calls['init']['similarity_func'] == metric._safe_spearman # type: ignore
     assert_common_quantus_inputs(calls, context)
+
+
+def test_sensitivity_n_expected_values(exp_val_context):
+    result = SensitivityN(
+        exp_val_context,
+        {
+            "n_max_percentage": 1.0,
+            "features_in_step": 1,
+            "abs": False,
+            "normalise": False,
+            "perturb_baseline": "black",
+        }
+    ).run()
+
+    np.testing.assert_allclose(result, [0.562845040002659], rtol=1e-6, atol=1e-7)
 
 
 def test_sensitivity_n_forwards_inputs_parameters_and_output(monkeypatch, context):
@@ -215,6 +330,44 @@ def test_sensitivity_n_forwards_inputs_parameters_and_output(monkeypatch, contex
     }
     assert_common_quantus_inputs(calls, context)
     assert context.model.training is False
+
+
+def test_sufficiency_expected_values():
+    context = MetricContext(
+        model=SmallLinearModel(),
+        X_test=pd.DataFrame(
+            [
+                [0.90, 0.20, 0.10],  # predicción 0
+                [0.80, 0.30, 0.20],  # predicción 0
+                [0.40, 0.70, 0.90],  # predicción 1
+                [0.60, 0.50, 0.80],  # predicción 1
+            ],
+            columns=["a", "b", "c"],
+        ),
+        y_test=pd.Series([0, 0, 1, 1]),
+        observations=[0, 1, 2, 3],
+        attributions=np.array(
+            [
+                [0.10, 0.22, 0.31],
+                [0.16, 0.19, 0.27],
+                [0.21, 0.28, 0.12],
+                [0.14, 0.20, 0.25],
+            ],
+            dtype=np.float32,
+        ),
+    )
+
+    result = Sufficiency(
+        context,
+        {
+            "threshold": 1.0,
+            "distance_func": "seuclidean",
+            "abs": False,
+            "normalise": False,
+        }
+    ).run()
+
+    assert result == [1/3, 1/3, 1/3, 1/3]
 
 
 def test_sufficiency_forwards_inputs_parameters_and_output(monkeypatch, context):

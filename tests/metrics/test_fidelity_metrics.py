@@ -17,6 +17,21 @@ import xai_metrics.metrics.fidelity.completeness.completeness_metric as complete
 from xai_metrics.metrics.fidelity.soundness import NonSensitivity
 import xai_metrics.metrics.fidelity.soundness.non_sensitivity as non_sensitivity_module
 
+
+def test_average_drop_expected_values(exp_val_context):
+    def score_operator(model, inputs, targets):
+        return np.sum(inputs, axis=1) / 3.0
+
+    result = AverageDrop(exp_val_context, {"operator": score_operator}).run()
+
+    np.testing.assert_allclose(
+        result,
+        [0.3500001, 0.5071771, 0.35312504],
+        rtol=1e-6,
+        atol=1e-7
+    )
+
+
 def test_average_drop_returns_one_score_per_observation(context):
     def probability_operator(mode, inputs, targets):
         return np.sum(inputs, axis=1) / 20.0
@@ -31,6 +46,20 @@ def test_average_drop_returns_one_score_per_observation(context):
 
     np.testing.assert_allclose(result, [49.0 / 90.0, 0.7], rtol=1e-6)
     assert len(result) == len(context.observations)
+
+
+def test_average_gain_expected_values(exp_val_context):
+    def score_operator(model, inputs, targets):
+        return 1.0 - np.sum(inputs, axis=1) / 3.0
+
+    result = AverageGain(exp_val_context, {"operator": score_operator}).run()
+
+    np.testing.assert_allclose(
+        result,
+        [0.3500001, 0.5071771, 0.35312504],
+        rtol=1e-6,
+        atol=1e-7
+    )
 
 
 def test_average_gain_returns_one_score_per_observation(context):
@@ -49,6 +78,15 @@ def test_average_gain_returns_one_score_per_observation(context):
     assert len(result) == len(context.observations)
 
 
+def test_average_increase_expected_values(exp_val_context):
+    def score_operator(model, inputs, targets):
+        return np.sum(inputs, axis=1) / 3.0
+
+    result = AverageIncrease(exp_val_context, {"operator": score_operator}).run()
+
+    np.testing.assert_allclose(result, [0.0, 0.0, 0.0], rtol=1e-6, atol=1e-7)
+
+
 def test_average_increase_returns_one_score_per_observation(context):
     def probability_operator(mode, inputs, targets):
         return 1.0 - np.sum(inputs, axis=1) / 20.0
@@ -63,6 +101,19 @@ def test_average_increase_returns_one_score_per_observation(context):
 
     assert result == [1.0, 1.0]
     assert len(result) == len(context.observations)
+
+
+def test_completeness_expected_values(exp_val_context):
+    result = Completeness(
+        exp_val_context,
+        {
+            "abs": False,
+            "normalise": False,
+            "perturb_baseline": "black",
+        }
+    ).run()
+
+    assert result == [False, False, False]
 
 
 def test_completeness_forwards_inputs_parameters_and_output(monkeypatch, context):
@@ -89,6 +140,27 @@ def test_completeness_forwards_inputs_parameters_and_output(monkeypatch, context
     assert context.model.training is False
 
 
+def test_deletion_expected_values(exp_val_context):
+    def score_operator(model, inputs, targets):
+        return np.sum(inputs, axis=1) / 3.0
+
+    result = Deletion(
+        exp_val_context,
+        {
+            "operator": score_operator,
+            "baseline_mode": 0.0,
+            "steps": 3,
+        }
+    ).run()
+    
+    np.testing.assert_allclose(
+        result,
+        [0.27777778, 0.29444445, 0.27777778],
+        rtol=1e-6,
+        atol=1e-7,
+    )
+
+
 def test_deletion_returns_auc_per_observation(context):
     def score_operator(mode, inputs, targets):
         return np.sum(inputs, axis=1)
@@ -106,6 +178,27 @@ def test_deletion_returns_auc_per_observation(context):
 
     np.testing.assert_allclose(result, [41.0 / 6.0, 22.0 / 6.0])
     assert len(result) == len(context.observations)
+
+
+def test_insertion_expected_values(exp_val_context):
+    def score_operator(model, inputs, targets):
+        return np.sum(inputs, axis=1) / 3.0
+
+    result = Insertion(
+        exp_val_context,
+        {
+            "operator": score_operator,
+            "baseline_mode": 0.0,
+            "steps": 3,
+        }
+    ).run()
+    
+    np.testing.assert_allclose(
+        result,
+        [0.38888889, 0.33888889, 0.38888889],
+        rtol=1e-6,
+        atol=1e-7,
+    )
 
 
 def test_insertion_returns_auc_per_observation(context):
@@ -127,6 +220,28 @@ def test_insertion_returns_auc_per_observation(context):
     assert len(result) == len(context.observations)
 
 
+def test_mufidelity_expected_values(exp_val_context):
+    def score_operator(model, inputs, targets):
+        return np.sum(inputs, axis=1) / 3.0
+
+    result = MuFidelity(
+        exp_val_context,
+        {
+            "operator": score_operator,
+            "nb_samples": 8,
+            "subset_percent": 0.5,
+            "random_state": 3,
+        },
+    ).run()
+    
+    np.testing.assert_allclose(
+        result,
+        [1.0, 0.97368421, 1.0],
+        rtol=0.0,
+        atol=1e-7,
+    )
+
+
 def test_mufidelity_returns_deterministc_score_per_observation(context):
     def score_operator(model, inputs, targets):
         return np.sum(inputs, axis=1)
@@ -145,6 +260,21 @@ def test_mufidelity_returns_deterministc_score_per_observation(context):
     assert len(first) == len(context.observations)
     np.testing.assert_allclose(first, second)
     assert np.all(np.isfinite(first))
+
+
+def test_nonsensitivity_expected_values(exp_val_context):
+    result = NonSensitivity(
+        exp_val_context,
+        {
+            "eps": 0.01,
+            "features_in_step": 1,
+            "abs": False,
+            "normalise": False,
+            "perturb_baseline": "mean",
+        },
+    ).run()
+    
+    assert result == [2, 3, 2]
 
 
 def test_non_sensitivity_forwards_inputs_parameters_and_output(monkeypatch, context):
