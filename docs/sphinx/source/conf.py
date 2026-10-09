@@ -36,6 +36,14 @@ templates_path = ['_templates']
 # generados por sphinx-apidoc se conservan como fuente, pero no se publican.
 exclude_patterns = ["api/**"]
 
+# -- Options for LaTeX/PDF output -------------------------------------------
+
+# Include every section level in the PDF table of contents while preserving
+# the standard Sphinx/LaTeX table-of-contents formatting.
+latex_elements = {
+    "preamble": r"\setcounter{tocdepth}{4}",
+}
+
 
 
 # -- Options for HTML output -------------------------------------------------

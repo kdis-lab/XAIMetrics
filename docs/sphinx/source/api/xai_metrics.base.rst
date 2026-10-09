@@ -4,14 +4,45 @@ xai\_metrics.base package
 Submodules
 ----------
 
-.. toctree::
-   :maxdepth: 4
+xai\_metrics.base.base\_explainer module
+----------------------------------------
 
-   xai_metrics.base.base_explainer
-   xai_metrics.base.base_metric
-   xai_metrics.base.explainer_registry
-   xai_metrics.base.metric_registry
-   xai_metrics.base.types
+.. automodule:: xai_metrics.base.base_explainer
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+xai\_metrics.base.base\_metric module
+-------------------------------------
+
+.. automodule:: xai_metrics.base.base_metric
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+xai\_metrics.base.explainer\_registry module
+--------------------------------------------
+
+.. automodule:: xai_metrics.base.explainer_registry
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+xai\_metrics.base.metric\_registry module
+-----------------------------------------
+
+.. automodule:: xai_metrics.base.metric_registry
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+xai\_metrics.base.types module
+------------------------------
+
+.. automodule:: xai_metrics.base.types
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------

@@ -4,10 +4,13 @@ xai\_metrics.config package
 Submodules
 ----------
 
-.. toctree::
-   :maxdepth: 4
+xai\_metrics.config.config\_controller module
+---------------------------------------------
 
-   xai_metrics.config.config_controller
+.. automodule:: xai_metrics.config.config_controller
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------

@@ -285,8 +285,8 @@ Input files must meet the following requirements:
       <td>Minimize</td>
     </tr>
     <tr>
-      <td rowspan="6"><a href="xai_metrics/metrics/robustness">Robustness</a></td>
-      <td rowspan="6">---</td>
+      <td rowspan="5"><a href="xai_metrics/metrics/robustness">Robustness</a></td>
+      <td rowspan="5">---</td>
       <td><a href="xai_metrics/metrics/robustness/average_stability.py">AverageStability</a></td>
       <td>Minimize</td>
     </tr>
@@ -297,10 +297,6 @@ Input files must meet the following requirements:
     <tr>
       <td><a href="xai_metrics/metrics/robustness/max_sensitivity.py">MaxSensitivity</a></td>
       <td>Minimize</td>
-    </tr>
-    <tr>
-      <td><a href="xai_metrics/metrics/robustness/mege.py">MeGe</a></td>
-      <td>Maximize</td>
     </tr>
     <tr>
       <td><a href="xai_metrics/metrics/robustness/relative_input_stability.py">RelativeInputStability</a></td>
@@ -337,7 +333,6 @@ Some metrics require additional information besides precomputed attributions.
 | `RandomLogit` | Classification targets and an explanation function. |
 | `ModelRandomization` | A PyTorch `torch.nn.Module` model and an explanation function. |
 | `AverageStability` | An explanation function to generate attributions for perturbed inputs. |
-| `MeGe` | A training function and an explanation function. The number of selected observations must be divisible by `k_splits`. |
 
 Explanation functions can be provided at runtime through `explain_funcs`:
 
@@ -357,26 +352,6 @@ An explanation function should follow this interface:
 def explain_func(model, inputs, targets=None):
     """Return one attribution array per input observation."""
     return attributions
-```
-
-`MeGe` additionally requires a training function:
-
-```python
-def training_func(X_train, y_train, X_holdout, y_holdout):
-    model = build_model()
-    model.fit(X_train, y_train)
-    return model
-```
-
-It can be supplied when running the evaluation:
-
-```python
-results = run_evaluation(
-    config="xai_metrics/config.yaml",
-    selected_metrics=["MeGe"],
-    explain_funcs={"lime": lime_explain_func},
-    training_func=training_func,
-)
 ```
 
 ## Generating explanations

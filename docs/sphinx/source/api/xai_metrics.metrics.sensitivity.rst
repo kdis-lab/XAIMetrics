@@ -4,12 +4,29 @@ xai\_metrics.metrics.sensitivity package
 Submodules
 ----------
 
-.. toctree::
-   :maxdepth: 4
+xai\_metrics.metrics.sensitivity.avg\_sensitivity module
+--------------------------------------------------------
 
-   xai_metrics.metrics.sensitivity.avg_sensitivity
-   xai_metrics.metrics.sensitivity.model_randomization
-   xai_metrics.metrics.sensitivity.random_logit
+.. automodule:: xai_metrics.metrics.sensitivity.avg_sensitivity
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+xai\_metrics.metrics.sensitivity.model\_randomization module
+------------------------------------------------------------
+
+.. automodule:: xai_metrics.metrics.sensitivity.model_randomization
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+xai\_metrics.metrics.sensitivity.random\_logit module
+-----------------------------------------------------
+
+.. automodule:: xai_metrics.metrics.sensitivity.random_logit
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------

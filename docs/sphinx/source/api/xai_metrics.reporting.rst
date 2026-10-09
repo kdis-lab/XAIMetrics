@@ -4,10 +4,13 @@ xai\_metrics.reporting package
 Submodules
 ----------
 
-.. toctree::
-   :maxdepth: 4
+xai\_metrics.reporting.reporting module
+---------------------------------------
 
-   xai_metrics.reporting.reporting
+.. automodule:: xai_metrics.reporting.reporting
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------

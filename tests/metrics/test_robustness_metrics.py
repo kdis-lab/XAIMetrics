@@ -10,7 +10,6 @@ from xai_metrics.metrics.robustness import (
     AverageStability,
     LocalLipschitzEstimate,
     MaxSensitivity,
-    MeGe,
     RelativeInputStability,
     RelativeOutputStability
 )
@@ -226,53 +225,6 @@ def test_max_sensitivity_forwards_explainer_device_and_output(
     assert calls['call']['explain_func'] is explain_func
     assert calls['call']['device'] == 'cpu'
     assert context.model.training is True
-
-
-def test_mege_returns_one_socre_per_Observation(mege_context):
-    training_calls = []
-
-    class PerfectModel:
-        def predict(self, inputs):
-            return np.asarray(inputs)[:, 0].astype(int)
-
-    def training_func(X_train, y_train, X_holdout, y_holdout):
-        training_calls.append(
-            {
-                "X_train": np.asarray(X_train),
-                "y_train": np.asarray(y_train),
-                "X_holdout": np.asarray(X_holdout),
-                "y_holdout": np.asarray(y_holdout)
-            }
-        )
-
-        return PerfectModel()
-
-    def explain_func(model, inputs, targets):
-        return np.asarray(inputs, dtype=np.float32)
-
-    result = MeGe(
-        mege_context,
-        training_func,
-        explain_func, # pyright: ignore[reportCallIssue]
-        {"k_splits": 2}
-    ).run()
-
-    assert len(training_calls) == 2
-    assert all(call['X_train'].shape == (2, 3) for call in training_calls)
-    assert all(call['y_train'].shape == (2,) for call in training_calls)
-
-    np.testing.assert_allclose(result, [1.0, 1.0, 1.0, 1.0])
-
-
-def test_mege_requires_training_and_explanation_functions(context, explain_func):
-    def training_func(X_train, y_train, X_holdout, y_holdout):
-        return context.model
-
-    with pytest.raises(ValueError, match="requires 'training_func'"):
-        MeGe(context, None, explain_func) # pyright: ignore[reportCallIssue]
-
-    with pytest.raises(ValueError, match="requires 'explain_func'"):
-        MeGe(context, training_func, None) # pyright: ignore[reportCallIssue]
 
 
 def test_relative_input_stability_expected_values(exp_val_context):

@@ -155,10 +155,6 @@ Robustness
    :members:
    :show-inheritance:
 
-.. automodule:: xai_metrics.metrics.robustness.mege
-   :members:
-   :show-inheritance:
-
 .. automodule:: xai_metrics.metrics.robustness.relative_input_stability
    :members:
    :show-inheritance:

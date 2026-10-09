@@ -26,7 +26,6 @@ from xai_metrics.metrics.robustness import (
     AverageStability,
     LocalLipschitzEstimate,
     MaxSensitivity,
-    MeGe,
     RelativeInputStability,
     RelativeOutputStability
 )
@@ -243,16 +242,8 @@ def test_safe_spearman_returns_zero_for_constant_inputs(context):
         pytest.param(
             lambda ctx, explain: AverageStability(ctx, explain),
             id="average_stability",
-        ),
-        pytest.param(
-            lambda ctx, explain: MeGe(
-                ctx,
-                lambda X_train, y_train, X_holdout, y_holdout: ctx.model,
-                explain,
-            ),
-            id="mege",
-        ),
-    ],
+        )
+    ]
 )
 def test_new_metrics_skip_when_no_observations(
     context,

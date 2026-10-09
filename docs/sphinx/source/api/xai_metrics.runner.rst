@@ -4,10 +4,13 @@ xai\_metrics.runner package
 Submodules
 ----------
 
-.. toctree::
-   :maxdepth: 4
+xai\_metrics.runner.runner module
+---------------------------------
 
-   xai_metrics.runner.runner
+.. automodule:: xai_metrics.runner.runner
+   :members:
+   :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
