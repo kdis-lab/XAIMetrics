@@ -1,7 +1,5 @@
 # tests/metrics_tests/test_robustness_metrics.py
-import pytest
 import numpy as np
-import torch
 
 from conftest import fake_quantus_metric, assert_common_quantus_inputs
 

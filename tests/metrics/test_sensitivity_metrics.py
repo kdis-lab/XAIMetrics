@@ -4,12 +4,56 @@ import torch
 
 from conftest import fake_quantus_metric, assert_common_quantus_inputs
 
+from xai_metrics.base import MetricContext
 from xai_metrics.metrics.sensitivity import (
     AvgSensitivity,
     ModelRandomization,
     RandomLogit
 )
 import xai_metrics.metrics.sensitivity.avg_sensitivity as avg_sensitivity_module
+
+
+def test_avg_sensitivity_expected_values(exp_val_context):
+    def explain_func(model, inputs, targets=None, **kwargs):
+        return 0.3 * (np.asarray(inputs, dtype=np.float32) + 1.0)
+
+    adapted_context = MetricContext(
+        model=exp_val_context.model,
+        X_test=exp_val_context.X_test,
+        y_test=exp_val_context.y_test,
+        observations=exp_val_context.observations,
+        attributions=explain_func(
+            exp_val_context.model,
+            exp_val_context.X_test.to_numpy(dtype=np.float32)
+        )
+    )
+
+    rng_state = np.random.get_state()
+    
+    try:
+        np.random.seed(3)
+        result = AvgSensitivity(
+            adapted_context,
+            explain_func,
+            {
+                "nr_samples": 8,
+                "abs": False,
+                "normalise": False,
+                "lower_bound": 0.01,
+                "upper_bound": 0.02
+            } # pyright: ignore[reportCallIssue]
+        ).run()
+    finally:
+        np.random.set_state(rng_state)
+
+        
+    np.testing.assert_allclose(
+        result,
+        [0.00879588, 0.00953731, 0.00833813],
+        rtol=0.0,
+        atol=1e-6
+    )
+
 
 def test_avg_sensitivity_forwards_explainer_device_and_output(
     monkeypatch,
@@ -47,6 +91,42 @@ def test_avg_sensitivity_forwards_explainer_device_and_output(
     assert context.model.training is True
 
 
+def test_model_randomization_expected_values(exp_val_context):
+    def weight_explainer(model, inputs, targets=None, **kwargs):
+        inputs = np.asarray(inputs, dtype=np.float32)
+        targets = np.asarray(targets, dtype=int)
+
+        with torch.no_grad():
+            weights = model.linear.weight.detach().cpu().numpy()
+
+        return inputs * weights[targets]
+
+    adapted_context = MetricContext(
+        model=exp_val_context.model,
+        X_test=exp_val_context.X_test,
+        y_test=exp_val_context.y_test,
+        observations=exp_val_context.observations,
+        attributions=weight_explainer(
+            exp_val_context.model,
+            exp_val_context.X_test.to_numpy(dtype=np.float32),
+            exp_val_context.y_test.loc[exp_val_context.observations].to_numpy(dtype=int)
+        )
+    )
+    
+    result = ModelRandomization(
+        adapted_context,
+        weight_explainer,
+        {"fraction": 1.0, "random_state": 3}, # pyright: ignore[reportCallIssue]
+    ).run()
+
+    np.testing.assert_allclose(
+        result,
+        [0.5, -0.5, -1.0],
+        rtol=0.0,
+        atol=1e-8
+    )
+
+
 def test_model_randomization_does_not_modify_original_model(context, explain_func):
     original_parameters = [
         parameter.detach().clone()
@@ -73,6 +153,24 @@ def test_model_randomization_does_not_modify_original_model(context, explain_fun
 
     for current, original in zip(context.model.parameters(), original_parameters):
         assert torch.equal(current.detach(), original)
+
+
+def test_random_logit_expected_values(exp_val_context):
+    def explain_func(model, inputs, targets=None, **kwargs):
+        return 0.3 * (np.asarray(inputs, dtype=np.float32) + 1.0)
+    
+    result = RandomLogit(
+        exp_val_context,
+        explain_func,
+        {"num_classes": 2, "random_state": 3} # pyright: ignore[reportCallIssue]
+    ).run()
+    
+    np.testing.assert_allclose(
+        result,
+        [0.67647599, 0.58228961, 0.69605679],
+        rtol=0.0,
+        atol=1e-8
+    )
 
 
 def test_random_logit_uses_a_different_class_per_observation(context, explain_func):
