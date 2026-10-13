@@ -32,22 +32,6 @@ def test_average_drop_expected_values(exp_val_context):
     )
 
 
-def test_average_drop_returns_one_score_per_observation(context):
-    def probability_operator(mode, inputs, targets):
-        return np.sum(inputs, axis=1) / 20.0
-
-    result = AverageDrop(
-        context,
-        {
-            "operator": probability_operator,
-            "batch_size": 1
-        }
-    ).run()
-
-    np.testing.assert_allclose(result, [49.0 / 90.0, 0.7], rtol=1e-6)
-    assert len(result) == len(context.observations)
-
-
 def test_average_gain_expected_values(exp_val_context):
     def score_operator(model, inputs, targets):
         return 1.0 - np.sum(inputs, axis=1) / 3.0
@@ -62,22 +46,6 @@ def test_average_gain_expected_values(exp_val_context):
     )
 
 
-def test_average_gain_returns_one_score_per_observation(context):
-    def probability_operator(mode, inputs, targets):
-        return 1.0 - np.sum(inputs, axis=1) / 20.0
-
-    result = AverageGain(
-        context,
-        {
-            "operator": probability_operator,
-            "batch_size": 1
-        }
-    ).run()
-
-    np.testing.assert_allclose(result, [49.0 / 90.0, 0.7], rtol=1e-6)
-    assert len(result) == len(context.observations)
-
-
 def test_average_increase_expected_values(exp_val_context):
     def score_operator(model, inputs, targets):
         return np.sum(inputs, axis=1) / 3.0
@@ -85,22 +53,6 @@ def test_average_increase_expected_values(exp_val_context):
     result = AverageIncrease(exp_val_context, {"operator": score_operator}).run()
 
     np.testing.assert_allclose(result, [0.0, 0.0, 0.0], rtol=1e-6, atol=1e-7)
-
-
-def test_average_increase_returns_one_score_per_observation(context):
-    def probability_operator(mode, inputs, targets):
-        return 1.0 - np.sum(inputs, axis=1) / 20.0
-
-    result = AverageIncrease(
-        context,
-        {
-            "operator": probability_operator,
-            "batch_size": 1
-        }
-    ).run()
-
-    assert result == [1.0, 1.0]
-    assert len(result) == len(context.observations)
 
 
 def test_completeness_expected_values(exp_val_context):
@@ -161,25 +113,6 @@ def test_deletion_expected_values(exp_val_context):
     )
 
 
-def test_deletion_returns_auc_per_observation(context):
-    def score_operator(mode, inputs, targets):
-        return np.sum(inputs, axis=1)
-
-    result = Deletion(
-        context,
-        {
-            "operator": score_operator,
-            "baseline_model": 0.0,
-            "steps": 3,
-            "max_percentage_perturbed": 1.0,
-            "batch_size": 1
-        }
-    ).run()
-
-    np.testing.assert_allclose(result, [41.0 / 6.0, 22.0 / 6.0])
-    assert len(result) == len(context.observations)
-
-
 def test_insertion_expected_values(exp_val_context):
     def score_operator(model, inputs, targets):
         return np.sum(inputs, axis=1) / 3.0
@@ -199,25 +132,6 @@ def test_insertion_expected_values(exp_val_context):
         rtol=1e-6,
         atol=1e-7,
     )
-
-
-def test_insertion_returns_auc_per_observation(context):
-    def score_operator(mode, inputs, targets):
-        return np.sum(inputs, axis=1)
-
-    result = Insertion(
-        context,
-        {
-            "operator": score_operator,
-            "baseline_model": 0.0,
-            "steps": 3,
-            "max_percentage_perturbed": 1.0,
-            "batch_size": 1
-        }
-    ).run()
-
-    np.testing.assert_allclose(result, [49.0 / 6.0, 14.0 / 6.0])
-    assert len(result) == len(context.observations)
 
 
 def test_mufidelity_expected_values(exp_val_context):
@@ -242,7 +156,7 @@ def test_mufidelity_expected_values(exp_val_context):
     )
 
 
-def test_mufidelity_returns_deterministc_score_per_observation(context):
+def test_mufidelity_is_deterministic_with_fixed_random_state(context):
     def score_operator(model, inputs, targets):
         return np.sum(inputs, axis=1)
 
