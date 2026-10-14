@@ -1,0 +1,12 @@
+{
+    "best_f1_validation": 0.07471902625383146,
+    "params": {
+        "contamination": 0.1,
+        "arquitectura": "media",
+        "lr": 0.0059180613292760705,
+        "epoch_num": 20,
+        "batch_size": 32,
+        "batch_norm": true,
+        "dropout_rate": 0.30000000000000004
+    }
+}
