@@ -18,11 +18,16 @@ class Consistency(BaseMetric):
     computes the proportion of other observations in its group that receive
     the same predicted class.
 
-    Higher scores indicate stronger agreement between similar explanations and
-    model predictions.
+    Higher scores indicate that observations sharing the same discretised
+    explanation more often receive the same predicted class.
 
     The metric is based on the Consistency metric proposed by Dasgupta et al.
     (2022) and implemented in Quantus.
+
+    Notes
+    -----
+    Although Quantus declares ``ScoreDirection.LOWER`` for this metric, by
+    definition higher values correspond to greater local consistency.
     """
     NAME = 'Consistency'
 
