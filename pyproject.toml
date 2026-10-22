@@ -1,6 +1,6 @@
 [project]
 name = "XAIMetrics"
-version = "0.1.0"
+version = "1.0.0"
 description = "Explainability metrics library"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -20,7 +20,7 @@ dependencies = [
     "sphinx-rtd-theme>=3.1.0",
     "torch>=2.12.0",
 ]
-license = { text = "MIT" }
+license = { text = "LGPL-2.1" }
 authors = [
   { name = "Maria Teresa Alba Rueda", email = "i12alrum@uco.es" }
 ]
@@ -28,7 +28,7 @@ keywords = ["XAI","metrics","explainability"]
 classifiers = [
   "Programming Language :: Python",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
-  "License :: OSI Approved :: MIT License"
+  "License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)"
 ]
 
 [tool.setuptools.packages.find]

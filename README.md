@@ -451,4 +451,4 @@ docs/sphinx/build/html/index.html
 
 ## License
 
-This project is distributed under the MIT License.
+This project is distributed under the GNU Lesser General Public License v2.1 (LGPL-2.1).
