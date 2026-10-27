@@ -252,3 +252,39 @@ def exp_val_context():
             dtype=np.float32,
         )
     )
+
+
+def create_explainer_data(directory, background_source="background"):
+    directory.mkdir(parents=True, exist_ok=True)
+
+    X_background_path = directory / f"X_{background_source}.csv"
+    y_background_path = directory / f"y_{background_source}.csv"
+    X_batch_path = directory / "X_batch.csv"
+    y_batch_path = directory / "y_batch.csv"
+
+    pd.DataFrame(
+        {"feature_1": [1.0, 2.0], "feature_2": [3.0, 4.0]},
+        index=[10, 11],
+    ).to_csv(X_background_path)
+
+    pd.DataFrame(
+        {"target": [0, 1]},
+        index=[10, 11],
+    ).to_csv(y_background_path)
+
+    pd.DataFrame(
+        {"feature_1": [5.0], "feature_2": [6.0]},
+        index=[20],
+    ).to_csv(X_batch_path)
+
+    pd.DataFrame(
+        {"target": [1]},
+        index=[20],
+    ).to_csv(y_batch_path)
+
+    return {
+        "X_background_path": X_background_path,
+        "y_background_path": y_background_path,
+        "X_batch_path": X_batch_path,
+        "y_batch_path": y_batch_path,
+    }

@@ -1,50 +1,26 @@
 # xai_metrics/config/config_controller.py
 from pathlib import Path
 import torch
-import yaml
 import torch.nn as nn
 import pandas as pd
 from itertools import product
-import pickle
-import joblib
 
+from xai_metrics.config.loaders import default_model_loader, load_config
+from xai_metrics.config.validators import (
+    validate_X_y_indexes,
+    normalise_class_labels,
+    validate_observations,
+    validate_metric_context_metadata,
+    validate_explainer_context_metadata
+)
+from xai_metrics.config.discovery import (
+    discover_metric_context_configs,
+    discover_explainer_context_configs
+)
 from xai_metrics.base import MetricContext, ExplainerContext
 
 from typing import Mapping, Any, Callable, Dict, Tuple, List
 import warnings
-
-def default_model_loader(model_path: str | Path) -> Any:
-    """
-    Load a model from disk.
-
-    Files with ``.pkl`` or ``.pickle`` extensions are loaded with
-    :mod:`pickle`. Files with ``.joblib`` or ``.jl`` extensions are loaded with
-    :mod:`joblib`. Any other file extension is loaded with :func:`torch.load`
-    using ``weights_only=False``.
-
-    Parameters
-    ----------
-    model_path : str or pathlib.Path
-        Path to the saved model file.
-
-    Returns
-    -------
-    Any
-        Loaded model object.
-    """
-    model_path = Path(model_path)
-    suffix = model_path.suffix.lower()
-
-    if suffix in {".pkl", ".pickle"}:
-        with model_path.open("rb") as f:
-            return pickle.load(f)
-
-    if suffix in {".joblib", ".jl"}:
-        return joblib.load(model_path)
-
-    return torch.load(model_path, weights_only=False)
-
-
 
 class ConfigController:
     """
@@ -76,235 +52,8 @@ class ConfigController:
             model path and return the loaded model object. If ``None``,
             :func:`default_model_loader` is used.
         """
-        self.config = self._load_config(config)
+        self.config = load_config(config)
         self.model_loader = model_loader or default_model_loader
-
-
-    def _load_config(self, config: Mapping[str, Any] | str | Path) -> Dict:
-        """
-        Load configuration data from a mapping or YAML file.
-
-        Parameters
-        ----------
-        config : Mapping[str, Any], str or pathlib.Path
-            Configuration mapping or path to a YAML configuration file. If the
-            value is ``"config.yaml"``, the file is loaded from the directory
-            containing this module.
-
-        Returns
-        -------
-        Dict
-            Loaded configuration dictionary. If the YAML file is empty, an
-            empty dictionary is returned.
-        """
-        if not isinstance(config, Mapping) and config == "config.yaml":
-            config_path = Path(__file__).resolve().parent / config
-            with config_path.open("r", encoding="utf-8") as f:
-                return yaml.safe_load(f) or {}
-            
-        if isinstance(config, Mapping):
-            return dict(config)
-        
-        config_path = Path(config)
-        with config_path.open("r", encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
-    
-
-    def _validate_X_y_indexes(
-        self,
-        X_test: pd.DataFrame,
-        y_test: pd.Series
-    ) -> Tuple[pd.DataFrame, pd.Series]:
-        """
-        Validate and align feature and target indexes.
-
-        Both objects must contain exactly the same indexes. The returned target
-        series is reordered to match the index order of the feature dataframe.
-
-        Parameters
-        ----------
-        X_test : pandas.DataFrame
-            Input data.
-        y_test : pandas.Series
-            Labels or targets associated with ``X_test``.
-
-        Returns
-        -------
-        Tuple[pandas.DataFrame, pandas.Series]
-            Input data and target values aligned using the index order of
-            ``X_test``.
-
-        Raises
-        ------
-        ValueError
-            If ``X_test`` and ``y_test`` do not contain the same indexes.
-        """
-        only_in_X = X_test.index.difference(y_test.index).tolist()
-        only_in_y = y_test.index.difference(X_test.index).tolist()
-
-        if only_in_X or only_in_y:
-            raise ValueError(
-                "X_test and y_test must contain the same indexes. "
-                f"Indexes only in X_test: {only_in_X}. "
-                f"Indexes only in y_test: {only_in_y}."
-            )
-
-        y_test = y_test.loc[X_test.index]
-
-        return X_test, y_test
-
-
-    def _normalise_class_labels(self, labels: pd.Series) -> pd.Series:
-        """Return integer-valued class labels with an integer dtype.
-
-        CSV files containing labels such as ``0.0`` and ``1.0`` are commonly
-        inferred as floating point by pandas. Quantus uses these values as
-        class-column indexes, so integer-valued numeric labels must be exposed
-        as integers. Non-numeric or genuinely continuous targets are left
-        unchanged.
-        """
-        numeric_labels = pd.to_numeric(labels, errors="coerce")
-
-        if numeric_labels.notna().all() and (numeric_labels % 1 == 0).all():
-            return numeric_labels.astype("int64")
-
-        return labels
-    
-
-    def _validate_observations(
-        self,
-        observations: List,
-        X_test_index: pd.Index
-    ) -> List:
-        """
-        Validate that attribution observations exist in the input data.
-
-        If the observation identifiers do not initially match the input index,
-        the method tries to convert them to the same dtype as ``X_test_index``
-        before validating them.
-
-        Parameters
-        ----------
-        observations : List
-            Observation identifiers obtained from the attribution file index.
-        X_test_index : pandas.Index
-            Index of the input data.
-
-        Returns
-        -------
-        List
-            Validated observation identifiers, possibly converted to the dtype
-            of ``X_test_index``.
-
-        Raises
-        ------
-        ValueError
-            If the observations cannot be converted to the dtype of
-            ``X_test_index`` or if any observation is missing.
-        """
-        observations_index = pd.Index(observations)
-
-        if observations_index.isin(X_test_index).all():
-            return observations
-        
-        try:
-            observations_typed_idx = observations_index.astype(X_test_index.dtype).tolist()
-        except (TypeError, ValueError) as e:
-            raise ValueError(
-                "Observations from attributions_path are not compatible with "
-                "the index type of X_test. "
-                f"Observations dtype: {observations_index.dtype}. "
-                f"X_test index dtype: {X_test_index.dtype}. "
-            ) from e
-        
-        missing = [obs for obs in observations_typed_idx if obs not in X_test_index]
-
-        if missing:
-            raise ValueError(
-                "All observations must exist in both X_test and y_test. "
-                f"Missing in X_test: {missing}. "
-            )
-
-        return observations_typed_idx
-    
-
-    def _validate_metric_context_metadata(self, ctx_cfg: Mapping[str, Any]) -> Dict[str, Any]:
-        """
-        Validate and return metadata required for a metric context.
-
-        Metric contexts must be identified by dataset, model and explanation
-        method names. These fields are used to organise metric results.
-
-        Parameters
-        ----------
-        ctx_cfg : Mapping[str, Any]
-            Context configuration dictionary.
-
-        Returns
-        -------
-        Dict[str, Any]
-            Dictionary containing ``dataset_name``, ``model_name`` and
-            ``xai_method_name``.
-
-        Raises
-        ------
-        ValueError
-            If any required metadata field is missing or empty.
-        """
-        required = ["dataset_name", "model_name", "xai_method_name"]
-        missing = [key for key in required if not ctx_cfg.get(key)]
-
-        if missing:
-            raise ValueError(
-                "Context metadata is required when passing direct paths. "
-                f"Missing fields: {missing}. "
-                f"Required fields: {required}."
-            )
-
-        return {
-            "dataset_name": ctx_cfg["dataset_name"],
-            "model_name": ctx_cfg["model_name"],
-            "xai_method_name": ctx_cfg["xai_method_name"],
-        }
-    
-
-    def _validate_explainer_context_metadata(self, ctx_cfg: Mapping[str, Any]) -> Dict[str, Any]:
-        """
-        Validate and return metadata required for an explainer context.
-
-        Explainer contexts must be identified by dataset and model names. These
-        fields are used to associate generated explanations with the
-        corresponding data and model.
-
-        Parameters
-        ----------
-        ctx_cfg : Mapping[str, Any]
-            Context configuration dictionary.
-
-        Returns
-        -------
-        Dict[str, Any]
-            Dictionary containing ``dataset_name`` and ``model_name``.
-
-        Raises
-        ------
-        ValueError
-            If any required metadata field is missing or empty.
-        """
-        required = ["dataset_name", "model_name"]
-        missing = [key for key in required if not ctx_cfg.get(key)]
-
-        if missing:
-            raise ValueError(
-                "Explainer context metadata is required when passing direct paths. "
-                f"Missing fields: {missing}. "
-                f"Required fields: {required}."
-            )
-        
-        return {
-            "dataset_name": ctx_cfg['dataset_name'],
-            "model_name": ctx_cfg['model_name']
-        }
     
 
     def _iter_metric_context_configs(self) -> List[Dict[str, Any]]:
@@ -338,99 +87,10 @@ class ConfigController:
             raise ValueError("Config must include a 'context' section.")
         
         if not all(key in ctx_cfg for key in ("datasets_dir", "models_dir", "attributions_dir")):
-            self._validate_metric_context_metadata(ctx_cfg)
-            return [ctx_cfg]
+            validate_metric_context_metadata(ctx_cfg)
+            return [dict(ctx_cfg)]
         
-        datasets_root = Path(ctx_cfg["datasets_dir"]).expanduser().resolve()
-        models_root = Path(ctx_cfg["models_dir"]).expanduser().resolve()
-        attributions_root = Path(ctx_cfg["attributions_dir"]).expanduser().resolve()
-
-        context_configs = []
-
-        for dataset_path in sorted(path for path in datasets_root.iterdir() if path.is_dir()):
-            dataset_name = dataset_path.name
-
-            models_dataset_root = models_root / dataset_name
-            attribution_dataset_root = attributions_root / dataset_name
-
-            if not models_dataset_root.exists() or not attribution_dataset_root.exists():
-                continue
-
-            X_files = sorted(
-                path for path in dataset_path.glob("*.csv")
-                if path.name.lower().startswith("x_batch")
-            )
-            test = False
-
-            if not X_files:
-                test = True
-                X_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("x_test")
-                )
-
-            if not X_files:
-                continue
-
-            if not test:
-                y_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("y_batch")
-                )
-            else:
-                y_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("y_test")
-                )
-
-            for model_dir in sorted(path for path in models_dataset_root.iterdir() if path.is_dir()):
-                model_name = model_dir.name
-                attribution_dataset_model_root = attribution_dataset_root / model_name
-
-                if not attribution_dataset_model_root.exists():
-                    continue
-
-                model_files = sorted(
-                    path for path in model_dir.rglob("*")
-                    if path.is_file()
-                    and path.suffix.lower() in {".pkl", ".pickle", ".pt", ".pth", ".joblib"}
-                )
-                
-                for xai_method_dir in sorted(
-                    path for path in attribution_dataset_model_root.iterdir()
-                    if path.is_dir()
-                ):
-                    xai_method_name = xai_method_dir.name
-                    attribution_dataset_model_xai_dir = attribution_dataset_model_root / xai_method_name
-
-                    attribution_files = sorted(
-                        path for path in attribution_dataset_model_xai_dir.rglob("*.csv")
-                        if path.is_file()
-                    )
-
-                    for model_path, X_path, y_path, attributions_path in product(
-                        model_files,
-                        X_files,
-                        y_files,
-                        attribution_files
-                    ):
-                        context_configs.append({
-                            "dataset_name": dataset_name,
-                            "model_name": model_name,
-                            "xai_method_name": xai_method_name,
-                            "model_path": str(model_path),
-                            "X_test_path": str(X_path),
-                            "y_test_path": str(y_path),
-                            "attributions_path": str(attributions_path),
-                            "device": ctx_cfg.get("device")
-                        })
-
-        if not context_configs:
-            raise ValueError(
-                "No MetricContext configs found from datasets_dir, models_dir and attributions_dir."
-            )
-
-        return context_configs
+        return discover_metric_context_configs(ctx_cfg)
     
 
     def _iter_explainer_context_configs(self) -> List[Dict[str, Any]]:
@@ -466,112 +126,10 @@ class ConfigController:
             raise ValueError("Config must include a 'context' section.")
         
         if not all(key in ctx_cfg for key in ("datasets_dir", "models_dir")):
-            self._validate_metric_context_metadata(ctx_cfg)
-            return [ctx_cfg]
-        
-        datasets_root = Path(ctx_cfg['datasets_dir']).expanduser().resolve()
-        models_root = Path(ctx_cfg['models_dir']).expanduser().resolve()
+            validate_explainer_context_metadata(ctx_cfg)
+            return [dict(ctx_cfg)]
 
-        context_configs = []
-
-        for dataset_path in sorted(path for path in datasets_root.iterdir() if path.is_dir()):
-            dataset_name = dataset_path.name
-            models_dataset_root = models_root / dataset_name
-
-            if not models_dataset_root.exists():
-                continue
-
-            X_background_files = sorted(
-                path for path in dataset_path.glob("*.csv")
-                if path.name.lower().startswith("x_background")
-            )
-            train = False
-
-            if not X_background_files:
-                train = True
-                X_background_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("x_train")
-                )
-
-            if not X_background_files:
-                continue
-
-            if not train:
-                y_background_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("y_background")
-                )
-            else:
-                y_background_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("y_train")
-                )
-
-            X_batch_files = sorted(
-                path for path in dataset_path.glob("*.csv")
-                if path.name.lower().startswith("x_batch")
-            )
-            test = False
-
-            if not X_batch_files:
-                test = True
-                X_batch_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("x_test")
-                )
-
-            if not X_batch_files:
-                continue
-
-            if not test:
-                y_batch_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("y_batch")
-                )
-            else:
-                y_batch_files = sorted(
-                    path for path in dataset_path.glob("*.csv")
-                    if path.name.lower().startswith("y_test")
-                )
-
-            for model_dir in sorted(path for path in models_dataset_root.iterdir() if path.is_dir()):
-                model_name = model_dir.name
-
-                model_files = sorted(
-                    path for path in model_dir.rglob("*")
-                    if path.is_file()
-                    and path.suffix.lower() in {".pkl", ".pickle", ".pt", ".pth", ".joblib"}
-                )
-
-                for model_path, X_background_path, X_batch_path in product(
-                    model_files,
-                    X_background_files,
-                    X_batch_files
-                ):
-                    base_config = {
-                        "dataset_name": dataset_name,
-                        "model_name": model_name,
-                        "model_path": str(model_path),
-                        "X_background_path": str(X_background_path),
-                        "X_batch_path": str(X_batch_path),
-                        "device": ctx_cfg.get("device"),
-                    }
-
-                    if y_background_files:
-                        base_config["y_background_path"] = str(y_background_files[0])
-
-                    if y_batch_files:
-                        base_config["y_batch_path"] = str(y_batch_files[0])
-
-                    context_configs.append(base_config)
-
-        if not context_configs:
-            raise ValueError(
-                "No ExplainerContext configs found from datasets_dir and models_dir."
-            )
-        
-        return context_configs
+        return discover_explainer_context_configs(ctx_cfg)
         
         
     def get_metrics_config(self) -> List:
@@ -685,13 +243,13 @@ class ConfigController:
             )
         y_test = y_test_df.iloc[:, 0]
 
-        X_test, y_test = self._validate_X_y_indexes(X_test, y_test)
-        y_test = self._normalise_class_labels(y_test)
+        X_test, y_test = validate_X_y_indexes(X_test, y_test)
+        y_test = normalise_class_labels(y_test)
 
         attributions_df = pd.read_csv(ctx_cfg['attributions_path'], index_col=0)
 
         observations = attributions_df.index.tolist()
-        observations = self._validate_observations(observations, X_test.index)
+        observations = validate_observations(observations, X_test.index)
 
         attributions = attributions_df.to_numpy(dtype=float)
 
@@ -704,7 +262,7 @@ class ConfigController:
             device=device
         )
 
-        metadata = self._validate_metric_context_metadata(ctx_cfg)
+        metadata = validate_metric_context_metadata(ctx_cfg)
 
         return metric_context, metadata
 
@@ -778,7 +336,7 @@ class ConfigController:
                 )
 
             y_background = y_background_df.iloc[:, 0]
-            y_background = self._normalise_class_labels(y_background)
+            y_background = normalise_class_labels(y_background)
         
         model = None
         if "model_path" in ctx_cfg:
@@ -806,10 +364,10 @@ class ConfigController:
                 )
 
             y_batch = y_batch_df.iloc[:, 0]
-            y_batch = self._normalise_class_labels(y_batch)
+            y_batch = normalise_class_labels(y_batch)
 
             if X_batch is not None:
-                X_batch, y_batch = self._validate_X_y_indexes(X_batch, y_batch)
+                X_batch, y_batch = validate_X_y_indexes(X_batch, y_batch)
         
         device = ctx_cfg.get("device")
         if device is not None:
@@ -826,7 +384,7 @@ class ConfigController:
             device=device
         )
 
-        metadata = self._validate_explainer_context_metadata(ctx_cfg)
+        metadata = validate_explainer_context_metadata(ctx_cfg)
 
         return explainer_context, metadata
     
