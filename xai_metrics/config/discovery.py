@@ -21,32 +21,44 @@ def discover_metric_context_configs(ctx_cfg: Mapping[str, Any]) -> List[Dict[str
         if not models_dataset_root.exists() or not attribution_dataset_root.exists():
             continue
 
-        X_files = sorted(
+        X_batch_files = sorted(
             path for path in dataset_path.glob("*.csv")
             if path.name.lower().startswith("x_batch")
         )
-        test = False
+        y_batch_files = sorted(
+            path for path in dataset_path.glob("*.csv")
+            if path.name.lower().startswith("y_batch")
+        )
+        X_test_files = sorted(
+            path for path in dataset_path.glob("*.csv")
+            if path.name.lower().startswith("x_test")
+        )
+        y_test_files = sorted(
+            path for path in dataset_path.glob("*.csv")
+            if path.name.lower().startswith("y_test")
+        )
 
-        if not X_files:
-            test = True
-            X_files = sorted(
-                path for path in dataset_path.glob("*.csv")
-                if path.name.lower().startswith("x_test")
+        if bool(X_batch_files) != bool(y_batch_files):
+            raise ValueError(
+                "X_batch.csv and y_batch.csv must be present together."
             )
+
+        if bool(X_test_files) != bool(y_test_files):
+            raise ValueError(
+                "X_test.csv and y_test.csv must be present together."
+            )
+
+        using_batch_files = bool(X_batch_files)
+
+        if using_batch_files:
+            X_files = X_batch_files
+            y_files = y_batch_files
+        else:
+            X_files = X_test_files
+            y_files = y_test_files
 
         if not X_files:
             continue
-
-        if not test:
-            y_files = sorted(
-                path for path in dataset_path.glob("*.csv")
-                if path.name.lower().startswith("y_batch")
-            )
-        else:
-            y_files = sorted(
-                path for path in dataset_path.glob("*.csv")
-                if path.name.lower().startswith("y_test")
-            )
 
         for model_dir in sorted(path for path in models_dataset_root.iterdir() if path.is_dir()):
             model_name = model_dir.name
@@ -79,16 +91,23 @@ def discover_metric_context_configs(ctx_cfg: Mapping[str, Any]) -> List[Dict[str
                     y_files,
                     attribution_files
                 ):
-                    context_configs.append({
+                    context_config = {
                         "dataset_name": dataset_name,
                         "model_name": model_name,
                         "xai_method_name": xai_method_name,
                         "model_path": str(model_path),
-                        "X_test_path": str(X_path),
-                        "y_test_path": str(y_path),
                         "attributions_path": str(attributions_path),
-                        "device": ctx_cfg.get("device")
-                    })
+                        "device": ctx_cfg.get("device"),
+                    }
+
+                    if using_batch_files:
+                        context_config["X_batch_path"] = str(X_path)
+                        context_config["y_batch_path"] = str(y_path)
+                    else:
+                        context_config["X_test_path"] = str(X_path)
+                        context_config["y_test_path"] = str(y_path)
+
+                    context_configs.append(context_config)
 
     if not context_configs:
         raise ValueError(
@@ -151,19 +170,20 @@ def discover_explainer_context_configs(ctx_cfg: Mapping[str, Any]) -> List[Dict[
                 if path.name.lower().startswith("x_test")
             )
 
-        if not X_batch_files:
-            continue
-
-        if not test:
-            y_batch_files = sorted(
-                path for path in dataset_path.glob("*.csv")
-                if path.name.lower().startswith("y_batch")
-            )
+        if X_batch_files:
+            if not test:
+                y_batch_files = sorted(
+                    path for path in dataset_path.glob("*.csv")
+                    if path.name.lower().startswith("y_batch")
+                )
+            else:
+                y_batch_files = sorted(
+                    path for path in dataset_path.glob("*.csv")
+                    if path.name.lower().startswith("y_test")
+                )
         else:
-            y_batch_files = sorted(
-                path for path in dataset_path.glob("*.csv")
-                if path.name.lower().startswith("y_test")
-            )
+            X_batch_files = [None]
+            y_batch_files = []
 
         for model_dir in sorted(path for path in models_dataset_root.iterdir() if path.is_dir()):
             model_name = model_dir.name
@@ -184,12 +204,14 @@ def discover_explainer_context_configs(ctx_cfg: Mapping[str, Any]) -> List[Dict[
                     "model_name": model_name,
                     "model_path": str(model_path),
                     "X_background_path": str(X_background_path),
-                    "X_batch_path": str(X_batch_path),
                     "device": ctx_cfg.get("device"),
                 }
 
                 if y_background_files:
                     base_config["y_background_path"] = str(y_background_files[0])
+
+                if X_batch_path:
+                    base_config["X_batch_path"] = str(X_batch_path)
 
                 if y_batch_files:
                     base_config["y_batch_path"] = str(y_batch_files[0])

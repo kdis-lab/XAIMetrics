@@ -203,11 +203,39 @@ class ConfigController:
 
         if not ctx_cfg:
             raise ValueError("Config must include a 'context' section.")
+
+        batch_input_configured = "X_batch_path" in ctx_cfg
+        batch_target_configured = "y_batch_path" in ctx_cfg
+
+        if batch_input_configured != batch_target_configured:
+            raise ValueError(
+                "X_batch_path and y_batch_path must be configured together."
+            )
+
+        test_input_configured = "X_test_path" in ctx_cfg
+        test_target_configured = "y_test_path" in ctx_cfg
+
+        if test_input_configured != test_target_configured:
+            raise ValueError(
+                "X_test_path and y_test_path must be configured together."
+            )
         
+        X_data_path = ctx_cfg.get("X_batch_path") or ctx_cfg.get("X_test_path")
+        y_data_path = ctx_cfg.get("y_batch_path") or ctx_cfg.get("y_test_path")
+
+        if X_data_path is None or y_data_path is None:
+            raise ValueError("Metric context requires X_batch_path or X_test_path.")
+
+        if not batch_input_configured:
+            warnings.warn(
+                "Using X_test_path and y_test_path for metric evaluation. "
+                "Attribution indexes are expected to match X_test indexes.",
+                UserWarning,
+                stacklevel=2,
+            )
+
         required = [
             "model_path",
-            "X_test_path",
-            "y_test_path",
             "attributions_path",
         ]
 
@@ -230,9 +258,9 @@ class ConfigController:
         if device is not None:
             model = model.to(device)
         
-        X_test = pd.read_csv(ctx_cfg["X_test_path"], index_col=0)
+        X_test = pd.read_csv(X_data_path, index_col=0)
 
-        y_test_df = pd.read_csv(ctx_cfg['y_test_path'], index_col=0)
+        y_test_df = pd.read_csv(y_data_path, index_col=0)
         if y_test_df.shape[1] > 1:
             warnings.warn(
                 "y_test contains more than one column. "

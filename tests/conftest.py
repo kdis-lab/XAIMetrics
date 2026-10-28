@@ -254,13 +254,13 @@ def exp_val_context():
     )
 
 
-def create_explainer_data(directory, background_source="background"):
+def create_explainer_data(directory, background_source="background", batch_source="batch"):
     directory.mkdir(parents=True, exist_ok=True)
 
     X_background_path = directory / f"X_{background_source}.csv"
     y_background_path = directory / f"y_{background_source}.csv"
-    X_batch_path = directory / "X_batch.csv"
-    y_batch_path = directory / "y_batch.csv"
+    X_batch_path = directory / f"X_{batch_source}.csv"
+    y_batch_path = directory / f"y_{batch_source}.csv"
 
     pd.DataFrame(
         {"feature_1": [1.0, 2.0], "feature_2": [3.0, 4.0]},

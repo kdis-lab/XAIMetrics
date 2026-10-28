@@ -1,6 +1,7 @@
 # tests/test_runner.py
 import numpy as np
 import pytest
+from dataclasses import replace
 
 import xai_metrics.runner.runner as runner_module
 from xai_metrics.base import BaseMetric, MetricSkipped, BaseExplainer, ExplainerSkipped
@@ -583,3 +584,52 @@ def test_run_evaluation_accepts_explain_funcs_by_dataset_and_xai_method(
             "value": "dataset lime explanation",
         }
     ]
+
+
+def test_run_explanation_rejects_missing_x_batch_before_calling_explain(
+    monkeypatch,
+    clean_explainer_registry,
+    explainer_context
+):
+    calls = []
+
+    class ExplainerThatMustNotRun(BaseExplainer):
+        NAME = "must_not_run"
+
+        def explain(self, model, inputs, targets=None, **kwargs):
+            calls.append(True)
+            return np.array([[1.0]])
+
+    EXPLAINER_REGISTRY['must_not_run'] = ExplainerThatMustNotRun
+
+    monkeypatch.setattr(
+        runner_module,
+        "autodiscover_explainers",
+        lambda *args, **kwargs: None,
+    )
+
+    context_without_batch = replace(
+        explainer_context,
+        X_batch=None,
+        y_batch=None
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="ExplainerContext must include X_batch",
+    ):
+        run_explanation(
+            context=context_without_batch,
+            config={
+                "context": {
+                    "dataset_name": "dataset",
+                    "model_name": "model",
+                },
+                "explainers": [
+                    {"name": "must_not_run"},
+                ],
+            },
+            attribution_output_dir=None,
+        )
+
+    assert calls == []
