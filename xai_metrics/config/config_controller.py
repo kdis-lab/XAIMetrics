@@ -314,22 +314,47 @@ class ConfigController:
         if not ctx_cfg:
             raise ValueError("Config must include a 'context' section.")
 
-        required = ["X_background_path"]
-        missing = [key for key in required if key not in ctx_cfg]
+        X_background_path = ctx_cfg.get("X_background_path")
+        X_train_path = ctx_cfg.get("X_train_path")
 
-        if missing:
-            raise ValueError(f"Missing explainer context config fields: {missing}")
-            
-        X_background = pd.read_csv(ctx_cfg["X_background_path"], index_col=0)
+        if X_background_path and X_train_path:
+            warnings.warn(
+                "Both X_background_path and X_train_path are configured. "
+                "Using X_background_path as explainer background data.",
+                UserWarning,
+                stacklevel=2,
+            )
+
+        X_background_path = X_background_path or X_train_path
+
+        if X_background_path is None:
+            raise ValueError(
+                "Explainer context requires X_background_path or X_train_path"
+            )
+
+        X_background = pd.read_csv(X_background_path, index_col=0)
+
+        y_background_path = ctx_cfg.get("y_background_path")
+        y_train_path = ctx_cfg.get("y_train_path")
+
+        if y_background_path and y_train_path:
+            warnings.warn(
+                "Both y_background_path and y_train_path are configured. "
+                "Using y_background_path as explainer background labels.",
+                UserWarning,
+                stacklevel=2,
+            )
+
+        y_background_path = y_background_path or y_train_path
 
         y_background = None
-        if "y_background_path" in ctx_cfg:
-            y_background_df = pd.read_csv(ctx_cfg["y_background_path"], index_col=0)
+        if y_background_path is not None:
+            y_background_df = pd.read_csv(y_background_path, index_col=0)
 
             if y_background_df.shape[1] > 1:
                 warnings.warn(
                     "y_background contains more than one column. "
-                    f"Only the first column will be used: {y_background_df.columns[0]!r}. "
+                    f"Only the first column will be used: {y_background_df.columns[0]}. "
                     f"Ignored columns: {list(y_background_df.columns[1:])}.",
                     UserWarning,
                     stacklevel=2,

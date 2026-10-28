@@ -287,9 +287,7 @@ def test_explainer_discovery_uses_train_when_background_files_do_not_exist(tmp_p
     }
 
 
-def test_explainer_discovery_raises_error_when_no_background_or_train_exists(
-    tmp_path,
-):
+def test_explainer_discovery_raises_error_when_no_background_or_train_exists(tmp_path):
     datasets_dir = tmp_path / "datasets"
     models_dir = tmp_path / "models"
 
@@ -327,13 +325,7 @@ def test_explainer_discovery_raises_error_when_no_background_or_train_exists(
         controller.build_explainers_contexts()
 
 
-# @pytest.mark.xfail(
-#     strict=True,
-#     reason="El modo explícito aún solo admite X_background_path.",
-# )
-def test_explicit_explainer_context_uses_train_paths_when_background_paths_are_absent(
-    tmp_path,
-):
+def test_explicit_explainer_context_uses_train_paths_when_background_paths_are_absent(tmp_path):
     X_train_path = tmp_path / "X_train.csv"
     y_train_path = tmp_path / "y_train.csv"
 
@@ -363,6 +355,7 @@ def test_explicit_explainer_context_uses_train_paths_when_background_paths_are_a
     context, metadata = controller.build_explainers_context()
 
     assert context.X_background.index.tolist() == [10, 11]
+    assert context.y_background is not None
     assert context.y_background.tolist() == [0, 1]
     assert metadata == {
         "dataset_name": "demo_dataset",
@@ -370,9 +363,7 @@ def test_explicit_explainer_context_uses_train_paths_when_background_paths_are_a
     }
 
 
-def test_explicit_explainer_context_raises_error_when_no_background_or_train_exists(
-    tmp_path,
-):
+def test_explicit_explainer_context_raises_error_when_no_background_or_train_exists(tmp_path):
     X_batch_path = tmp_path / "X_batch.csv"
     y_batch_path = tmp_path / "y_batch.csv"
     model_path = tmp_path / "model.pt"
@@ -407,3 +398,76 @@ def test_explicit_explainer_context_raises_error_when_no_background_or_train_exi
         match="X_background_path or X_train_path",
     ):
         controller.build_explainers_contexts()
+
+
+def test_explicit_explainer_context_prioritises_background_over_train(tmp_path):
+    background_paths = create_explainer_data(
+        tmp_path / "explicit_data",
+        background_source="background"
+    )
+    train_paths = create_explainer_data(
+        tmp_path / "explicit_data",
+        background_source="train"
+    )
+
+    pd.DataFrame(
+        {"feature_1": [99.0], "feature_2": [100.0]},
+        index=[99]
+    ).to_csv(train_paths['X_background_path'])
+
+    pd.DataFrame(
+        {"target": [9]},
+        index=[99]
+    ).to_csv(train_paths['y_background_path'])
+
+    controller = ConfigController(
+        config={
+            "context": {
+                "dataset_name": "demo_dataset",
+                "model_name": "demo_model",
+                "model_path": str(tmp_path / "model.pt"),
+                "X_background_path": str(
+                    background_paths["X_background_path"]
+                ),
+                "y_background_path": str(
+                    background_paths["y_background_path"]
+                ),
+                "X_train_path": str(train_paths["X_background_path"]),
+                "y_train_path": str(train_paths["y_background_path"]),
+                "X_batch_path": str(background_paths["X_batch_path"]),
+                "y_batch_path": str(background_paths["y_batch_path"])
+            }
+        },
+        model_loader=lambda path: nn.Identity()
+    )
+
+    with pytest.warns(UserWarning) as captured_warnings:
+        context, metadata = controller.build_explainers_context()
+
+    warning_messages = [str(warning.message) for warning in captured_warnings]
+
+    assert (
+        "Both X_background_path and X_train_path are configured. "
+        "Using X_background_path as explainer background data."
+        in warning_messages
+    )
+    assert (
+        "Both y_background_path and y_train_path are configured. "
+        "Using y_background_path as explainer background labels."
+        in warning_messages
+    )
+
+    assert context.X_background.index.tolist() == [10, 11]
+    assert context.X_background.iloc[:, 0].tolist() == [1.0, 2.0]
+    assert context.y_background is not None
+    assert context.y_background.tolist() == [0, 1]
+
+    assert context.X_batch is not None
+    assert context.X_batch.index.tolist() == [20]
+    assert context.y_batch is not None
+    assert context.y_batch.tolist() == [1]
+
+    assert metadata == {
+        "dataset_name": "demo_dataset",
+        "model_name": "demo_model"
+    }
