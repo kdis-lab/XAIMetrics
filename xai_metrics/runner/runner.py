@@ -258,6 +258,11 @@ def run_explanation(
         if ctx.X_batch is None:
             raise ValueError("ExplainerContext must include X_batch.")
 
+        if not metadata.get("model_name"):
+            raise ValueError(
+                "Explanation generation requires 'model_name' in the context."
+            )
+
         print(
             f"\n{'=' * 60}\n"
             "Running XAI explanations\n"
