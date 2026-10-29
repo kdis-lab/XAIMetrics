@@ -202,6 +202,9 @@ def run_explanation(
     if context is None:
         context_list = config_controller.build_explainers_contexts()
     else:
+        if context.model is None:
+            raise ValueError("ExplainerContext must include a model.")
+
         metadata = {
             "dataset_name": ctx_cfg.get("dataset_name"),
             "model_name": ctx_cfg.get("model_name")

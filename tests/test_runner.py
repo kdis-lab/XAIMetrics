@@ -667,8 +667,7 @@ def test_run_explanation_rejects_missing_model_before_calling_explain(
             context=context_without_model,
             config={
                 "context": {
-                    "dataset_name": "dataset",
-                    "model_name": "model"
+                    "dataset_name": "dataset"
                 },
                 "explainers": [
                     {"name": "must_not_run"}
