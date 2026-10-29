@@ -182,7 +182,7 @@ def validate_explainer_context_metadata(ctx_cfg: Mapping[str, Any]) -> Dict[str,
     ValueError
         If any required metadata field is missing or empty.
     """
-    required = ["dataset_name", "model_name"]
+    required = ["dataset_name"]
     missing = [key for key in required if not ctx_cfg.get(key)]
 
     if missing:
@@ -192,7 +192,11 @@ def validate_explainer_context_metadata(ctx_cfg: Mapping[str, Any]) -> Dict[str,
             f"Required fields: {required}."
         )
     
-    return {
+    metadata = {
         "dataset_name": ctx_cfg['dataset_name'],
-        "model_name": ctx_cfg['model_name']
     }
+
+    if ctx_cfg.get("model_name"):
+        metadata['model_name'] = ctx_cfg['model_name']
+
+    return metadata

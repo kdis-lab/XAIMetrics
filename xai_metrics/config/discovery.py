@@ -119,16 +119,31 @@ def discover_metric_context_configs(ctx_cfg: Mapping[str, Any]) -> List[Dict[str
 
 def discover_explainer_context_configs(ctx_cfg: Mapping[str, Any]) -> List[Dict[str, Any]]:
     datasets_root = Path(ctx_cfg['datasets_dir']).expanduser().resolve()
-    models_root = Path(ctx_cfg['models_dir']).expanduser().resolve()
+
+    models_dir = ctx_cfg.get("models_dir")
+    models_root = (
+        Path(models_dir).expanduser().resolve()
+        if models_dir is not None
+        else None
+    )
 
     context_configs = []
 
     for dataset_path in sorted(path for path in datasets_root.iterdir() if path.is_dir()):
         dataset_name = dataset_path.name
-        models_dataset_root = models_root / dataset_name
+        
+        if models_root is None:
+            model_dirs = [None]
+        else:
+            models_dataset_root = models_root / dataset_name
 
-        if not models_dataset_root.exists():
-            continue
+            if not models_dataset_root.exists():
+                continue
+
+            model_dirs = sorted(
+                path for path in models_dataset_root.iterdir()
+                if path.is_dir()
+            )
 
         X_background_files = sorted(
             path for path in dataset_path.glob("*.csv")
@@ -185,14 +200,20 @@ def discover_explainer_context_configs(ctx_cfg: Mapping[str, Any]) -> List[Dict[
             X_batch_files = [None]
             y_batch_files = []
 
-        for model_dir in sorted(path for path in models_dataset_root.iterdir() if path.is_dir()):
-            model_name = model_dir.name
+        for model_dir in model_dirs:
+            model_name = model_dir.name if model_dir is not None else None
 
-            model_files = sorted(
-                path for path in model_dir.rglob("*")
-                if path.is_file()
-                and path.suffix.lower() in {".pkl", ".pickle", ".pt", ".pth", ".joblib"}
-            )
+            if model_dir is None:
+                model_files = [None]
+            else:
+                model_files = sorted(
+                    path for path in model_dir.rglob("*")
+                    if path.is_file()
+                    and path.suffix.lower() in {".pkl", ".pickle", ".pt", ".pth", ".joblib"}
+                )
+
+                if not model_files:
+                    model_files = [None]
 
             for model_path, X_background_path, X_batch_path in product(
                 model_files,
@@ -201,11 +222,15 @@ def discover_explainer_context_configs(ctx_cfg: Mapping[str, Any]) -> List[Dict[
             ):
                 base_config = {
                     "dataset_name": dataset_name,
-                    "model_name": model_name,
-                    "model_path": str(model_path),
                     "X_background_path": str(X_background_path),
                     "device": ctx_cfg.get("device"),
                 }
+
+                if model_name is not None:
+                    base_config['model_name'] = model_name
+
+                if model_path is not None:
+                    base_config['model_path'] = str(model_path)
 
                 if y_background_files:
                     base_config["y_background_path"] = str(y_background_files[0])

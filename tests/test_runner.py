@@ -633,3 +633,48 @@ def test_run_explanation_rejects_missing_x_batch_before_calling_explain(
         )
 
     assert calls == []
+
+
+def test_run_explanation_rejects_missing_model_before_calling_explain(
+    monkeypatch,
+    clean_explainer_registry,
+    explainer_context
+):
+    calls = []
+
+    class ExplainerThatMustNotRun(BaseExplainer):
+        NAME = "must_not_run"
+
+        def explain(self, model, inputs, targets=None, **kwargs):
+            calls.append(True)
+            return np.array([[1.0]])
+
+    EXPLAINER_REGISTRY['must_not_run'] = ExplainerThatMustNotRun
+
+    monkeypatch.setattr(
+        runner_module,
+        "autodiscover_explainers",
+        lambda *args, **kwargs: None,
+    )
+
+    context_without_model = replace(explainer_context, model=None)
+
+    with pytest.raises(
+        ValueError,
+        match="ExplainerContext must include a model"
+    ):
+        run_explanation(
+            context=context_without_model,
+            config={
+                "context": {
+                    "dataset_name": "dataset",
+                    "model_name": "model"
+                },
+                "explainers": [
+                    {"name": "must_not_run"}
+                ]
+            },
+            attribution_output_dir=None
+        )
+
+    assert calls == []

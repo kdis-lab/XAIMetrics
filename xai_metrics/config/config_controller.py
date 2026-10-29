@@ -125,7 +125,7 @@ class ConfigController:
         if not ctx_cfg:
             raise ValueError("Config must include a 'context' section.")
         
-        if not all(key in ctx_cfg for key in ("datasets_dir", "models_dir")):
+        if "datasets_dir" not in ctx_cfg:
             validate_explainer_context_metadata(ctx_cfg)
             return [dict(ctx_cfg)]
 
