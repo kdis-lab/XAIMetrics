@@ -1,6 +1,6 @@
 context:
   device: "cpu"
-  datasets_dir: "datasets"
+  datasets_dir: "data"
   models_dir: "models"
   attributions_dir: "attributions"
 
@@ -19,7 +19,7 @@ metrics:
 
   - name: LocalLipschitzEstimate
     params:
-      nr_samples: 200
+      nr_samples: 20
       normalise: true
 
 explainers:

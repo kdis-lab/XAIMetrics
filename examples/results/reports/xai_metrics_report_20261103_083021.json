@@ -1,0 +1,53 @@
+{
+  "report": [
+    {
+      "dataset_name": "hydraulic",
+      "model_name": "IForest",
+      "metric": "Complexity",
+      "metric_params": {
+        "normalise": true
+      },
+      "BreakDown": 1.4618588343175816,
+      "LIME": 1.3153222538590967,
+      "MAPLE": 1.2369929715822898,
+      "SHAP": 1.494590826244311
+    },
+    {
+      "dataset_name": "hydraulic",
+      "model_name": "IForest",
+      "metric": "Faithfulness",
+      "metric_params": {
+        "base_strategy": "mean"
+      },
+      "BreakDown": 0.35324631344526947,
+      "LIME": 0.14967040555380248,
+      "MAPLE": 0.2702671366083908,
+      "SHAP": 0.3686057716208372
+    },
+    {
+      "dataset_name": "hydraulic",
+      "model_name": "IForest",
+      "metric": "LocalLipschitzEstimate",
+      "metric_params": {
+        "nr_samples": 20,
+        "normalise": true
+      },
+      "BreakDown": 3.638162153079169,
+      "LIME": 9.19584052530238,
+      "MAPLE": 4.894431158866613,
+      "SHAP": 3.807186419669424
+    },
+    {
+      "dataset_name": "hydraulic",
+      "model_name": "IForest",
+      "metric": "Sparseness",
+      "metric_params": {
+        "normalise": true
+      },
+      "BreakDown": 0.4253448922684421,
+      "LIME": 0.49155103920555693,
+      "MAPLE": 0.515773197357161,
+      "SHAP": 0.37177384198101715
+    }
+  ]
+}

@@ -8,7 +8,7 @@ from xai_metrics.explainers.maple import MAPLEExplainer
 from xai_metrics.runner import run_explanation
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 config_path = PROJECT_ROOT / "examples/specific_examples/config.yaml"
 
 # direct class use
